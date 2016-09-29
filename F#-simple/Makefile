@@ -2,7 +2,7 @@ SRCS=fft.fs main.fs
 TARGET=benchmark.exe
 
 all:
-	fsharpc --out:$(TARGET) --optimizer+ $(SRCS)
+	fsharpc --out:$(TARGET) --optimize+ $(SRCS)
 	@chmod +x $(TARGET)
 
 clean:
