@@ -26,7 +26,7 @@ module MainModule =
         let stopwatch = Stopwatch.StartNew()
 
         for i = 0 to FFT_REPEAT - 1 do
-            let fft_out = FftModule.fft 16 xy
+            let fft_out = FftModule.fft LOG2FFTSIZE xy
             let eltime = stopwatch.ElapsedMilliseconds
             printfn "%6d piece of %d pt FFT;  %9.5f ms/piece\n" FFT_REPEAT  (1 <<< LOG2FFTSIZE) (float eltime / float FFT_REPEAT)
 

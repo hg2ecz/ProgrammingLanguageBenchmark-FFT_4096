@@ -28,7 +28,7 @@ module MainModule =
         // time of repeated FFT
         let stopwatch = Stopwatch.StartNew()
         for i = 0 to FFT_REPEAT - 1 do
-            let fft_out = FftModule.fft 16 xy
+            let fft_out = FftModule.fft LOG2FFTSIZE xy
             ()
         let eltime = stopwatch.ElapsedMilliseconds
 
