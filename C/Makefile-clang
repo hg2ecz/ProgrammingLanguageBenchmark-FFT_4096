@@ -6,6 +6,9 @@ CFLAGS+=-mcpu=cortex-a5
 CFLAGS+=-DLOG2FFTSIZE=16
 CFLAGS+=-DFFT_REPEAT=10
 
+# improve speed
+CFLAGS+=-DMOD_SPEED
+
 LDFLAGS=-lm -lfftw3 -s
 OBJS=fft.o benchmark.o
 
