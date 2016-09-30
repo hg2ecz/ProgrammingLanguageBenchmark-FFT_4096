@@ -32,9 +32,13 @@ void fft(int log2point, double complex *xy_out, const double complex *xy_in) {
     int n = 1<<log2point;
     int l2pt=0;
     int mmax=1;
+#ifdef MOD_SPEED
+    while (l2pt < log2point) {
+	int istep = 2<<l2pt;
+#else
     while (n>mmax) {
 	int istep = mmax<<1;
-
+#endif
 //	double theta = -2*M_PI/istep;
 //	double complex wphase_XY = cos(theta) + sin(theta)*I;
 	double complex wphase_XY = phasevec[l2pt++];
