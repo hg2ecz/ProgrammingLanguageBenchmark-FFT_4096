@@ -1,7 +1,10 @@
 CC=gcc
 
 CFLAGS =-Wall -Ofast -funroll-all-loops
+
+# ARM and x86
 CFLAGS+=-mcpu=cortex-a5 -mfpu=neon-fp16
+#CFLAGS+=-march=native
 
 CFLAGS+=-DLOG2FFTSIZE=16
 CFLAGS+=-DFFT_REPEAT=10
@@ -15,7 +18,7 @@ OBJS=fft.o benchmark.o
 TARGET=benchmark
 
 all: $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) -o $(TARGET)
+	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
 
 clean:
 	rm -rf $(OBJS) $(TARGET)
