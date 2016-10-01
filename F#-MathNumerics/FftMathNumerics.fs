@@ -13,7 +13,7 @@ module FftModule =
     | Managed
     | MultiThreaded
     | NativeMKL
-    | NativeCUDE
+    | NativeCUDA
 
     let compareSequences seq1 seq2 = 
         // Compare the first 5 decimal digit of the double
@@ -25,7 +25,7 @@ module FftModule =
         | Managed -> Control.UseManaged()
         | MultiThreaded -> Control.UseMultiThreading()
         | NativeMKL -> Control.UseNativeMKL()
-        | NativeCUDE -> Control.UseNativeCUDA()
+        | NativeCUDA -> Control.UseNativeCUDA()
         | _ -> ()
 
         printfn "Linear Algebra Provider = %A" Control.LinearAlgebraProvider
@@ -60,7 +60,7 @@ module FftModule =
             Managed
             MultiThreaded
             NativeMKL
-            NativeCUDE
+            NativeCUDA
         ]
 
         let algorithms = [
