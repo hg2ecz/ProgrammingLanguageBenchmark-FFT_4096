@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     timestart = time.time()
     for i in xrange(FFT_REPEAT):
-	fft_out = fft.fft(16, xy)
+	fft_out = fft.fft(LOG2FFTSIZE, xy)
     eltime = 1000*(time.time() - timestart);
     print "%6d piece of %d pt FFT;  %9.5f ms/piece\n"%(FFT_REPEAT, 1<<LOG2FFTSIZE, eltime/FFT_REPEAT)
 
