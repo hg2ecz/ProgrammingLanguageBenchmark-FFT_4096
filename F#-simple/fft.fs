@@ -1,6 +1,7 @@
-namespace FftPerformanceDemo
+﻿namespace FftPerformanceDemo
 
 module FftModule =
+    
     open System
     open System.Numerics
 
@@ -15,7 +16,7 @@ module FftModule =
             phasevec_exist <- true
 
         let mutable xy_out = Array.init (1 <<< log2point) (fun _ -> Complex())
-
+    
         for i = 0 to (1 <<< log2point) - 1 do
             let mutable (brev: uint32) = uint32 i
             brev <- ((brev &&& uint32 0xaaaaaaaa) >>> 1) ||| ((brev &&& uint32 0x55555555) <<< 1)
@@ -39,17 +40,25 @@ module FftModule =
             l2pt <- l2pt + 1
 
             let mutable w_XY = Complex(1.0, 0.0)
-
+    
             for m = 0 to mmax - 1 do
-                // FIXME: slow, profile this: [m..x..n]    
-                for i in [m .. istep .. n - 1] do
+                // FIXME: slow, profile this: [m..x..n]
+#if SPEED_UP
+                let mutable i = m
+                while i < n - 1 do
                     let tempXY = w_XY * xy_out.[i + mmax]
                     xy_out.[i+mmax] <- xy_out.[i] - tempXY
                     xy_out.[i] <- xy_out.[i] + tempXY
 
+                    i <- i + istep
+#else    
+                for i in [m .. istep .. n - 1] do
+                    let tempXY = w_XY * xy_out.[i + mmax]
+                    xy_out.[i+mmax] <- xy_out.[i] - tempXY
+                    xy_out.[i] <- xy_out.[i] + tempXY
+#endif
                 w_XY <- w_XY * wphase_XY // rotate
-
+        
             mmax <- istep
-
+        
         xy_out
-
