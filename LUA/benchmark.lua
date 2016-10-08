@@ -3,8 +3,8 @@
 require "bit"
 require "fft"
 
-local LOG2FFTSIZE = 16
-local FFT_REPEAT = 10
+local LOG2FFTSIZE = 12
+local FFT_REPEAT = 1000
 
 local SIZE = bit.lshift(1, LOG2FFTSIZE)
 local xy = {}

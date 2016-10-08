@@ -10,8 +10,8 @@ module MainModule =
     [<EntryPoint>]
     let main argv =
 
-        let LOG2FFTSIZE = 16
-        let FFT_REPEAT = 10
+        let LOG2FFTSIZE = 12
+        let FFT_REPEAT = 1000
 
         let SIZE = 1 <<< LOG2FFTSIZE
 
@@ -23,7 +23,7 @@ module MainModule =
         for i = SIZE/2 to SIZE - 1 do
             xy.[i] <- Complex(-1.0, 0.0)
 
-        let fft_out = FftModule.fft 16 xy
+        let fft_out = FftModule.fft LOG2FFTSIZE xy
 
         // time of repeated FFT
         let stopwatch = Stopwatch.StartNew()

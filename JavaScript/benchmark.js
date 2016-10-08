@@ -5,8 +5,8 @@
 var fft = require('./fft');
 
 
-var LOG2FFTSIZE=16
-var FFT_REPEAT=10
+var LOG2FFTSIZE=12
+var FFT_REPEAT=1000
 
 var xy = [];
 var xy_out = [];

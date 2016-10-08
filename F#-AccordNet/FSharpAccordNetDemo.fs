@@ -8,9 +8,9 @@ module MainModule =
     [<EntryPoint>]
     let main argv =
 
-        let LOG2FFTSIZE = 14
+        let LOG2FFTSIZE = 12
         let SIZE = 1 <<< LOG2FFTSIZE
-        let FFT_REPEAT = 80
+        let FFT_REPEAT = 1000
 
         let input = Array.init SIZE (fun _ -> Complex())
 

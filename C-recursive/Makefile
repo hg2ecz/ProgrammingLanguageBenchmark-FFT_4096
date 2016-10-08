@@ -6,8 +6,8 @@ CFLAGS =-Wall -Ofast -funroll-all-loops
 CFLAGS+=-mcpu=cortex-a5 -mfpu=neon-fp16
 #CFLAGS+=-march=native
 
-CFLAGS+=-DLOG2FFTSIZE=16
-CFLAGS+=-DFFT_REPEAT=10
+CFLAGS+=-DLOG2FFTSIZE=12
+CFLAGS+=-DFFT_REPEAT=1000
 
 # improve speed
 CFLAGS+=-DMOD_SPEED

@@ -9,8 +9,8 @@ use Math::Complex;
 use Time::HiRes;
 use fft;
 
-use constant LOG2FFTSIZE => 16;
-use constant FFT_REPEAT => 1;
+use constant LOG2FFTSIZE => 12;
+use constant FFT_REPEAT => 10;
 
 my $SIZE = 1<<LOG2FFTSIZE;
 my @xy;

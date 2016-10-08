@@ -44,7 +44,7 @@ module FftModule =
     [<EntryPoint>]
     let main argv =
 
-        let LOG2FFTSIZE = 16
+        let LOG2FFTSIZE = 12
 
         let SIZE = 1 <<< LOG2FFTSIZE
 

@@ -6,8 +6,8 @@ namespace CSharpFftDemo
 {
     public class Benchmark
     {
-        static int LOG2FFTSIZE = 16;
-        static int FFT_REPEAT = 10;
+        static int LOG2FFTSIZE = 12;
+        static int FFT_REPEAT = 1000;
 
         // Internal variables
         static int phasevec_exist = 0;

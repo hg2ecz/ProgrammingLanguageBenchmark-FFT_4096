@@ -10,8 +10,8 @@ module MainModule =
     [<EntryPoint>]
     let main argv =
 
-        let LOG2FFTSIZE = 16
-        let FFT_REPEAT = 10
+        let LOG2FFTSIZE = 12
+        let FFT_REPEAT = 1000
 
         let SIZE = 1 <<< LOG2FFTSIZE
 
