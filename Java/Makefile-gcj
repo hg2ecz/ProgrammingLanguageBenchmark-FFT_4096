@@ -1,0 +1,22 @@
+CC=gcj-6
+
+CFLAGS =-Wall -Ofast -funroll-all-loops
+
+# ARM and x86
+CFLAGS+=-mcpu=cortex-a5 -mfpu=neon-fp16
+#CFLAGS+=-march=native
+
+LDFLAGS=-s --main=benchmark
+OBJS=benchmark.o
+
+TARGET=benchmark
+
+.SUFFIXES: .java
+%.o: %.java
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+
+all: $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
+
+clean:
+	rm -rf $(OBJS) $(TARGET)
