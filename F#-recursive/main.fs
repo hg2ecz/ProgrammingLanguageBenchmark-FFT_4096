@@ -24,7 +24,7 @@ let rec fft_recursive (buf: Complex array) (out: Complex array) (n: int) (step: 
 let main args =
     let LOG2FFTSIZE = 16
     let SIZE = 1 <<< LOG2FFTSIZE
-    let FFT_REPEAT = 1
+    let FFT_REPEAT = 1000
 
     let xy = Array.init SIZE (fun i -> 
         if i < SIZE / 2 
@@ -39,7 +39,8 @@ let main args =
         let xy_tmp = Array.init SIZE (fun _ -> Complex.Zero)
         fft_recursive xy_out_fft xy_tmp SIZE 1 0
 
-        printfn "%A" xy_out_fft
+        if i = 0 then
+            printfn "%A" xy_out_fft
 
     printfn "%6d piece(s) of %d pt FFT;  %9.5f ms/piece" FFT_REPEAT SIZE (float sw.ElapsedMilliseconds / float FFT_REPEAT)
 
