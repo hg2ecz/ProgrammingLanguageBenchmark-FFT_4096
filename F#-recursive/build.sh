@@ -1,1 +1,1 @@
-fsc -o fft.exe main.fs 
+fsharpc -o fft.exe main.fs 
