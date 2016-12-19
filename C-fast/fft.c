@@ -7,7 +7,7 @@ static int phasevec_exist = 0;
 static double complex phasevec[32];
 
 // Public function
-void fft(int log2point, double complex *xy_out, const double complex *xy_in) {
+void fft(int log2point, double complex *restrict xy_out, const double complex *restrict xy_in) {
     int i;
     if (!phasevec_exist) {
 	for (i=0; i<32; i++) {

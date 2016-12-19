@@ -1,4 +1,4 @@
-CC=gcc
+CC=gcj-6
 
 CFLAGS =-Wall -Ofast -funroll-all-loops
 
@@ -6,16 +6,14 @@ CFLAGS =-Wall -Ofast -funroll-all-loops
 CFLAGS+=-mcpu=cortex-a5 -mfpu=neon-fp16
 #CFLAGS+=-march=native
 
-CFLAGS+=-DLOG2FFTSIZE=16
-CFLAGS+=-DFFT_REPEAT=10
-
-# improve speed
-CFLAGS+=-DMOD_SPEED
-
-LDFLAGS=-lm -s
-OBJS=fft.o benchmark.o
+LDFLAGS=-s --main=benchmark
+OBJS=benchmark.o
 
 TARGET=benchmark
+
+.SUFFIXES: .java
+%.o: %.java
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
 all: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)

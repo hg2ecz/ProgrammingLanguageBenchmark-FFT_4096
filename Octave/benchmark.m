@@ -1,7 +1,7 @@
 #!/usr/bin/octave
 
-LOG2FFTSIZE = 16
-FFT_REPEAT = 1
+LOG2FFTSIZE = 12
+FFT_REPEAT = 10
 
 SIZE = bitshift(1, LOG2FFTSIZE);
 xy = zeros(1, SIZE);

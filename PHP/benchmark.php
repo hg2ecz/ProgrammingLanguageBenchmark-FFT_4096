@@ -3,8 +3,8 @@
 <?php
 include "fft.php";
 
-$LOG2FFTSIZE = 16;
-$FFT_REPEAT = 10;
+$LOG2FFTSIZE = 12;
+$FFT_REPEAT = 1000;
 
 $SIZE = 1<<$LOG2FFTSIZE;
 $xy = new SplFixedArray($SIZE);
