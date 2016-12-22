@@ -1,3 +1,5 @@
+var webpack = require("webpack");
+
 module.exports = {  
   entry: './benchmark.ts',
   output: {
@@ -10,5 +12,10 @@ module.exports = {
     loaders: [
       { test: /\.ts$/, loader: 'ts-loader' }
     ]
-  }
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false }
+    })
+  ]
 }
