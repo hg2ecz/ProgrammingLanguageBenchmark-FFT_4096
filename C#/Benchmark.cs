@@ -87,7 +87,8 @@ namespace CSharpFftDemo
             }
 
 
-            for (i = 0; i < 20; i++)
+            // JIT warm up ... possible give more speed
+            for (i = 0; i < FFT_REPEAT; i++)
             {
                 FFT(LOG2FFTSIZE, xy);
             }
