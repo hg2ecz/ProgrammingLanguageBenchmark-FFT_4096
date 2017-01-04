@@ -97,13 +97,13 @@ namespace CSharpFftDemo
             Console.WriteLine("{0} piece(s) of {1} pt FFT;  {2} ms/piece\n",
                 FFT_REPEAT,
                 1 << LOG2FFTSIZE,
-                stopwatch.ElapsedMilliseconds / FFT_REPEAT);
+                stopwatch.ElapsedMilliseconds / (float)FFT_REPEAT);
 
             var result = FFT(LOG2FFTSIZE, xy);
 
             for (i = 0; i < 6; i++)
             {
-                Console.WriteLine("{0}\t{1}\n", i, result[i]);
+                Console.WriteLine("{0}\t{1}", i, result[i]);
             }
         }
     }
