@@ -86,8 +86,14 @@ namespace CSharpFftDemo
                 xy[i] = new Complex(-1.0, 0.0);
             }
 
+
+            for (i = 0; i < 20; i++)
+            {
+                FFT(LOG2FFTSIZE, xy);
+            }
             // FFT
             var stopwatch = Stopwatch.StartNew();
+
 
             for (i = 0; i < FFT_REPEAT; i++)
             {
