@@ -73,7 +73,9 @@ public class benchmark {
 	for(i=0; i<SIZE/2; i++) { xy[i][0]=  1.; xy[i][1]= 0.; }
 	for(   ; i<SIZE  ; i++) { xy[i][0]= -1.; xy[i][1]= 0.; }
 
-// FFT
+// warm up ... JIT activating
+	for (i=0; i<FFT_REPEAT; i++) fft(LOG2FFTSIZE, xy_out_fft, xy);
+// FFT & time measurement
 	long starttime = System.nanoTime();
 	for (i=0; i<FFT_REPEAT; i++) fft(LOG2FFTSIZE, xy_out_fft, xy);
 	double eltime = (System.nanoTime() - starttime)/1000000.;
