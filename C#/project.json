@@ -14,6 +14,13 @@
         }
       },
       "imports": "dnxcore50"
+    },
+    "net452": {
+      "dependencies": {
+      }
     }
+  },
+  "runtimes": {
+    "win": {}
   }
 }
