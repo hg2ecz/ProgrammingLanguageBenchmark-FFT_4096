@@ -6,31 +6,26 @@ namespace CSharpFftDemo
 {
     public class Benchmark
     {
-        static int LOG2FFTSIZE = 12;
-        static int FFT_REPEAT = 1000;
+        static int Log2FftSize = 12;
+        static int FftRepeat = 1000;
 
         // Internal variables
-        static int phasevec_exist = 0;
-        static Complex[] phasevec = new Complex[32];
+        static Complex[] phasevec = null;
+
+
+        private static Complex s_one = Complex.One;
 
         // Public function
         public static Complex[] FFT(int log2point, Complex[] xy_in)
         {
-            Complex[] xy_out = new Complex[xy_in.Length];
+            PhasevecInit();
 
-            if (phasevec_exist == 0)
-            {
-                for (int i = 0; i < 32; i++)
-                {
-                    int point = 2 << i;
-                    phasevec[i] = new Complex(Math.Cos(-2 * Math.PI / point), Math.Sin(-2 * Math.PI / point));
-                }
-                phasevec_exist = 1;
-            }
+            var xy_out = new Complex[xy_in.Length];
 
             for (int i = 0; i < (1 << log2point); i++)
             {
                 long brev = i;
+
                 brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
                 brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);
                 brev = ((brev & 0xf0f0f0f0) >> 4) | ((brev & 0x0f0f0f0f) << 4);
@@ -38,7 +33,9 @@ namespace CSharpFftDemo
                 brev = (brev >> 16) | (brev << 16);
 
                 brev >>= 32 - log2point;
-                xy_out[brev] = new Complex(xy_in[i].Real, xy_in[i].Imaginary);
+                xy_out[brev] = xy_in[i]; 
+                // Complex is a struct in .NET, so passed by value.
+                // new Complex(xy_in[i].Real, xy_in[i].Imaginary);
             }
 
             int n = 1 << log2point;
@@ -49,14 +46,17 @@ namespace CSharpFftDemo
             {
                 int istep = mmax << 1;
 
-                Complex wphase_XY = phasevec[l2pt++];
-                Complex w_XY = new Complex(1.0, 0.0);
+                var wphase_XY = phasevec[l2pt++];
+
+                // Same.
+                var w_XY = s_one;
+
 
                 for (int m = 0; m < mmax; m++)
                 {
                     for (int i = m; i < n; i += istep)
                     {
-                        Complex tempXY = w_XY * xy_out[i + mmax];
+                        var tempXY = w_XY * xy_out[i + mmax];
 
                         xy_out[i + mmax] = xy_out[i] - tempXY;
                         xy_out[i] = xy_out[i] + tempXY;
@@ -70,43 +70,61 @@ namespace CSharpFftDemo
             return xy_out;
         }
 
+        // Should not try to init every time.
+        private static void PhasevecInit()
+        {
+            if (phasevec != null)
+                return;
+
+            phasevec = new Complex[32];
+
+            for (int i = 0; i < 32; i++)
+            {
+                int point = 2 << i;
+                phasevec[i] = new Complex(Math.Cos(-2 * Math.PI / point), Math.Sin(-2 * Math.PI / point));
+            }
+        }
+
+
+
         static void Main(string[] args)
         {
+            PhasevecInit();
+
             int i;
-            int SIZE = 1 << LOG2FFTSIZE;
-            Complex[] xy = new Complex[SIZE];
+            int size = 1 << Log2FftSize;
+            Complex[] xy = new Complex[size];
 
-            for (i = 0; i < SIZE / 2; i++)
-            {
+            for (i = 0; i < size / 2; i++)
                 xy[i] = new Complex(1.0, 0.0);
-            }
 
-            for (i = SIZE/2; i < SIZE; i++)
-            {
+            for (i = size/2; i < size; i++)
                 xy[i] = new Complex(-1.0, 0.0);
-            }
 
 
             // JIT warm up ... possible give more speed
-            for (i = 0; i < FFT_REPEAT; i++)
+            for (i = 0; i < FftRepeat; i++)
             {
-                FFT(LOG2FFTSIZE, xy);
+                FFT(Log2FftSize, xy);
             }
             // FFT
             var stopwatch = Stopwatch.StartNew();
 
 
-            for (i = 0; i < FFT_REPEAT; i++)
+            for (i = 0; i < FftRepeat; i++)
             {
-                FFT(LOG2FFTSIZE, xy);
+                FFT(Log2FftSize, xy);
             }
 
-            Console.WriteLine("{0} piece(s) of {1} pt FFT;  {2} ms/piece\n",
-                FFT_REPEAT,
-                1 << LOG2FFTSIZE,
-                stopwatch.ElapsedMilliseconds / (float)FFT_REPEAT);
+            stopwatch.Stop();
 
-            var result = FFT(LOG2FFTSIZE, xy);
+            Console.WriteLine($"Total ({FftRepeat}): {stopwatch.ElapsedMilliseconds}");
+
+            var tpp = stopwatch.ElapsedMilliseconds / (float)FftRepeat;
+
+            Console.WriteLine($"{FftRepeat} piece(s) of {1 << Log2FftSize} pt FFT;  {tpp} ms/piece\n");
+
+            var result = FFT(Log2FftSize, xy);
 
             for (i = 0; i < 6; i++)
             {
