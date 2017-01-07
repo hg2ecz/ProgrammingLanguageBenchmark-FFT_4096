@@ -26,8 +26,8 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 	brev = (brev >> 16) | (brev << 16);
 
 	brev >>= 32-log2point;
-	xy_out->fract[brev][0] = xy_in->fract[i][0];
-	xy_out->fract[brev][1] = xy_in->fract[i][1];
+	xy_out[brev].i = xy_in[i].i;
+	xy_out[brev].q = xy_in[i].q;
     }
 
     // here begins the Danielson-Lanczos section
@@ -43,23 +43,23 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 #endif
 //	int theta = -2*M_PI/istep;
 //	struct _sample wphase_XY = cos(theta) + sin(theta)*I;
-	int wphase_XY[2] = { phasevec[l2pt][0], phasevec[l2pt][1] };
+	struct _sample wphase_XY = { phasevec[l2pt][0], phasevec[l2pt][1] };
 	l2pt++;
 
-	int w_XY[2] = { 1.*(1<<INTMUL), 0 };
+	struct _sample w_XY = { 1.*(1<<INTMUL), 0 };
 	for (int m=0; m < mmax; m++) {
 	    for (int i=m; i < n; i += istep) {
-		int tempXY[2];
-		tempXY[0] = ((long long)w_XY[0] * xy_out->fract[i+mmax][0] - (long long)w_XY[1] * xy_out->fract[i+mmax][1]) >> INTMUL;
-		tempXY[1] = ((long long)w_XY[0] * xy_out->fract[i+mmax][1] + (long long)w_XY[1] * xy_out->fract[i+mmax][0]) >> INTMUL;
-		xy_out->fract[i+mmax][0]  = xy_out->fract[i][0] - tempXY[0];
-		xy_out->fract[i+mmax][1]  = xy_out->fract[i][1] - tempXY[1];
-		xy_out->fract[i     ][0] += tempXY[0];
-		xy_out->fract[i     ][1] += tempXY[1];
+		struct _sample tempXY;
+		tempXY.i = ((long long)w_XY.i * xy_out[i+mmax].i - (long long)w_XY.q * xy_out[i+mmax].q) >> INTMUL;
+		tempXY.q = ((long long)w_XY.i * xy_out[i+mmax].q + (long long)w_XY.q * xy_out[i+mmax].i) >> INTMUL;
+		xy_out[i+mmax].i  = xy_out[i].i - tempXY.i;
+		xy_out[i+mmax].q  = xy_out[i].q - tempXY.q;
+		xy_out[i     ].i += tempXY.i;
+		xy_out[i     ].q += tempXY.q;
 	    }
-	    int w_tmp = ((long long)w_XY[0] * wphase_XY[0] - (long long)w_XY[1] * wphase_XY[1]) >> INTMUL;
-	    w_XY[1] = ((long long)w_XY[0] * wphase_XY[1] + (long long)w_XY[1] * wphase_XY[0]) >> INTMUL;
-	    w_XY[0] = w_tmp;
+	    int w_tmp = ((long long)w_XY.i * wphase_XY.i - (long long)w_XY.q * wphase_XY.q) >> INTMUL;
+	    w_XY.q = ((long long)w_XY.i * wphase_XY.q + (long long)w_XY.q * wphase_XY.i) >> INTMUL;
+	    w_XY.i = w_tmp;
 	}
 	mmax=istep;
     }
