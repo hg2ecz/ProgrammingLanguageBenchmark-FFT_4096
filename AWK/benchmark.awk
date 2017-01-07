@@ -19,14 +19,15 @@ BEGIN {
         fft_in[i][1] = 0
     }
 
-    getline < "/proc/uptime"
+    uptime = "/proc/uptime"
+    getline < uptime; close(uptime)
     timestart = $1
 
     for (fft_rep=0; fft_rep<FFT_REPEAT; fft_rep++) {
         fft(LOG2FFTSIZE, fft_in, fft_out)
     }
 
-    getline < "./uptime"
+    getline < uptime; close(uptime)
     timeend = $1
 
     eltime = 1000*(timeend - timestart)
