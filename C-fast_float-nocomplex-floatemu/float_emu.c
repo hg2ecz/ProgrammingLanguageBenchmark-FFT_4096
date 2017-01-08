@@ -28,54 +28,47 @@ static inline float add(float ain, float bin) {
     unsigned int a_frac = (1<<23) | (*ap & ((1<<23)-1));
     unsigned int b_frac = (1<<23) | (*bp & ((1<<23)-1));
 
-    unsigned int sign;
-    int exp;
     unsigned int frac;
 
     if (a_exp == 0 && a_frac == (1<<23) && b_exp == 0 && b_frac == (1<<23)) return ain; // zero
 
     if (a_sign == b_sign) {
-	sign = a_sign;
-	exp = a_exp;
 	if (b_exp > a_exp) {
-	    exp = b_exp;
-	    a_frac >>= (b_exp - a_exp)>>23;
+	    frac = (a_frac >> ((b_exp - a_exp)>>23)) + b_frac;
+	    a_exp = b_exp;
 	} else if (a_exp > b_exp) {
-	    b_frac >>= (a_exp - b_exp)>>23;
-	}
-	frac = a_frac + b_frac;
+	    frac = a_frac + (b_frac >> ((a_exp - b_exp)>>23));
+	} else frac = a_frac + b_frac;
+
 	if (frac & (1<<24)) {
-	    exp += 1<<23;
+	    a_exp += 1<<23;
 	    frac>>=1;
 	}
     } else { // (+ and -) or (- and +)
 	if (b_exp > a_exp) {
-	    sign = b_sign;
-	    exp = b_exp;
-	    a_frac >>= (b_exp - a_exp)>>23;
-	    frac = b_frac - a_frac;
+	    a_sign = b_sign;
+	    frac = b_frac - (a_frac >> ((b_exp - a_exp)>>23));
+	    a_exp = b_exp;
 	} else if (a_exp > b_exp) {
-	    sign = a_sign;
-	    exp = a_exp;
-	    b_frac >>= (a_exp - b_exp)>>23;
-	    frac = a_frac - b_frac;
+	    frac = a_frac - (b_frac >> ((a_exp - b_exp)>>23));
 	} else {
-	    exp = a_exp;
 	    if (a_frac >= b_frac) {
-		sign = a_sign;
 		frac = a_frac - b_frac;
 	    } else {
-		sign = b_sign;
+		a_sign = b_sign;
 		frac = b_frac - a_frac;
 	    }
 	}
-	for (int i=0; i<23; i++) {
-	    if (frac & (1<<23)) break;
+	if (!(frac & ((1>>23)-1))) { // zero
+	    float *resf = (float *)&a_sign;
+	    return *resf;
+	}
+	for (int i=0; !(frac & (1<<23)); i++) {
 	    frac <<=1;
-	    exp -= 1<<23;
+	    a_exp -= 1<<23;
 	}
     }
-    unsigned int er = sign | exp | (frac & ((1<<23)-1));
+    unsigned int er = a_sign | a_exp | (frac & ((1<<23)-1));
     float *erf = (float*)&er;
     return *erf;
 }
