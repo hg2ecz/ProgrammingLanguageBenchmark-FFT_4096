@@ -102,7 +102,7 @@ static inline float mul(float ain, float bin) {
     }
 
     //if (exp > (0xff<<23)) exp = 0xff<<23; ---> not need for signal processing
-    unsigned int res = exp < 0 ? sign : sign | exp | (a_frac & ((1<<23)-1));
+    unsigned int res = sign | exp | (a_frac & ((1<<23)-1));
     float *resf = (float*)&res;
     return *resf;
 }
