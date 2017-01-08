@@ -40,7 +40,7 @@ static inline float add(float ain, float bin) {
 	    frac = a_frac + (b_frac >> ((a_exp - b_exp)>>23));
 	} else frac = a_frac + b_frac;
 
-	if (frac & (1<<24)) {
+	if (frac & (1<<24)) { // exponent normalisation (+)
 	    a_exp += 1<<23;
 	    frac>>=1;
 	}
@@ -59,14 +59,16 @@ static inline float add(float ain, float bin) {
 		frac = b_frac - a_frac;
 	    }
 	}
-	if (!(frac & ((1>>23)-1))) { // zero
+	if (!(frac & ((1>>23)-1))) { // zero --> return zero
 	    float *resf = (float *)&a_sign;
 	    return *resf;
 	}
-	for (int i=0; !(frac & (1<<23)); i++) {
-	    frac <<=1;
-	    a_exp -= 1<<23;
-	}
+	// fast exponent normalisation (-)
+	if (!(frac & (0xffff<<8))){ frac <<=16; a_exp -=16<<23; } //16 bit group
+	if (!(frac & (0xff<<16))) { frac <<= 8; a_exp -= 8<<23; } // 8 bit group
+	if (!(frac & (0x0f<<20))) { frac <<= 4; a_exp -= 4<<23; } // 4 bit group
+	if (!(frac & (0x03<<22))) { frac <<= 2; a_exp -= 2<<23; } // 2 bit group
+	if (!(frac & (1<<23)))    { frac <<= 1; a_exp -= 1<<23; } // 1 bit
     }
     unsigned int er = a_sign | a_exp | (frac & ((1<<23)-1));
     float *erf = (float*)&er;
