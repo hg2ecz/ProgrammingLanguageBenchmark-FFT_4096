@@ -1,5 +1,4 @@
 #include <math.h>
-//#include <malloc.h>
 #include "fft.h"
 
 // Internal variables
@@ -41,11 +40,11 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 	int istep = mmax<<1;
 #endif
 //	int theta = -2*M_PI/istep;
-//	struct _sample wphase_XY = cos(theta) + sin(theta)*I;
-	struct _sample wphase_XY = { phasevec[l2pt].i, phasevec[l2pt].q };
+//	double complex wphase_XY = cos(theta) + sin(theta)*I;
+	struct _sample wphase_XY = phasevec[l2pt];
 	l2pt++;
 
-	struct _sample w_XY = { 1.*(1<<INTMUL), 0 };
+	struct _sample w_XY = { 1<<INTMUL, 0 };
 	for (int m=0; m < mmax; m++) {
 	    for (int i=m; i < n; i += istep) {
 		struct _sample tempXY;
