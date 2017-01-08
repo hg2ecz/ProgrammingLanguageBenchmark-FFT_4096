@@ -26,8 +26,7 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 	brev = (brev >> 16) | (brev << 16);
 
 	brev >>= 32-log2point;
-	xy_out[brev].i = xy_in[i].i;
-	xy_out[brev].q = xy_in[i].q;
+	xy_out[brev] = xy_in[i];
     }
 
     // here begins the Danielson-Lanczos section
