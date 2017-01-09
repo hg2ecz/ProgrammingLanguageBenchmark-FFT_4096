@@ -22,7 +22,7 @@ let rec fft_recursive (buf: Complex array) (out: Complex array) (n: int) (step: 
 
 [<EntryPoint>]
 let main args =
-    let LOG2FFTSIZE = 16
+    let LOG2FFTSIZE = 12
     let SIZE = 1 <<< LOG2FFTSIZE
     let FFT_REPEAT = 1000
 
