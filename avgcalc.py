@@ -17,12 +17,12 @@ for row in sys.stdin:
 	snum += num
 	i+=1
 
-awg = snum/float(i)
+avg = snum/float(i)
 
 var = 0
 for num in nums:
-    var += (num-awg)**2
+    var += (num-avg)**2
 
 var /= float(i)
 
-print "----> %s (%s): AWG: %.3f VAR: %.5f"%(os.getcwd().split('/')[-1], param, awg, var)
+print "----> %s (%s) ----> AVG: %.3f VAR: %.5f"%(os.getcwd().split('/')[-1], param, avg, var)
