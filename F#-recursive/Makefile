@@ -10,3 +10,9 @@ all:
 
 clean:
 	rm -f $(TARGET)
+
+
+PROG=$(TARGET)
+test:
+	./$(PROG)
+	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py

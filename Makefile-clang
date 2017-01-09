@@ -1,0 +1,8 @@
+all:
+	for i in C-*; do make -f Makefile-clang -C $$i; done
+
+clean:
+	for i in C-*; do make -f Makefile-clang -C $$i clean; done
+
+test:
+	for i in C-*; do make -f Makefile-clang -C $$i test; done
