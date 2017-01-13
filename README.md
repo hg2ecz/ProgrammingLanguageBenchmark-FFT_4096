@@ -11,7 +11,7 @@
 <tr><td>C-fast_float</td><td>0.82</td><td>0.72</td></tr>
 <tr><td>C-fast_integer</td><td>1.12</td><td>0.52</td></tr>
 <tr><td>C-fast_longlong_64bit</td><td>-</td><td>1.40</td></tr>
-<tr><td>C-fast_float-nocomplex-floatemu</td><td>4.77</td><td>7.22</td></tr>
+<tr><td>C-fast_float-nocomplex-floatemu</td><td>4.77</td><td>3.92</td></tr>
 </table>
 
 <p>Other compiled language speed compared with C-fast_double</p>
