@@ -3,7 +3,7 @@
 - Raspberry Pi3: 1,2 GHz ARM Cortex A53, 32 bit Raspbian 9 beta
 - Odroid-C2: 1,5 GHz ARM Cortex A53, 64 bit Ubuntu 16.04
 
-<p>C relative speed compared with C-fast_double; floatemu if haven't FPU in the processor (e.g. some 32 bit microcontroller)</p>
+<p>C relative speed compared with C-fast_double; floatemu if not FPU in the processor (e.g. some 32 bit microcontroller)</p>
 
 <table border="1">
 <tr><th>Language</th><th>Raspberry Pi3</th><th>Odroid-C2@64 bit</th></tr>
