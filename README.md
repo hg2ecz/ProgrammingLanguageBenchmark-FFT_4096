@@ -20,8 +20,8 @@
 <table border="1">
 <tr><th>Language</th><th>Raspberry Pi3</th><th>Odroid-C2@64 bit</th><th>i5-3337u</th></tr>
 <tr><td>Java (Oracle)</td><td>7.94</td><td> </td><td>1.38</td></tr>
-<tr><td>C#</td><td>8.32</td><td>5.30</td><td>5.22</td></tr>
-<tr><td>F#</td><td>8.31</td><td> </td><td>4.93</td></tr>
+<tr><td>C# (mono-4.x)</td><td>8.32</td><td>5.30</td><td>5.22</td></tr>
+<tr><td>F# (fsharpc 4.0)</td><td>8.31</td><td> </td><td>4.93</td></tr>
 </table>
 
 <p>Script language speed compared with C-fast_double</p>
