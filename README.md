@@ -28,8 +28,8 @@
 
 <table border="1">
 <tr><th>Language</th><th>Raspberry Pi3</th><th>Odroid-C2@64 bit</th><th>i5-3337u</th></tr>
-<tr><td>LUA (LUAjit)</td><td>8.01</td><td>70.8 (beta)</td><td>5.4</td></tr>
-<tr><td>Python (Pypy 5.4)</td><td>27.5</td><td>183</td><td>4.91</td></tr>
+<tr><td>LUA (LUAjit)</td><td>8.01</td><td> </td><td>5.4</td></tr>
+<tr><td>Python (Pypy 5.4)</td><td>27.5</td><td> </td><td>4.91</td></tr>
 <tr><td>JavaScript (nodejs 4.x)</td><td>25</td><td>22 </td><td>17.3 </td></tr>
 <tr><td>PHP7</td><td>129</td><td>121</td><td>88.2</td></tr>
 <tr><td>AWK</td><td>625</td><td>499</td><td>499</td></tr>
