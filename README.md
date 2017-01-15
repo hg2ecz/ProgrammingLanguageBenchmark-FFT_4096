@@ -1,8 +1,8 @@
 # 4096 point FFT test result
 
-- Raspberry Pi3: ARM Cortex A53, 1.2 GHz, 32 bit Raspbian 9 beta
-- Odroid-C2: ARM Cortex A53, 1.5 GHz, 64 bit Ubuntu 16.04
-- Intel i5-3337u: Ivy Bridge, 1.8 GHz (turbo 2,7 GHz), 64 bit Ubuntu 16.04
+- Raspberry Pi3: ARM Cortex A53, 1.2 GHz, 32 bit Raspbian 9 beta (gcc-6.2)
+- Odroid-C2: ARM Cortex A53, 1.5 GHz, 64 bit Ubuntu 17.04 alpha (gcc-6.3)
+- Intel i5-3337u: Ivy Bridge, 1.8 GHz (turbo 2,7 GHz), 64 bit Ubuntu 16.10 (gcc-6.2)
 
 <p>C relative speed compared with C-fast_double; floatemu if not FPU in the processor (e.g. some 32 bit microcontroller)</p>
 
