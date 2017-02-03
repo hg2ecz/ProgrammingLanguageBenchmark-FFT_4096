@@ -1,7 +1,9 @@
+#!/usr/local/bin/tsc
+
 import Fft from './fft';
 
-var LOG2FFTSIZE: number = 16;
-var FFT_REPEAT: number = 10;
+var LOG2FFTSIZE: number = 12;
+var FFT_REPEAT: number = 1000;
 
 var xy: number[][] = [];
 var xy_out: number[][] = [];
