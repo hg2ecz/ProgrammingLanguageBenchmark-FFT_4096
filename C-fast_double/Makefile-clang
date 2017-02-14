@@ -1,5 +1,5 @@
-CC=gcc
-CFLAGS =-Wall -Ofast -funroll-all-loops
+CC=clang
+CFLAGS =-Wall -Ofast -funroll-loops
 
 PARAMS_CPU = -march=native
 ifeq ($(shell uname -m), armv7l)
@@ -13,12 +13,10 @@ CFLAGS+=-DFFT_REPEAT=1000
 # improve speed
 CFLAGS+=-DMOD_SPEED
 
-LDFLAGS=-lm -s
-OBJS=fft_recursive.o benchmark.o
+LDFLAGS=-lm -lfftw3 -s
+OBJS=fft.o benchmark.o
 
-TARGET=benchmark
-
-
+TARGET=benchmark-clang
 
 all: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)

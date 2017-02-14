@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace CSharpFftDemo
 {
-    public class Benchmark
+    public static class Benchmark
     {
         const int Log2FftSize = 12;
         const int FftRepeat = 1000;
@@ -16,7 +16,7 @@ namespace CSharpFftDemo
         private static Complex s_one = Complex.One;
 
         // Public function
-        public unsafe static Complex[] FFT(Complex[] xy_in, Complex[] xy_out)
+        public unsafe static Complex[] Fft(Complex[] xy_in, Complex[] xy_out)
         {
             PhasevecInit();
 
@@ -87,7 +87,7 @@ namespace CSharpFftDemo
 
 
 
-        static void Main(string[] args)
+        static void Main()
         {
             PhasevecInit();
 
@@ -107,7 +107,7 @@ namespace CSharpFftDemo
             // JIT warm up ... possible give more speed
             for (i = 0; i < FftRepeat; i++)
             {
-                FFT(xy, xy_out);
+                Fft(xy, xy_out);
             }
             // FFT
             var stopwatch = Stopwatch.StartNew();
@@ -115,7 +115,7 @@ namespace CSharpFftDemo
 
             for (i = 0; i < FftRepeat; i++)
             {
-                FFT(xy, xy_out);
+                Fft(xy, xy_out);
             }
 
             stopwatch.Stop();
@@ -126,7 +126,7 @@ namespace CSharpFftDemo
 
             Console.WriteLine($"{FftRepeat} piece(s) of {1 << Log2FftSize} pt FFT;  {tpp} ms/piece\n");
 
-            var result = FFT(xy, xy_out);
+            var result = Fft(xy, xy_out);
 
             for (i = 0; i < 6; i++)
             {

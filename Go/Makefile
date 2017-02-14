@@ -1,4 +1,4 @@
-CC=gcc
+GOCC=gccgo
 CFLAGS =-Wall -Ofast -funroll-all-loops
 
 PARAMS_CPU = -march=native
@@ -7,21 +7,19 @@ ifeq ($(shell uname -m), armv7l)
 endif
 CFLAGS+= $(PARAMS_CPU)
 
-CFLAGS+=-DLOG2FFTSIZE=12
-CFLAGS+=-DFFT_REPEAT=1000
-
-# improve speed
-CFLAGS+=-DMOD_SPEED
+#CFLAGS+=-DLOG2FFTSIZE=12
+#CFLAGS+=-DFFT_REPEAT=1000
 
 LDFLAGS=-lm -s
-OBJS=fft_recursive.o benchmark.o
+OBJS=fft.o benchmark.o
 
 TARGET=benchmark
 
-
+%.o: %.go
+	$(GOCC) $(CFLAGS) -c $<
 
 all: $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
+	$(GOCC) $(OBJS) $(LDFLAGS) -o $(TARGET)
 
 clean:
 	rm -rf $(OBJS) $(TARGET)

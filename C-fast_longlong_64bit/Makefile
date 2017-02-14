@@ -14,7 +14,7 @@ CFLAGS+=-DFFT_REPEAT=1000
 CFLAGS+=-DMOD_SPEED
 
 LDFLAGS=-lm -s
-OBJS=fft_recursive.o benchmark.o
+OBJS=fft.o benchmark.o
 
 TARGET=benchmark
 
