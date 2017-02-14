@@ -23,7 +23,7 @@ func main() {
     for i=0; i<FFT_REPEAT; i++ { xy_out_fft = fft.Fft(LOG2FFTSIZE, xy) };
     var endTime = time.Now().UnixNano();
 
-    fmt.Printf("%8d piece(s) of %d pt FFT;    %.3f ms/piece\n\n", FFT_REPEAT, SIZE, float64(endTime-startTime)/float64(1e9));
+    fmt.Printf("%8d piece(s) of %d pt FFT;    %.3f ms/piece\n\n", FFT_REPEAT, SIZE, float64(endTime-startTime)/float64(1e6)/float64(FFT_REPEAT));
 //    fmt.Println(endTime);
 //    fmt.Println(endTime-startTime);
 //    printf("%6d piece(s) of %d pt FFT;  %9.5f ms/piece\n", FFT_REPEAT, 1<<LOG2FFTSIZE, eltime/FFT_REPEAT);
