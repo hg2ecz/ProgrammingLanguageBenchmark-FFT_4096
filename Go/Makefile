@@ -7,8 +7,8 @@ ifeq ($(shell uname -m), armv7l)
 endif
 CFLAGS+= $(PARAMS_CPU)
 
-CFLAGS+=-DLOG2FFTSIZE=12
-CFLAGS+=-DFFT_REPEAT=1000
+#CFLAGS+=-DLOG2FFTSIZE=12
+#CFLAGS+=-DFFT_REPEAT=1000
 
 LDFLAGS=-lm -s
 OBJS=fft.o benchmark.o
