@@ -7,8 +7,8 @@ var phasevec_exist bool = false;
 var phasevec[32] complex128;
 
 // Public function
-func Fft(log2point uint,  xy_in []complex128)   []complex128 {
-    //var xy_in[] complex128 = xy_in_if.([]complex128);
+func Fft(log2point uint, xy_in[4096] complex128) [4096]complex128 {
+    var xy_out[4096] complex128;
     if !phasevec_exist {
 	for i:=0; i<32; i++ {
 	    var num uint = 2;
@@ -17,7 +17,6 @@ func Fft(log2point uint,  xy_in []complex128)   []complex128 {
 	}
 	phasevec_exist = true;
     }
-    var xy_out[] complex128;
     for i:=0; i < (1<<log2point); i++ {
 	var brev uint = uint(i);
 	brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
@@ -45,7 +44,7 @@ func Fft(log2point uint,  xy_in []complex128)   []complex128 {
 	var w_XY complex128 = complex(1.0, 0.0);
 	for m:=0; m < mmax; m++ {
 	    for i:=m; i < n; i += istep {
-		var tempXY complex128 = w_XY *xy_out[i+mmax];
+		var tempXY complex128 = w_XY * xy_out[i+mmax];
 		xy_out[i+mmax]  = xy_out[i] - tempXY;
 		xy_out[i     ] += tempXY;
 	    }
