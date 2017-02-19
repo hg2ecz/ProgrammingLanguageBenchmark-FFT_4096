@@ -33,6 +33,7 @@
 <tr><td>Python (Pypy 5.4)</td><td>27.5</td><td> </td><td>4.91</td></tr>
 <tr><td>JavaScript (nodejs 4.x)</td><td>25</td><td>23.7</td><td>17.3 </td></tr>
 <tr><td>PHP7</td><td>129</td><td>135</td><td>88.2</td></tr>
+<tr><td>Ruby</td><td>481</td><td>395</td><td>287</td></tr>
 <tr><td>AWK</td><td>625</td><td>541</td><td>499</td></tr>
 <tr><td>PERL</td><td>5139</td><td>5377</td><td>5710</td></tr>
 <tr><td>Octave</td><td>9326</td><td> </td><td>7972</td></tr>
