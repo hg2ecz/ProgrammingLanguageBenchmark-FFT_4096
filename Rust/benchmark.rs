@@ -16,7 +16,7 @@ fn main() {
 
 // FFT
     let start_time = Instant::now();
-    for _i in 0..FFT_REPEAT { unsafe { xy_out_fft = fft::fft(LOG2FFTSIZE, xy) } }
+    for _i in 0..FFT_REPEAT { unsafe { fft::fft(LOG2FFTSIZE, xy, &mut xy_out_fft) } }
     let elapsed_time = start_time.elapsed();
     let milliseconds = (elapsed_time.as_secs() as f64 * 1000.0) +
 		       (elapsed_time.subsec_nanos() as f64 / 1_000_000.0);
