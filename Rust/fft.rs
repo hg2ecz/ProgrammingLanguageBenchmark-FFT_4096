@@ -5,8 +5,7 @@ static mut PHASEVEC_EXIST : bool = false;
 static mut PHASEVEC: [[f64; 2]; 32] = [[0.0; 2]; 32];
 
 // Public function
-pub unsafe fn fft(log2point: u32, xy_out: &mut [[f64; 2]; 4096], xy_in: [[f64; 2]; 4096]) {
-
+pub unsafe fn fft(log2point: u32, xy_out: &mut [[f64; 2] ], xy_in: &[[f64; 2] ]) {
     if !PHASEVEC_EXIST {;
 	for i in 0..32 {
 	    let point: i32 = 2<<i;
