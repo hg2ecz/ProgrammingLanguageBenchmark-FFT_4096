@@ -5,15 +5,17 @@ static mut PHASEVEC_EXIST : bool = false;
 static mut PHASEVEC: [[f64; 2]; 32] = [[0.0; 2]; 32];
 
 // Public function
-pub unsafe fn fft(log2point: u32, xy_out: &mut [[f64; 2] ], xy_in: &[[f64; 2] ]) {
-    if !PHASEVEC_EXIST {;
+pub fn fft(log2point: u32, xy_out: &mut [[f64; 2] ], xy_in: &[[f64; 2] ]) {
+    unsafe {
+      if !PHASEVEC_EXIST {;
 	for i in 0..32 {
 	    let point: i32 = 2<<i;
 	    PHASEVEC[i][0] = (-2.0*std::f64::consts::PI/(point as f64)).cos();
 	    PHASEVEC[i][1] = (-2.0*std::f64::consts::PI/(point as f64)).sin();
 	}
 	PHASEVEC_EXIST = true;
-    };
+      };
+    }
     for i in 0 .. 1<<log2point {
 	let mut brev: usize = i;
 	brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
@@ -35,7 +37,8 @@ pub unsafe fn fft(log2point: u32, xy_out: &mut [[f64; 2] ], xy_in: &[[f64; 2] ])
 	let istep: usize = mmax<<1;
 //	double theta = -2*M_PI/istep;
 //	double complex wphase_xy = cos(theta) + sin(theta)*I;
-	let wphase_xy: [f64; 2] = PHASEVEC[l2pt];
+	let wphase_xy: [f64; 2];
+	unsafe { wphase_xy = PHASEVEC[l2pt]; }
 	l2pt+=1;
 	let mut w_xy: [f64; 2] = [1.0, 0.0];
 	for m in 0..mmax {;
