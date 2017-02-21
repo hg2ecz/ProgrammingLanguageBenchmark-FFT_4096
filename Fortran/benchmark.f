@@ -13,26 +13,26 @@
 	real :: startTime
 	real :: endTime
 
-	integer :: i = 0
-	do i = 1, SIZE/2-1
+	integer :: i
+	do i = 1, SIZE/2
 	    xy(i) = cmplx( 1.0, 0.0)
 	enddo
 
-	do i = SIZE/2, SIZE-1
+	do i = SIZE/2+1, SIZE
 	    xy(i) = cmplx(-1.0, 0.0)
 	enddo
 ! FFT
 	
 	call etime(tstart, startTime)
-	do i=0, FFT_REPEAT
+	do i=0, FFT_REPEAT-1
 	    xy_out_fft = fft(SIZE, xy)
 	enddo
 	call etime(tend, endTime)
-	real elTime = endTime-startTime
 
-	print *, FFT_REPEAT, "piece(s) of", SIZE, "pt FFT;    ", elTime/FFT_REPEAT, "ms/piece\n"
+	elTime_ms = (tend(1)-tstart(1))*1000.0/FFT_REPEAT
+	print *, FFT_REPEAT, "piece(s) of", SIZE, "pt FFT;    ", elTime_ms, "ms/piece\n"
 
-	do i=0, 6-1
+	do i=1, 6
 	    print *, i, xy_out_fft(i)
 	enddo
 
