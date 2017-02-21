@@ -1,7 +1,7 @@
 TARGET=benchmark
 
 all:
-	rustc benchmark.rs
+	rustc -O -C link-arg=-s benchmark.rs
 
 clean:
 	rm $(TARGET)
