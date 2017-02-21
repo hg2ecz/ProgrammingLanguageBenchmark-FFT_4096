@@ -1,5 +1,5 @@
 GOCC=gccgo
-CFLAGS =-Wall -Ofast
+CFLAGS =-Wall -Ofast -funroll-all-loops
 
 #CFLAGS+=-DLOG2FFTSIZE=12
 #CFLAGS+=-DFFT_REPEAT=1000
