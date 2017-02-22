@@ -3,27 +3,33 @@
 !    float var:   begin with a..h   or   o..z letter
 	module fftmod
 !	implicit none
+
 ! Internal variables
 	logical :: phasevec_exist = .false.
 	complex :: phasevec(32)
 
+	complex :: wphase_XY
+	complex :: w_XY
+	complex :: tempXY
+
 	contains
-	  function fft(ipoint, xy_in) result(xy_out)
-	    integer :: ipoint
-	    complex :: xy_in(ipoint)
-	    complex :: xy_out(ipoint)
+	  function fft(point, xy_in) result(xy_out)
+	    integer :: point
+	    complex :: xy_in(point)
+	    complex :: xy_out(point)
 
 	    if (.not. phasevec_exist) then
-		do i=0, 32-1
-		    integer pt = ishft(2, i)
-		    phasevec(i) = cmplx(cos(-2*PI/pt), sin(-2*PI/pt))
+		PI=4.D0*DATAN(1.D0)
+		do i=1, 32-1
+		    pt = ishft(1, i)
+		    phasevec(i) = cmplx(cos(-2.0*PI/pt), sin(-2.0*PI/pt))
 		enddo
-		phasevec_exist = .true.
+c		phasevec_exist = .true.
 	    end if
 
 	    integer i=0;
-	    do i=0, ipoint
-		ibrev = i;
+	    do i=1, point
+		ibrev = i-1;
 		itmp = ishft(iand(ibrev, Z'55555555'), 1)
 		ibrev = ior(ishft(iand(ibrev, Z'aaaaaaaa'), -1), itmp)
 
@@ -38,29 +44,27 @@
 		ibrev = ior(ishft(ibrev, -16), ishft(ibrev, 16))
 
 		ibrev = ishft(ibrev, -(32-12))
-		xy_out(ibrev+1) = xy_in(i+1)
+		xy_out(ibrev+1) = xy_in(i)
 	    enddo
 
 !	    // here begins the Danielson-Lanczos section
-	    integer n = ipoint
-	    integer l2pt = 0
-	    integer mmax = 1
-
+	    n = point
+	    l2pt = 1
+	    mmax = 1
 	    do while (n > mmax)
-		integer istep = ishft(mmax, 1)
+		istep = ishft(mmax, 1)
 !//	double theta = -2*M_PI/istep
 !//	double complex wphase_XY = cos(theta) + sin(theta)*I
-		complex wphase_XY = phasevec(l2pt)
-		l2pt=l2pt+1
-
-		complex w_XY = complex(1.0, 0.0)
+		wphase_XY = phasevec(l2pt)
+		l2pt = l2pt+1
+		w_XY = cmplx(1.0, 0.0)
 		do m=1, mmax
-		    do i=m, n, istep do
-			complex tempXY = w_XY * xy_out(i+mmax)
+		    do i=m, n, istep
+			tempXY = w_XY * xy_out(i+mmax)
 			xy_out(i+mmax) = xy_out(i) - tempXY
 			xy_out(i     ) = xy_out(i) + tempXY
 		    enddo
-		    w_XY = w_XY * wphase_XY;
+		    w_XY = w_XY * wphase_XY
 		enddo
 		mmax=istep
 	    enddo
