@@ -5,8 +5,8 @@
 	integer, parameter :: FFT_REPEAT = 1000
 
 	integer, parameter :: SIZE = lshift(1, LOG2SIZE)
-	complex :: xy(SIZE)
-	complex :: xy_out_fft(SIZE)
+	complex*16 :: xy(SIZE)
+	complex*16 :: xy_out_fft(SIZE)
 
 	real, dimension(2) :: tstart
 	real, dimension(2) :: tend
@@ -30,7 +30,7 @@
 	call etime(tend, endTime)
 
 	elTime_ms = (tend(1)-tstart(1))*1000.0/FFT_REPEAT
-	print *, FFT_REPEAT, "piece(s) of", SIZE, "pt FFT;    ", elTime_ms, "ms/piece\n"
+	print *, FFT_REPEAT, "piece(s) of", SIZE, "pt FFT;", elTime_ms
 
 	do i=1, 6
 	    print *, i, xy_out_fft(i)
