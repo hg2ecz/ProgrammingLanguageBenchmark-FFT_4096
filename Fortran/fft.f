@@ -6,28 +6,29 @@
 
 ! Internal variables
 	logical :: phasevec_exist = .false.
-	complex :: phasevec(32)
+	complex*16 :: phasevec(32)
 
-	complex :: wphase_XY
-	complex :: w_XY
-	complex :: tempXY
+	real*8 PI
+
+	complex*16 :: wphase_XY
+	complex*16 :: w_XY
+	complex*16 :: tempXY
 
 	contains
 	  function fft(point, xy_in) result(xy_out)
 	    integer :: point
-	    complex :: xy_in(point)
-	    complex :: xy_out(point)
+	    complex*16 :: xy_in(point)
+	    complex*16 :: xy_out(point)
 
 	    if (.not. phasevec_exist) then
 		PI=4.D0*DATAN(1.D0)
 		do i=1, 32-1
 		    pt = ishft(1, i)
-		    phasevec(i) = cmplx(cos(-2.0*PI/pt), sin(-2.0*PI/pt))
+		    phasevec(i) = complex(cos(-2.D0*PI/pt), sin(-2.D0*PI/pt))
 		enddo
 c		phasevec_exist = .true.
 	    end if
 
-	    integer i=0;
 	    do i=1, point
 		ibrev = i-1;
 		itmp = ishft(iand(ibrev, Z'55555555'), 1)

@@ -1,5 +1,5 @@
 FC=f95
-FCFLAGS =-Wall -Ofast -funroll-all-loops
+FFLAGS = -Ofast -funroll-all-loops
 
 #CFLAGS+=-DLOG2FFTSIZE=12
 #CFLAGS+=-DFFT_REPEAT=1000
@@ -14,7 +14,7 @@ all: $(OBJS)
 	$(FC) $(OBJS) $(LDFLAGS) -o $(TARGET)
 
 clean:
-	rm -rf $(OBJS) $(TARGET) *.mod
+	rm -f $(OBJS) $(TARGET) *.mod
 
 PROG=$(TARGET)
 test:
