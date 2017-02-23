@@ -15,10 +15,12 @@
 	complex*16 :: tempXY
 
 	contains
-	  function fft(point, xy_in) result(xy_out)
+	  function fft(point, xy_out, xy_in) result(i)
 	    integer :: point
-	    complex*16 :: xy_in(point)
 	    complex*16 :: xy_out(point)
+	    complex*16 :: xy_in(point)
+
+	    integer :: i
 
 	    if (.not. phasevec_exist) then
 		PI=4.D0*DATAN(1.D0)
@@ -69,5 +71,6 @@ c		phasevec_exist = .true.
 		enddo
 		mmax=istep
 	    enddo
+	    i=0
 	  end function
 	end module

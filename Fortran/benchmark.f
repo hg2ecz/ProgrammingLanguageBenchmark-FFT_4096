@@ -25,7 +25,7 @@
 	
 	call etime(tstart, startTime)
 	do i=0, FFT_REPEAT-1
-	    xy_out_fft = fft(SIZE, xy)
+	    res = fft(SIZE, xy_out_fft, xy)
 	enddo
 	call etime(tend, endTime)
 
