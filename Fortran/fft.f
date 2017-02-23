@@ -28,7 +28,7 @@
 		    pt = ishft(1, i)
 		    phasevec(i) = complex(cos(-2.D0*PI/pt), sin(-2.D0*PI/pt))
 		enddo
-c		phasevec_exist = .true.
+		phasevec_exist = .true.
 	    end if
 
 	    do i=1, point
