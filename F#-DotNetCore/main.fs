@@ -11,7 +11,7 @@ module MainModule =
     let main argv =
 
         let LOG2FFTSIZE = 12
-        let FFT_REPEAT = 1000
+        let FFT_REPEAT = 100000
 
         let SIZE = 1 <<< LOG2FFTSIZE
 

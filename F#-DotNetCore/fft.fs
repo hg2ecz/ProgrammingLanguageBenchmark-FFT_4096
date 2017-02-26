@@ -12,11 +12,12 @@ module FftModule =
         let point = 2 <<< i
         phasevec.[i] <- Complex(Math.Cos(-2.0 * Math.PI / float point), Math.Sin(-2.0 * Math.PI / float point))
 
+
     let fft log2point (xy_in: Complex array) =
         let mutable xy_out = Array.init (1 <<< log2point) (fun _ -> Complex())
     
         for i = 0 to (1 <<< log2point) - 1 do
-            let mutable (brev: uint32) = uint32 i
+            let mutable brev = (uint32) i
             brev <- ((brev &&& uint32 0xaaaaaaaa) >>> 1) ||| ((brev &&& uint32 0x55555555) <<< 1)
             brev <- ((brev &&& uint32 0xcccccccc) >>> 2) ||| ((brev &&& uint32 0x33333333) <<< 2)
             brev <- ((brev &&& uint32 0xf0f0f0f0) >>> 4) ||| ((brev &&& uint32 0x0f0f0f0f) <<< 4)
