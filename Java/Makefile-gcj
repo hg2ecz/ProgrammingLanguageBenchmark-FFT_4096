@@ -1,0 +1,24 @@
+CC=gcj-6
+OBJCOPY=objcopy
+
+CFLAGS =-Wall -Ofast -funroll-all-loops
+
+# ARM and x86
+CFLAGS+=-mcpu=cortex-a5 -mfpu=neon-fp16
+#CFLAGS+=-march=native
+
+LDFLAGS=-s --main=Benchmark
+OBJS=Fft.o Benchmark.o
+
+TARGET=benchmark
+
+.SUFFIXES: .java
+%.o: %.java
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+	${OBJCOPY} -L '_ZGr8_$$_dummy' $@
+
+all: $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
+
+clean:
+	rm -rf $(OBJS) $(TARGET)

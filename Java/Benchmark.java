@@ -14,11 +14,11 @@ public class Benchmark {
 	for(   ; i<SIZE  ; i++) { xy[i][0]= -1.; xy[i][1]= 0.; }
 
 // warm up ... JIT activating
-	Fft fft = new Fft();
-	for (i=0; i<FFT_REPEAT; i++) fft.fft(LOG2FFTSIZE, xy_out_fft, xy);
+	Fft fftc = new Fft();
+	for (i=0; i<FFT_REPEAT; i++) fftc.fft(LOG2FFTSIZE, xy_out_fft, xy);
 // FFT & time measurement
 	long starttime = System.nanoTime();
-	for (i=0; i<FFT_REPEAT; i++) fft.fft(LOG2FFTSIZE, xy_out_fft, xy);
+	for (i=0; i<FFT_REPEAT; i++) fftc.fft(LOG2FFTSIZE, xy_out_fft, xy);
 	double eltime = (System.nanoTime() - starttime)/1000000.;
 	System.out.format("%6d piece(s) of %d pt FFT;  %9.5f ms/piece\n", FFT_REPEAT, 1<<LOG2FFTSIZE, eltime/FFT_REPEAT);
 
