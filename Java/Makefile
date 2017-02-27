@@ -1,7 +1,7 @@
-OBJS=benchmark.class
+OBJS=Fft.class Benchmark.class
 
 all:
-	javac benchmark.java
+	javac Fft.java Benchmark.java
 	jar cfm benchmark.jar MANIFEST.MF $(OBJS)
 
 clean:
