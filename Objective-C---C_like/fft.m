@@ -1,12 +1,13 @@
+#include <math.h>
+//#include <malloc.h>
 #include "fft.h"
 
-@implementation Fft
 // Internal variables
 static int phasevec_exist = 0;
 static double complex phasevec[32];
 
 // Public function
-- (void) fft: (int) log2point andOutVec:(double complex *)xy_out andInVec:(const double complex *)xy_in {
+void fft(int log2point, double complex *xy_out, const double complex *xy_in) {
     int i;
     if (!phasevec_exist) {
 	for (i=0; i<32; i++) {
@@ -56,4 +57,3 @@ static double complex phasevec[32];
 	mmax=istep;
     }
 }
-@end

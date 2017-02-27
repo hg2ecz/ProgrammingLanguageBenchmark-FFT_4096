@@ -41,8 +41,7 @@ int main() {
 
 // FFT
     timestart();
-    Fft *fft = [[Fft alloc]init];
-    for (i=0; i<FFT_REPEAT; i++) [fft fft:LOG2FFTSIZE andOutVec:xy_out_fft andInVec:xy];
+    for (i=0; i<FFT_REPEAT; i++) fft(LOG2FFTSIZE, xy_out_fft, xy);
     eltime = timeend();
     printf("%6d piece(s) of %d pt FFT;  %9.5f ms/piece\n", FFT_REPEAT, 1<<LOG2FFTSIZE, eltime/FFT_REPEAT);
 
