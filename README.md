@@ -4,6 +4,16 @@
 - Odroid-C2: ARM Cortex A53, 1.5 GHz, 64 bit Ubuntu 17.04 alpha (gcc-6.3)
 - Intel i5-3337u: Ivy Bridge, 1.8 GHz (turbo 2,7 GHz), 64 bit Ubuntu 16.10 (gcc-6.2)
 
+<p>Architecture measurement: C-fast time in milliseconds at FFT_REPEAT=10 000 (gcc-6.3; 1 core test)</p>
+
+<table border="1">
+<tr><th>C-fast...</th><th>Raspberry Pi1<br>0,7 GHz ARM11</th><th>Beaglebone Black<br>1 GHz Cortex-A8</th><th>Odroid-C1<br>1.5 GHz Cortex A5</th><th>Raspberry Pi3<br>1.2 GHz Cortex A53</th><th>Odroid-C2@64 bit<br>1.5 GHz Cortex A53</th><th>Intel Celeron<br>J1900</th><th>Intel laptop<br>i5-3337u</th></tr>
+<tr><td>double </td><td>5.884 ms</td><td>4.009 ms</td><td>1.472 ms</td><td>0.915 ms</td><td>0.738 ms</td><td>0.371 ms</td><td>0.158 ms</td></tr>
+<tr><td>float  </td><td>4.712 ms</td><td>3.509 ms</td><td>0.787 ms</td><td>0.671 ms</td><td>0.496 ms</td><td>0.342 ms</td><td>0.107 ms</td></tr>
+<tr><td>integer</td><td>5.344 ms</td><td>1.759 ms</td><td>1.268 ms</td><td>1.053 ms</td><td>0.432 ms</td><td>0.324 ms</td><td>0.113 ms</td></tr>
+</table>
+
+
 <p>C relative speed compared with C-fast_double; floatemu if not FPU in the processor (e.g. some 32 bit microcontroller)</p>
 
 <table border="1">
