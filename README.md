@@ -7,10 +7,14 @@
 <p>Architecture measurement: C-fast time in milliseconds at FFT_REPEAT=10 000 (gcc-6.3; 1 core test)</p>
 
 <table border="1">
-<tr><th>C-fast...</th><th>Raspberry Pi1<br>0,7 GHz ARM11</th><th>Beaglebone Black<br>1 GHz Cortex-A8</th><th>Odroid-C1<br>1.5 GHz Cortex A5</th><th>Raspberry Pi3<br>1.2 GHz Cortex A53</th><th>Odroid-C2@64 bit<br>1.5 GHz Cortex A53</th><th>Intel Celeron<br>J1900</th><th>Intel laptop<br>i5-3337u</th></tr>
-<tr><td>double </td><td>5.884 ms</td><td>4.009 ms</td><td>1.472 ms</td><td>0.915 ms</td><td>0.738 ms</td><td>0.371 ms</td><td>0.158 ms</td></tr>
-<tr><td>float  </td><td>4.712 ms</td><td>3.509 ms</td><td>0.787 ms</td><td>0.671 ms</td><td>0.496 ms</td><td>0.342 ms</td><td>0.107 ms</td></tr>
-<tr><td>integer</td><td>5.344 ms</td><td>1.759 ms</td><td>1.268 ms</td><td>1.053 ms</td><td>0.432 ms</td><td>0.324 ms</td><td>0.113 ms</td></tr>
+<tr><th>C-fast_...</th><th>double</th><th>float</th><th>integer</th></tr>
+<tr><td>Raspberry Pi1<br>0.7 GHz ARM11             </td><td>5.884 ms</td><td>4.712 ms</td><td>5.344 ms</td></tr>
+<tr><td>BeagleBone Black<br>1 GHz ARM Cortex A8    </td><td>4.009 ms</td><td>3.509 ms</td><td>1.759 ms</td></tr>
+<tr><td>Odroid-C1<br>1.5 GHz ARM Cortex A5         </td><td>1.472 ms</td><td>0.787 ms</td><td>1.268 ms</td></tr>
+<tr><td>Raspberry Pi3<br>1.2 GHz ARM Cortex A53    </td><td>0.915 ms</td><td>0.671 ms</td><td>1.053 ms</td></tr>
+<tr><td>Odroid-C2@64 bit<br>1.5 GHz ARM Cortex A53 </td><td>0.738 ms</td><td>0.496 ms</td><td>0.432 ms</td></tr>
+<tr><td>Intel Celeron<br>J1900                     </td><td>0.371 ms</td><td>0.342 ms</td><td>0.324 ms</td></tr>
+<tr><td>Intel Core laptop<br>i5-3337u              </td><td>0.158 ms</td><td>0.107 ms</td><td>0.113 ms</td></tr>
 </table>
 
 
