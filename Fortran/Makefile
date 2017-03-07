@@ -1,6 +1,12 @@
 FC=f95
 FFLAGS = -Ofast -funroll-all-loops
 
+PARAMS_CPU = -march=native
+ifeq ($(shell uname -m), armv7l)
+    PARAMS_CPU = -mcpu=cortex-a5 -mfpu=neon-fp16
+endif
+FFLAGS+= $(PARAMS_CPU)
+
 #CFLAGS+=-DLOG2FFTSIZE=12
 #CFLAGS+=-DFFT_REPEAT=1000
 

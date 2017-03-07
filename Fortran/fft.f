@@ -15,10 +15,12 @@
 	complex*16 :: tempXY
 
 	contains
-	  function fft(point, xy_in) result(xy_out)
+	  function fft(point, xy_out, xy_in) result(i)
 	    integer :: point
-	    complex*16 :: xy_in(point)
 	    complex*16 :: xy_out(point)
+	    complex*16 :: xy_in(point)
+
+	    integer :: i
 
 	    if (.not. phasevec_exist) then
 		PI=4.D0*DATAN(1.D0)
@@ -26,7 +28,7 @@
 		    pt = ishft(1, i)
 		    phasevec(i) = complex(cos(-2.D0*PI/pt), sin(-2.D0*PI/pt))
 		enddo
-c		phasevec_exist = .true.
+		phasevec_exist = .true.
 	    end if
 
 	    do i=1, point
@@ -58,7 +60,7 @@ c		phasevec_exist = .true.
 !//	double complex wphase_XY = cos(theta) + sin(theta)*I
 		wphase_XY = phasevec(l2pt)
 		l2pt = l2pt+1
-		w_XY = cmplx(1.0, 0.0)
+		w_XY = complex(1.0, 0.0)
 		do m=1, mmax
 		    do i=m, n, istep
 			tempXY = w_XY * xy_out(i+mmax)
@@ -69,5 +71,6 @@ c		phasevec_exist = .true.
 		enddo
 		mmax=istep
 	    enddo
+	    i=0
 	  end function
 	end module
