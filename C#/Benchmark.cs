@@ -7,7 +7,7 @@ namespace CSharpFftDemo
     public static class Benchmark
     {
         const int Log2FftSize = 12;
-        const int FftRepeat = 1000;
+        const int FftRepeat = 100000;
 
         // Internal variables
         static Complex[] phasevec = null;
@@ -16,7 +16,7 @@ namespace CSharpFftDemo
         private static Complex s_one = Complex.One;
 
         // Public function
-        public unsafe static Complex[] Fft(Complex[] xy_in, Complex[] xy_out)
+        public static Complex[] Fft(Complex[] xy_in, Complex[] xy_out)
         {
             PhasevecInit();
 
