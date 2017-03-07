@@ -7,7 +7,7 @@ namespace CSharpFftDemo
     public static class Benchmark
     {
         const int Log2FftSize = 12;
-        const int FftRepeat = 100000;
+        const int FftRepeat = 10000;
 
         // Internal variables
         static Complex[] phasevec = null;
@@ -16,10 +16,8 @@ namespace CSharpFftDemo
         private static Complex s_one = Complex.One;
 
         // Public function
-        public static Complex[] Fft(Complex[] xy_in, Complex[] xy_out)
+        public static void Fft(Complex[] xy_in, Complex[] xy_out)
         {
-            PhasevecInit();
-
 
             for (int i = 0; i < (1 << Log2FftSize); i++)
             {
@@ -65,8 +63,6 @@ namespace CSharpFftDemo
                 }
                 mmax = istep;
             }
-
-            return xy_out;
         }
 
         // Should not try to init every time.
@@ -126,11 +122,11 @@ namespace CSharpFftDemo
 
             Console.WriteLine($"{FftRepeat} piece(s) of {1 << Log2FftSize} pt FFT;  {tpp} ms/piece\n");
 
-            var result = Fft(xy, xy_out);
+            Fft(xy, xy_out);
 
             for (i = 0; i < 6; i++)
             {
-                Console.WriteLine("{0}\t{1}", i, result[i]);
+                Console.WriteLine("{0}\t{1}", i, xy_out[i]);
             }
         }
     }
