@@ -55,9 +55,10 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 		xy_out[i     ].i += tempXY.i;
 		xy_out[i     ].q += tempXY.q;
 	    }
-	    int w_tmp = ((MULTYPE)w_XY.i * wphase_XY.i - (MULTYPE)w_XY.q * wphase_XY.q) >> INTMUL;
+	    struct _sample temp_w;
+	    temp_w.i = ((MULTYPE)w_XY.i * wphase_XY.i - (MULTYPE)w_XY.q * wphase_XY.q) >> INTMUL;
 	    w_XY.q = ((MULTYPE)w_XY.i * wphase_XY.q + (MULTYPE)w_XY.q * wphase_XY.i) >> INTMUL;
-	    w_XY.i = w_tmp;
+	    w_XY.i = temp_w.i;
 	}
 	mmax=istep;
     }
