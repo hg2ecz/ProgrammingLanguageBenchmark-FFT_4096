@@ -11,8 +11,8 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
     if (!phasevec_exist) {
 	for (i=0; i<32; i++) {
 	    int point = 2<<i;
-	    phasevec[i].i = (1<<INTMUL)*cos(-2*M_PI/point);
-	    phasevec[i].q = (1<<INTMUL)*sin(-2*M_PI/point);
+	    phasevec[i].i = (1UL<<INTMUL)*cos(-2*M_PI/point);
+	    phasevec[i].q = (1UL<<INTMUL)*sin(-2*M_PI/point);
 	}
 	phasevec_exist = 1;
     }
@@ -44,7 +44,7 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 	struct _sample wphase_XY = phasevec[l2pt];
 	l2pt++;
 
-	struct _sample w_XY = { 1<<INTMUL, 0 };
+	struct _sample w_XY = { 1UL<<INTMUL, 0 };
 	for (int m=0; m < mmax; m++) {
 	    for (int i=m; i < n; i += istep) {
 		struct _sample tempXY;
