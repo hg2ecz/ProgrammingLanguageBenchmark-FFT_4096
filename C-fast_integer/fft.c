@@ -48,15 +48,15 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 	for (int m=0; m < mmax; m++) {
 	    for (int i=m; i < n; i += istep) {
 		struct _sample tempXY;
-		tempXY.i = ((long long)w_XY.i * xy_out[i+mmax].i - (long long)w_XY.q * xy_out[i+mmax].q) >> INTMUL;
-		tempXY.q = ((long long)w_XY.i * xy_out[i+mmax].q + (long long)w_XY.q * xy_out[i+mmax].i) >> INTMUL;
+		tempXY.i = ((MULTYPE)w_XY.i * xy_out[i+mmax].i - (MULTYPE)w_XY.q * xy_out[i+mmax].q) >> INTMUL;
+		tempXY.q = ((MULTYPE)w_XY.i * xy_out[i+mmax].q + (MULTYPE)w_XY.q * xy_out[i+mmax].i) >> INTMUL;
 		xy_out[i+mmax].i  = xy_out[i].i - tempXY.i;
 		xy_out[i+mmax].q  = xy_out[i].q - tempXY.q;
 		xy_out[i     ].i += tempXY.i;
 		xy_out[i     ].q += tempXY.q;
 	    }
-	    int w_tmp = ((long long)w_XY.i * wphase_XY.i - (long long)w_XY.q * wphase_XY.q) >> INTMUL;
-	    w_XY.q = ((long long)w_XY.i * wphase_XY.q + (long long)w_XY.q * wphase_XY.i) >> INTMUL;
+	    int w_tmp = ((MULTYPE)w_XY.i * wphase_XY.i - (MULTYPE)w_XY.q * wphase_XY.q) >> INTMUL;
+	    w_XY.q = ((MULTYPE)w_XY.i * wphase_XY.q + (MULTYPE)w_XY.q * wphase_XY.i) >> INTMUL;
 	    w_XY.i = w_tmp;
 	}
 	mmax=istep;
