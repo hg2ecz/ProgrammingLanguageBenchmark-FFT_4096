@@ -13,6 +13,9 @@ void dft_init(int point) {
 void dft(float complex *xy_out, const float complex *xy_in) {
     float complex phaseXY = 1.;
 
+#ifdef _OPENMP
+    #pragma omp parallel for
+#endif
     for (int i = 0; i<dft_point; i++) {
 	float complex vfoXY = 1.;
 	xy_out[i] = 0.;
