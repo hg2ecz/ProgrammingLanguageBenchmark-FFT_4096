@@ -1,4 +1,4 @@
 #include <complex.h>
 
-void dft_init();
-void dft_sample(int point, double complex *xy_out, double complex xy_sample);
+void dft_init(int point);
+void dft_sample(double complex *xy_out, double complex xy_sample);
