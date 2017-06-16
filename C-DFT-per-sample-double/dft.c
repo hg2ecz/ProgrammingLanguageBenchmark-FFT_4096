@@ -11,7 +11,7 @@ static double complex vfoXY[1<<LOG2FFTSIZE];
 void dft_init(int point) {
     dft_point = point;
     dft_revpt = 1./point;
-    phasediffXY = cos(2*M_PI/point) + I*sin(2*M_PI/point);
+    phasediffXY = cexp(-2j*M_PI/point);
 
     for (int i=0; i< 1<<LOG2FFTSIZE; i++) vfoXY[i]=1.;
 }

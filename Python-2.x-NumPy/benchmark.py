@@ -1,10 +1,10 @@
-#!/usr/bin/pypy
+#!/usr/bin/python
 # -*- coding: utf8 -*-
 
 from __future__ import print_function
 
-import fft
 import time
+import numpy
 
 LOG2FFTSIZE = 12
 FFT_REPEAT = 1000
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     timestart = time.time()
     for i in xrange(FFT_REPEAT):
-        fft_out = fft.fft(LOG2FFTSIZE, xy)
+        fft_out = numpy.fft.fft(xy)
     eltime = 1000*(time.time() - timestart)
     print ("%6d piece of %d pt FFT;  %9.5f ms/piece\n"%(FFT_REPEAT, 1<<LOG2FFTSIZE, eltime/FFT_REPEAT))
 
