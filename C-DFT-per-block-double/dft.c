@@ -5,7 +5,8 @@ static int dft_point = 0;
 static double complex phasediffXY;
 
 void dft_init(int point) {
-    phasediffXY = cos(2*M_PI/point) + I*sin(2*M_PI/point);
+//    phasediffXY = cos(-2*M_PI/point) + I*sin(-2*M_PI/point);
+    phasediffXY = cexp(-2j*M_PI/point);
     dft_point = point;
 }
 
