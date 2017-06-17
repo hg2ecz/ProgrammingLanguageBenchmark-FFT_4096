@@ -25,12 +25,15 @@ void dft_sample(double complex *xy_out, double complex xy_sample) {
     double complex phaseXY = 1.;
 
     for(int i=0; i<dft_point; i++) {
-	double complex tmp = dft_vfoXY[i];
-	xy_out[i] += xy_sample*tmp;
+	double complex tmp_vfoXY = dft_vfoXY[i];// register --> faster
+	double complex tmp_xy_out = xy_out[i];	// register --> faster
 
-	tmp *= phaseXY;				// oscillator new state
+	tmp_xy_out += xy_sample*tmp_vfoXY;	// new DFT value
+
+	tmp_vfoXY *= phaseXY;			// oscillator new state
 	phaseXY *= dft_phasediffXY;		// oscillator new speed
-	dft_corr += xy_out[i]*conj(tmp);	// generate new prev. correction
-	dft_vfoXY[i]=tmp;
+	dft_corr += tmp_xy_out*conj(tmp_vfoXY);	// generate new prev. correction
+	dft_vfoXY[i]=tmp_vfoXY;
+	xy_out[i] = tmp_xy_out;
     }
 }
