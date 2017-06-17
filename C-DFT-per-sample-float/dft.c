@@ -14,7 +14,7 @@ void dft_init(int point) {
     //phasediffXY = cos(-2*M_PI/point) + I*sin(-2*M_PI/point);
     dft_phasediffXY = cexp(-2j*M_PI/point);
 
-    for (int i=0; i< 1<<LOG2FFTSIZE; i++) dft_vfoXY[i]=1.;
+    for (int i=0; i<point; i++) dft_vfoXY[i]=1.;
 }
 
 static float complex dft_corr=0;
