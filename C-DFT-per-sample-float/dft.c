@@ -28,8 +28,8 @@ void dft_sample(float complex *xy_out, float complex xy_sample) {
 	float complex tmp = dft_vfoXY[i];
 	xy_out[i] += xy_sample*tmp;
 
-	tmp *= phaseXY;
-	phaseXY *= dft_phasediffXY;		// oscillator new state
+	tmp *= phaseXY;				// oscillator new state
+	phaseXY *= dft_phasediffXY;		// oscillator new speed
 	dft_corr += xy_out[i]*conjf(tmp);	// generate new prev. correction
 	dft_vfoXY[i]=tmp;
     }
