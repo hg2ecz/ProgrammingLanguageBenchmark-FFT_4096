@@ -23,7 +23,7 @@ func main() {
     var startTime = time.Now().UnixNano()
     for i=0; i<FFT_REPEAT; i++ {
 	for j:=0; j<SIZE; j++ {
-	    xy_out_fft = dft.Dft_sample(xy_out_fft, xy[j])
+	    dft.Dft_sample(&xy_out_fft, xy[j])
 	}
     }
     var endTime = time.Now().UnixNano()
