@@ -11,8 +11,8 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
     if (!phasevec_exist) {
 	for (i=0; i<32; i++) {
 	    int point = 2<<i;
-	    phasevec[i].i = (1<<INTMUL)*cos(-2*M_PI/point);
-	    phasevec[i].q = (1<<INTMUL)*sin(-2*M_PI/point);
+	    phasevec[i].i = (1UL<<INTMUL)*cos(-2*M_PI/point);
+	    phasevec[i].q = (1UL<<INTMUL)*sin(-2*M_PI/point);
 	}
 	phasevec_exist = 1;
     }
@@ -44,20 +44,21 @@ void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *r
 	struct _sample wphase_XY = phasevec[l2pt];
 	l2pt++;
 
-	struct _sample w_XY = { 1<<INTMUL, 0 };
+	struct _sample w_XY = { 1UL<<INTMUL, 0 };
 	for (int m=0; m < mmax; m++) {
 	    for (int i=m; i < n; i += istep) {
 		struct _sample tempXY;
-		tempXY.i = ((long long)w_XY.i * xy_out[i+mmax].i - (long long)w_XY.q * xy_out[i+mmax].q) >> INTMUL;
-		tempXY.q = ((long long)w_XY.i * xy_out[i+mmax].q + (long long)w_XY.q * xy_out[i+mmax].i) >> INTMUL;
+		tempXY.i = ((MULTYPE)w_XY.i * xy_out[i+mmax].i - (MULTYPE)w_XY.q * xy_out[i+mmax].q) >> INTMUL;
+		tempXY.q = ((MULTYPE)w_XY.i * xy_out[i+mmax].q + (MULTYPE)w_XY.q * xy_out[i+mmax].i) >> INTMUL;
 		xy_out[i+mmax].i  = xy_out[i].i - tempXY.i;
 		xy_out[i+mmax].q  = xy_out[i].q - tempXY.q;
 		xy_out[i     ].i += tempXY.i;
 		xy_out[i     ].q += tempXY.q;
 	    }
-	    int w_tmp = ((long long)w_XY.i * wphase_XY.i - (long long)w_XY.q * wphase_XY.q) >> INTMUL;
-	    w_XY.q = ((long long)w_XY.i * wphase_XY.q + (long long)w_XY.q * wphase_XY.i) >> INTMUL;
-	    w_XY.i = w_tmp;
+	    struct _sample temp_w;
+	    temp_w.i = ((MULTYPE)w_XY.i * wphase_XY.i - (MULTYPE)w_XY.q * wphase_XY.q) >> INTMUL;
+	    w_XY.q = ((MULTYPE)w_XY.i * wphase_XY.q + (MULTYPE)w_XY.q * wphase_XY.i) >> INTMUL;
+	    w_XY.i = temp_w.i;
 	}
 	mmax=istep;
     }

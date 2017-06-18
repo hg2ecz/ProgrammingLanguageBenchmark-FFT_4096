@@ -1,3 +1,4 @@
+#define MULTYPE long long
 #define INTMUL (19+5)
 #define INTMULSAMPLE (19-4)
 

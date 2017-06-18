@@ -1,10 +1,12 @@
+TARGET=Benchmark.exe
+
 all:
-	mcs -optimize -unsafe -r:System.Numerics.dll Benchmark.cs
+	mcs -optimize -unsafe -r:System.Numerics.dll Fft.cs Benchmark.cs -out:$(TARGET)
 
 clean:
-	rm -f Benchmark.exe
+	rm -f $(TARGET)
 
-PROG=Benchmark.exe
+PROG=$(TARGET)
 test:
 	./$(PROG)
 	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py

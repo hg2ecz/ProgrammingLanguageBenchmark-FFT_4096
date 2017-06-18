@@ -1,5 +1,4 @@
 #include <math.h>
-//#include <malloc.h>
 #include "fft.h"
 
 // Internal variables

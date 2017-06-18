@@ -1,3 +1,4 @@
+#define MULTYPE __int128
 #define INTMUL (55+5)
 #define INTMULSAMPLE (55-4)
 
