@@ -26,6 +26,6 @@ func main() {
     fmt.Printf("%8d piece(s) of %d pt FFT;    %.3f ms/piece\n\n", FFT_REPEAT, SIZE, float64(endTime-startTime)/float64(1e6)/float64(FFT_REPEAT))
 
     for i=0; i<6; i++ {
-	fmt.Println(i, xy_out_fft[i])
+	fmt.Printf("%d %f %f\n", i, real(xy_out_fft[i]), imag(xy_out_fft[i]))
     }
 }

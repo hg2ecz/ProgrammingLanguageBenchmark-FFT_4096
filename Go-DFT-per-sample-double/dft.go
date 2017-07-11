@@ -25,7 +25,7 @@ func Dft_init(point int) {
 }
 
 var dft_corr complex128 = 0
-func Dft_sample(xy_out[SIZE] complex128, xy_sample complex128) [SIZE]complex128 {
+func Dft_sample(xy_out *[SIZE] complex128, xy_sample complex128) {
     xy_sample -= dft_corr*dft_revpt;		// remove oldest value from DFT
 
     dft_corr = 0
@@ -48,10 +48,9 @@ func Dft_sample(xy_out[SIZE] complex128, xy_sample complex128) [SIZE]complex128 
 
 	tmp_vfoXY *= phaseXY			// oscillator new state
 	phaseXY *= dft_phasediffXY		// oscillator new speed
-	dft_corr += tmp_xy_out*cmplx.Conj(tmp_vfoXY)	// generate new prev. correction
+	//dft_corr += tmp_xy_out*cmplx.Conj(tmp_vfoXY)    // generate new prev. correction
+	dft_corr += tmp_xy_out*complex(real(tmp_vfoXY), -imag(tmp_vfoXY)) // faster than cmplx.Conj()
 	dft_vfoXY[i]=tmp_vfoXY
 	xy_out[i] = tmp_xy_out
     }
-
-    return xy_out
 }
