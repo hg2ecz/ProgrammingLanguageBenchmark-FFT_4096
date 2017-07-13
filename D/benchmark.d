@@ -2,14 +2,15 @@ import std.stdio;
 import std.datetime;
 import ifft;
 
-const uint LOG2FFTSIZE = 12;
-const int FFT_REPEAT = 1000;
-
-const uint SIZE = (1<<LOG2FFTSIZE);
-static cdouble[SIZE] xy;
-static cdouble[SIZE] xy_out_fft;
 
 class Benchmark {
+	const uint LOG2FFTSIZE = 12;
+	const int FFT_REPEAT = 1000;
+
+	const uint SIZE = (1<<LOG2FFTSIZE);
+	static cdouble[SIZE] xy;
+	static cdouble[SIZE] xy_out_fft;
+
 	IFFT fft;
 
 	this(IFFT fft)
