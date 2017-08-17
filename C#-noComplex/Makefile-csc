@@ -1,7 +1,7 @@
 TARGET=Benchmark.exe
 
 all:
-	csc /o+ /r:System.Numerics.dll Fft.cs Benchmark.cs /out:$(TARGET)
+	csc /o+ Fft.cs Benchmark.cs /out:$(TARGET)
 
 clean:
 	rm -f $(TARGET)
