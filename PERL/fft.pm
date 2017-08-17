@@ -50,7 +50,7 @@ sub fft {
 	my $w_XY = 1.0 + 0.0*i;
 	for ($m=0; $m < $mmax; $m++) {
 	    for ($i=$m; $i < $n; $i += $istep) {
-		$tempXY = $w_XY * $xy_out[$i+$mmax];
+		my $tempXY = $w_XY * $xy_out[$i+$mmax];
 		$xy_out[$i+$mmax] = $xy_out[$i] - $tempXY;
 		$xy_out[$i     ] += $tempXY;
 	    }
