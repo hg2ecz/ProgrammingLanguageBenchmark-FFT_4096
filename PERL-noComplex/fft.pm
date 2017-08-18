@@ -1,6 +1,5 @@
 package fft;
 
-use Math::Complex;
 use constant M_PI  => 4 * atan2 1, 1;
 
 # Internal variables
@@ -17,7 +16,8 @@ sub fft {
     if (!$phasevec_exist) {
 	for ($i=0; $i<30; $i++) { # 2**32 --> negative !!! 32 bit signed
 	    $point = 2<<$i;
-	    $phasevec[$i] = cos(-2 * M_PI / $point) + sin(-2 * M_PI / $point)*i; # complex.h ??
+	    $phasevec[$i][0] = cos(-2 * M_PI / $point);
+            $phasevec[$i][1] = sin(-2 * M_PI / $point); # complex.h ??
 	}
 	$phasevec_exist = 1;
     }
@@ -35,7 +35,8 @@ sub fft {
 
 	$brev >>= 32-$log2point;
 	#$brev >>= 16-$log2point;   // no >>16 <<16
-	$xy_out[$brev] = $xy_in[$i];
+	$xy_out[$brev][0] = $xy_in[$i][0];
+	$xy_out[$brev][1] = $xy_in[$i][1];
     }
 
     # here begins the Danielson-Lanczos section
@@ -45,16 +46,26 @@ sub fft {
     while ($n > $mmax) {
 	my $istep = $mmax<<1;
 
-	my $wphase_XY = $phasevec[$l2pt++];
+	my $wphase_X = $phasevec[$l2pt][0];
+	my $wphase_Y = $phasevec[$l2pt][1];
+	$l2pt++;
 
-	my $w_XY = 1.0 + 0.0*i;
+	my $w_X = 1.0;
+	my $w_Y = 0.0;
+
 	for ($m=0; $m < $mmax; $m++) {
 	    for ($i=$m; $i < $n; $i += $istep) {
-		my $tempXY = $w_XY * $xy_out[$i+$mmax];
-		$xy_out[$i+$mmax] = $xy_out[$i] - $tempXY;
-		$xy_out[$i     ] += $tempXY;
+		my $tempX = $w_X * $xy_out[$i+$mmax][0] - $w_Y * $xy_out[$i+$mmax][1];
+		my $tempY = $w_X * $xy_out[$i+$mmax][1] + $w_Y * $xy_out[$i+$mmax][0];
+
+		$xy_out[$i+$mmax][0] = $xy_out[$i][0] - $tempX;
+		$xy_out[$i+$mmax][1] = $xy_out[$i][1] - $tempY;
+		$xy_out[$i     ][0] += $tempX;
+		$xy_out[$i     ][1] += $tempY;
 	    }
-	    $w_XY = $w_XY * $wphase_XY; # rotate
+	    $w_Xtemp = $w_X * $wphase_X - $w_Y * $wphase_Y; # rotate
+	    $w_Y     = $w_X * $wphase_Y + $w_Y * $wphase_X; # rotate
+	    $w_X = $w_Xtemp;
 	}
 	$mmax=$istep;
     }
