@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="PublishLinuxARM">
 
   <PropertyGroup>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>linux-x64;linux-arm</RuntimeIdentifiers>
@@ -10,5 +10,10 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+
+  <Target Name="PublishLinuxARM">
+    <Message Text="Szia, Krüpl mester, most lefordítom a projektet és az eredményt a LINUX_ARM könyvtárba teszem" Importance="high" />
+    <MSBuild Targets="Publish" Projects="fft_on_dotnet_core.csproj" Properties="Configuration=Release;RuntimeIdentifier=linux-arm;PublishDir=LINUX_ARM" />
+  </Target>
 
 </Project>
