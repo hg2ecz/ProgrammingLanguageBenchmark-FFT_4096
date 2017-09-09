@@ -42,7 +42,7 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
     mmax<<=1;
 
     COMPLEX_VFO_TYPE w_XY2 = phasevec[l2pt++];
-    for (int i=0; i < n; i += 4) {
+    for (int i=0; i < n; i += 8) {
 	COMPLEX_TYPE tempXY = xy_out[i+mmax]; // w_XY = 1   mmax = 2
 	xy_out[i+mmax]  = xy_out[i] - tempXY;
 	xy_out[i     ] += tempXY;
@@ -50,6 +50,14 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
 	COMPLEX_TYPE tempXY2 = w_XY2 * xy_out[i+1+mmax];
 	xy_out[i+1+mmax]  = xy_out[i+1] - tempXY2;
 	xy_out[i+1     ] += tempXY2;
+
+	COMPLEX_TYPE tempXY3 = xy_out[i+4+mmax]; // w_XY = 1   mmax = 2
+	xy_out[i+4+mmax]  = xy_out[i+4] - tempXY3;
+	xy_out[i+4     ] += tempXY3;
+
+	COMPLEX_TYPE tempXY4 = w_XY2 * xy_out[i+5+mmax];
+	xy_out[i+5+mmax]  = xy_out[i+5] - tempXY4;
+	xy_out[i+5     ] += tempXY4;
     }
     mmax<<=1;
 
