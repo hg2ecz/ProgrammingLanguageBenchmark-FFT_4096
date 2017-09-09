@@ -15,7 +15,7 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
 	}
 	phasevec_exist = 1;
     }
-    for (i=0; i < (1<<log2point); i++) {
+    for (i=0; i < (1<<log2point); i+=4) {
 	unsigned int brev = i;
 	brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
 	brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);
@@ -25,6 +25,15 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
 
 	brev >>= 32-log2point;
 	xy_out[brev] = xy_in[i];
+
+	unsigned int brev2 = brev | (1<<(log2point-1));
+	xy_out[brev2] = xy_in[i+1];
+
+	brev2 = brev | (1<<(log2point-2));
+	xy_out[brev2] = xy_in[i+2];
+
+	brev2 = brev | (3<<(log2point-2));
+	xy_out[brev2] = xy_in[i+3];
     }
 
     // here begins the Danielson-Lanczos section
