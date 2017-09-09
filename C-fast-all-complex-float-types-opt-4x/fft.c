@@ -32,12 +32,25 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
     int l2pt=0;
     int mmax=1;
 
+
+    l2pt++;
     for (int i=0; i < n; i += 2) {
 	COMPLEX_TYPE tempXY = xy_out[i+mmax]; // w_XY = 1
 	xy_out[i+mmax]  = xy_out[i] - tempXY;
-	xy_out[i  ] += tempXY;
+	xy_out[i     ] += tempXY;
     }
-    l2pt++;
+    mmax<<=1;
+
+    COMPLEX_VFO_TYPE w_XY2 = phasevec[l2pt++];
+    for (int i=0; i < n; i += 4) {
+	COMPLEX_TYPE tempXY = xy_out[i+mmax]; // w_XY = 1
+	xy_out[i+mmax]  = xy_out[i] - tempXY;
+	xy_out[i     ] += tempXY;
+
+	COMPLEX_TYPE tempXY2 = w_XY2 * xy_out[i+1+mmax];
+	xy_out[i+1+mmax]  = xy_out[i+1] - tempXY2;
+	xy_out[i+1     ] += tempXY2;
+    }
     mmax<<=1;
 
 #ifdef MOD_SPEED
@@ -52,9 +65,11 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
 	COMPLEX_VFO_TYPE wphase_XY = phasevec[l2pt++];
 
 	COMPLEX_VFO_TYPE w_XY = 1.0 + 0.0*I;
-	COMPLEX_VFO_TYPE w_XY2;
-	for (int m=0; m < mmax; m+=2) { // optimization: tempXY and tempXY2
+	COMPLEX_VFO_TYPE w_XY2, w_XY3, w_XY4;
+	for (int m=0; m < mmax; m+=4) { // optimization: tempXY and tempXY2
 	    w_XY2 = w_XY * wphase_XY; // rotate
+	    w_XY3 = w_XY2 * wphase_XY; // rotate
+	    w_XY4 = w_XY3 * wphase_XY; // rotate
 	    for (int i=m; i < n; i += istep) {
 		COMPLEX_TYPE tempXY = (COMPLEX_TYPE)w_XY *xy_out[i+mmax];
 		xy_out[i+mmax]  = xy_out[i] - tempXY;
@@ -63,8 +78,16 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
 		COMPLEX_TYPE tempXY2 = (COMPLEX_TYPE)w_XY2 *xy_out[i+1+mmax];
 		xy_out[i+1+mmax]  = xy_out[i+1] - tempXY2;
 		xy_out[i+1     ] += tempXY2;
+
+		COMPLEX_TYPE tempXY3 = (COMPLEX_TYPE)w_XY3 *xy_out[i+2+mmax];
+		xy_out[i+2+mmax]  = xy_out[i+2] - tempXY3;
+		xy_out[i+2     ] += tempXY3;
+
+		COMPLEX_TYPE tempXY4 = (COMPLEX_TYPE)w_XY4 *xy_out[i+3+mmax];
+		xy_out[i+3+mmax]  = xy_out[i+3] - tempXY4;
+		xy_out[i+3     ] += tempXY4;
 	    }
-	    w_XY = w_XY2 * wphase_XY; // rotate
+	    w_XY = w_XY4 * wphase_XY; // rotate
 	}
 	mmax=istep;
     }
