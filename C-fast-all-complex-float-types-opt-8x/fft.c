@@ -98,29 +98,49 @@ void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restr
 	COMPLEX_VFO_TYPE wphase_XY = phasevec[l2pt++];
 
 	COMPLEX_VFO_TYPE w_XY = 1.0 + 0.0*I;
-	COMPLEX_VFO_TYPE w_XY2, w_XY3, w_XY4;
-	for (int m=0; m < mmax; m+=4) { // optimization: tempXY and tempXY2
-	    w_XY2 = w_XY * wphase_XY; // rotate
+	COMPLEX_VFO_TYPE w_XY1, w_XY2, w_XY3, w_XY4, w_XY5, w_XY6, w_XY7;
+	for (int m=0; m < mmax; m+=8) { // optimization: tempXY and tempXY2
+	    w_XY1 = w_XY * wphase_XY; // rotate
+	    w_XY2 = w_XY1 * wphase_XY; // rotate
 	    w_XY3 = w_XY2 * wphase_XY; // rotate
 	    w_XY4 = w_XY3 * wphase_XY; // rotate
+	    w_XY5 = w_XY4 * wphase_XY; // rotate
+	    w_XY6 = w_XY5 * wphase_XY; // rotate
+	    w_XY7 = w_XY6 * wphase_XY; // rotate
 	    for (int i=m; i < n; i += istep) {
 		COMPLEX_TYPE tempXY = (COMPLEX_TYPE)w_XY *xy_out[i+mmax];
 		xy_out[i+mmax]  = xy_out[i] - tempXY;
 		xy_out[i     ] += tempXY;
 
-		COMPLEX_TYPE tempXY2 = (COMPLEX_TYPE)w_XY2 *xy_out[i+1+mmax];
-		xy_out[i+1+mmax]  = xy_out[i+1] - tempXY2;
-		xy_out[i+1     ] += tempXY2;
+		COMPLEX_TYPE tempXY1 = (COMPLEX_TYPE)w_XY1 *xy_out[i+1+mmax];
+		xy_out[i+1+mmax]  = xy_out[i+1] - tempXY1;
+		xy_out[i+1     ] += tempXY1;
 
-		COMPLEX_TYPE tempXY3 = (COMPLEX_TYPE)w_XY3 *xy_out[i+2+mmax];
-		xy_out[i+2+mmax]  = xy_out[i+2] - tempXY3;
-		xy_out[i+2     ] += tempXY3;
+		COMPLEX_TYPE tempXY2 = (COMPLEX_TYPE)w_XY2 *xy_out[i+2+mmax];
+		xy_out[i+2+mmax]  = xy_out[i+2] - tempXY2;
+		xy_out[i+2     ] += tempXY2;
 
-		COMPLEX_TYPE tempXY4 = (COMPLEX_TYPE)w_XY4 *xy_out[i+3+mmax];
-		xy_out[i+3+mmax]  = xy_out[i+3] - tempXY4;
-		xy_out[i+3     ] += tempXY4;
+		COMPLEX_TYPE tempXY3 = (COMPLEX_TYPE)w_XY3 *xy_out[i+3+mmax];
+		xy_out[i+3+mmax]  = xy_out[i+3] - tempXY3;
+		xy_out[i+3     ] += tempXY3;
+
+		COMPLEX_TYPE tempXY4 = (COMPLEX_TYPE)w_XY4 *xy_out[i+4+mmax];
+		xy_out[i+4+mmax]  = xy_out[i+4] - tempXY4;
+		xy_out[i+4     ] += tempXY4;
+
+		COMPLEX_TYPE tempXY5 = (COMPLEX_TYPE)w_XY5 *xy_out[i+5+mmax];
+		xy_out[i+5+mmax]  = xy_out[i+5] - tempXY5;
+		xy_out[i+5     ] += tempXY5;
+
+		COMPLEX_TYPE tempXY6 = (COMPLEX_TYPE)w_XY6 *xy_out[i+6+mmax];
+		xy_out[i+6+mmax]  = xy_out[i+6] - tempXY6;
+		xy_out[i+6     ] += tempXY6;
+
+		COMPLEX_TYPE tempXY7 = (COMPLEX_TYPE)w_XY7 *xy_out[i+7+mmax];
+		xy_out[i+7+mmax]  = xy_out[i+7] - tempXY7;
+		xy_out[i+7     ] += tempXY7;
 	    }
-	    w_XY = w_XY4 * wphase_XY; // rotate
+	    w_XY = w_XY7 * wphase_XY; // rotate
 	}
 	mmax=istep;
     }
