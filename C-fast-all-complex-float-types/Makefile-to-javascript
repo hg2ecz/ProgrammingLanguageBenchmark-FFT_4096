@@ -1,0 +1,21 @@
+CC=emcc
+
+CFLAGS =-Wall -O3 -funroll-loops
+
+CFLAGS+=-DLOG2FFTSIZE=12
+CFLAGS+=-DFFT_REPEAT=100
+
+# improve speed
+CFLAGS+=-DMOD_SPEED
+
+LDFLAGS=
+
+OBJS=fft.o benchmark.o
+
+TARGET=benchmark
+
+all: $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET).html
+
+clean:
+	rm -rf $(OBJS) $(TARGET).html $(TARGET).js
