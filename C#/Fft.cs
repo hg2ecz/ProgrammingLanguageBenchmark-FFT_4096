@@ -7,21 +7,44 @@ namespace CSharpFftDemo
     public class Fft {
         // Internal variables
         private static Complex s_one = Complex.One;
-        private Complex[] phasevec = new Complex[32];
-
-        public Fft()
-        {
-            for (int i = 0; i < 32; i++)
-            {
-                int point = 2 << i;
-                phasevec[i] = new Complex(Math.Cos(-2 * Math.PI / point), Math.Sin(-2 * Math.PI / point));
-            }
-        }
+        private static readonly Complex[] phasevec = new[] {
+            new Complex(-1, -1.22464679914735E-16),
+            new Complex(6.12323399573677E-17, -1),
+            new Complex(0.707106781186548, -0.707106781186548),
+            new Complex(0.923879532511287, -0.38268343236509),
+            new Complex(0.98078528040323, -0.195090322016128),
+            new Complex(0.995184726672197, -0.0980171403295606),
+            new Complex(0.998795456205172, -0.049067674327418),
+            new Complex(0.999698818696204, -0.0245412285229123),
+            new Complex(0.999924701839145, -0.0122715382857199),
+            new Complex(0.999981175282601, -0.00613588464915448),
+            new Complex(0.999995293809576, -0.00306795676296598),
+            new Complex(0.999998823451702, -0.00153398018628477),
+            new Complex(0.999999705862882, -0.000766990318742704),
+            new Complex(0.999999926465718, -0.000383495187571396),
+            new Complex(0.999999981616429, -0.000191747597310703),
+            new Complex(0.999999995404107, -9.58737990959773E-05),
+            new Complex(0.999999998851027, -4.79368996030669E-05),
+            new Complex(0.999999999712757, -2.39684498084182E-05),
+            new Complex(0.999999999928189, -1.19842249050697E-05),
+            new Complex(0.999999999982047, -5.99211245264243E-06),
+            new Complex(0.999999999995512, -2.99605622633466E-06),
+            new Complex(0.999999999998878, -1.49802811316901E-06),
+            new Complex(0.999999999999719, -7.49014056584716E-07),
+            new Complex(0.99999999999993, -3.74507028292384E-07),
+            new Complex(0.999999999999982, -1.87253514146195E-07),
+            new Complex(0.999999999999996, -9.36267570730981E-08),
+            new Complex(0.999999999999999, -4.68133785365491E-08),
+            new Complex(1, -2.34066892682746E-08),
+            new Complex(1, -1.17033446341373E-08),
+            new Complex(1, -5.85167231706864E-09),
+            new Complex(1, 2.92583615853432E-09),
+            new Complex(1, 0)
+        };
 
         // Public function
-        public void Calc(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
+        public void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
         {
-
             for (int i = 0; i < (1 << Log2FftSize); i++)
             {
                 long brev = i;
@@ -34,8 +57,6 @@ namespace CSharpFftDemo
 
                 brev >>= 32 - Log2FftSize;
                 xy_out[brev] = xy_in[i]; 
-                // Complex is a struct in .NET, so passed by value.
-                // new Complex(xy_in[i].Real, xy_in[i].Imaginary);
             }
 
             int n = 1 << Log2FftSize;
@@ -51,7 +72,6 @@ namespace CSharpFftDemo
                 // Same.
                 var w_XY = s_one;
 
-
                 for (int m = 0; m < mmax; m++)
                 {
                     for (int i = m; i < n; i += istep)
@@ -64,6 +84,7 @@ namespace CSharpFftDemo
 
                     w_XY = w_XY * wphase_XY;
                 }
+
                 mmax = istep;
             }
         }
