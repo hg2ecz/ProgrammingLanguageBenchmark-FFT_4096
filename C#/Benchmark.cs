@@ -16,7 +16,6 @@ namespace CSharpFftDemo
             Complex[] xy = new Complex[size];
             Complex[] xy_out = new Complex[xy.Length];
 
-
             for (i = 0; i < size / 2; i++)
                 xy[i] = new Complex(1.0, 0.0);
 
@@ -28,15 +27,15 @@ namespace CSharpFftDemo
             // JIT warm up ... possible give more speed
             for (i = 0; i < FftRepeat; i++)
             {
-                fft.Calc(Log2FftSize, xy, xy_out);
+                fft.Calculate(Log2FftSize, xy, xy_out);
             }
+
             // FFT
             var stopwatch = Stopwatch.StartNew();
 
-
             for (i = 0; i < FftRepeat; i++)
             {
-                fft.Calc(Log2FftSize, xy, xy_out);
+                fft.Calculate(Log2FftSize, xy, xy_out);
             }
 
             stopwatch.Stop();
