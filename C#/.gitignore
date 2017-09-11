@@ -5,3 +5,4 @@ dist-arm
 dist-x86_64
 **/*.deb
 **/*.rpm
+packaging/opt
