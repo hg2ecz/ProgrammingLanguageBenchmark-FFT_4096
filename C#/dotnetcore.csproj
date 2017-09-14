@@ -6,6 +6,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>linux-x64;linux-arm</RuntimeIdentifiers>
     <AssemblyName>fft-benchmark</AssemblyName>
+    <RootNamespace>FftBenchmark</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

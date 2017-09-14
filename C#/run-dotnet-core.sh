@@ -1,8 +1,0 @@
-sudo sh -c 'echo "deb http://apt-mo.trafficmanager.net/repos/dotnet-release/ xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
-sudo apt-get update
-sudo apt-get install dotnet-dev-1.0.0-rc4-004771
-
-dotnet restore dotnetcore.csproj
-dotnet build -c Release dotnetcore.csproj
-dotnet bin/Release/netcoreapp1.1/C#.dll
