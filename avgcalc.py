@@ -26,4 +26,4 @@ for num in nums:
 
 var = math.sqrt(var/float(i-1))
 
-print "----> %s (%s) ----> AVG: %.3f VAR: %.5f RELVAR: %.2f %%"%(os.getcwd().split('/')[-1], param, avg, var, 100.*var/avg)
+print "----> %s (%s) ----> AVG: %.3f RELVAR: %.2f %%"%(os.getcwd().split('/')[-1], param, avg, 100.*var/avg)
