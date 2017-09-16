@@ -8,6 +8,7 @@ static COMPLEX_VFO_TYPE phasevec[32];
 // Public function
 void fft(int log2point, COMPLEX_TYPE *restrict xy_out, const COMPLEX_TYPE *restrict xy_in) {
     int i;
+
     if (!phasevec_exist) {
 	for (i=0; i<32; i++) {
 	    int point = 2<<i;

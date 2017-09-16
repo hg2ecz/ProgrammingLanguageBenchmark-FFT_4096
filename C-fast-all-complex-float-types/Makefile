@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS =-Wall -Ofast -funroll-all-loops
+CFLAGS =-Wall -Ofast -funroll-all-loops -fPIC
 
 PARAMS_CPU = -march=native
 ifeq ($(shell uname -m), armv6l)
@@ -25,6 +25,7 @@ TARGET=benchmark
 
 all: $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
+	$(CC) -shared -o fft.so fft.o
 
 clean:
 	rm -rf $(OBJS) $(TARGET)
