@@ -10,7 +10,6 @@ LOG2FFTSIZE = 12
 FFT_REPEAT = 1000
 
 SIZE = 1<<LOG2FFTSIZE
-xy = [0+0j]*SIZE
 complexArrayType = (2 * ctypes.c_float) * SIZE
 
 if __name__ == "__main__":
