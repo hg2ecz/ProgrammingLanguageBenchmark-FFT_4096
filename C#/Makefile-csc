@@ -1,9 +1,11 @@
 TARGET=Benchmark.exe
 
 all:
+	make -C ../C-fast-all-complex-float-types-opt-4x
 	csc /o+ /r:System.Numerics.dll Fft.cs Benchmark.cs /out:$(TARGET)
 
 clean:
+	make -C ../C-fast-all-complex-float-types-opt-4x clean
 	rm -f $(TARGET)
 
 PROG=$(TARGET)

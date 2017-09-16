@@ -1,14 +1,15 @@
-TARGET=Benchmark.exe
-
 all:
 	make -C ../C-fast-all-complex-float-types-opt-4x
-	mcs -optimize -unsafe -r:System.Numerics.dll Fft.cs Benchmark.cs -out:$(TARGET)
 
 clean:
 	make -C ../C-fast-all-complex-float-types-opt-4x clean
-	rm -f $(TARGET)
 
-PROG=$(TARGET)
+PROG=benchmark.py
 test:
 	./$(PROG)
 	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py
+
+PROG2=python benchmark.py
+test2:
+	$(PROG2)
+	@($(PROG2);$(PROG2);$(PROG2);$(PROG2);$(PROG2);  $(PROG2);$(PROG2);$(PROG2);$(PROG2);$(PROG2) )|../avgcalc.py
