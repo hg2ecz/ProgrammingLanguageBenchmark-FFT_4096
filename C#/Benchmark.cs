@@ -12,12 +12,18 @@ namespace CSharpFftDemo
 
         static void Main()
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("---- MANAGED ----");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
             Managed();
 
             try
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("---- NATIVE ----");
+                Console.ForegroundColor = ConsoleColor.Gray;
+
                 Native();
             }
             catch (Exception e)
@@ -28,38 +34,38 @@ namespace CSharpFftDemo
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct DoubleComplex
+        public struct FloatComplex
         {
             public float Real;
             public float Imaginary;
 
-            public DoubleComplex(double real, double imaginary)
+            public FloatComplex(float real, float imaginary)
             {
-                Real = (float)real;
-                Imaginary = (float)imaginary;
+                Real = real;
+                Imaginary = imaginary;
             }
     
             public override string ToString()
             {
-                return $"(R: {Real}, I: {Imaginary}";
+                return $"(Re: {Real}, Im: {Imaginary}";
             }
         }
 
         [DllImport("../C-fast-all-complex-float-types-opt-4x/fft.so")]
-        public static extern void fft(int log2point, [Out] DoubleComplex[] xy_out, DoubleComplex[] xy_in);
+        public static extern void fft(int log2point, [Out] FloatComplex[] xy_out, FloatComplex[] xy_in);
 
         static void Native()
         {
             int i;
             int size = 1 << Log2FftSize;
-            DoubleComplex[] xy = new DoubleComplex[size];
-            DoubleComplex[] xy_out = new DoubleComplex[xy.Length];
+            FloatComplex[] xy = new FloatComplex[size];
+            FloatComplex[] xy_out = new FloatComplex[xy.Length];
 
             for (i = 0; i < size / 2; i++)
-                xy[i] = new DoubleComplex(1.0, 0.0);
+                xy[i] = new FloatComplex(1.0f, 0.0f);
 
             for (i = size/2; i < size; i++)
-                xy[i] = new DoubleComplex(-1.0, 0.0);
+                xy[i] = new FloatComplex(-1.0f, 0.0f);
 
             var stopwatch = Stopwatch.StartNew();
 
