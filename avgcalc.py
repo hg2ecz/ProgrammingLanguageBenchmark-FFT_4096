@@ -2,6 +2,7 @@
 
 import os
 import sys
+import math
 
 param = 'none'
 if len(sys.argv) > 1:
@@ -23,6 +24,6 @@ var = 0
 for num in nums:
     var += (num-avg)**2
 
-var /= float(i)
+var = math.sqrt(var/float(i-1))
 
-print "----> %s (%s) ----> AVG: %.3f VAR: %.5f"%(os.getcwd().split('/')[-1], param, avg, var)
+print "----> %s (%s) ----> AVG: %.3f VAR: %.5f RELVAR: %.2f %%"%(os.getcwd().split('/')[-1], param, avg, var, 100.*var/avg)
