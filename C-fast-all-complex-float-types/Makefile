@@ -21,14 +21,14 @@ OBJS=fft.o benchmark.o
 
 TARGET=benchmark
 
-
-
-all: $(OBJS)
+all: $(OBJS) shlib
 	$(CC) $(OBJS) $(LDFLAGS) -o $(TARGET)
+
+shlib:	fft.o
 	$(CC) -shared -o fft.so fft.o
 
 clean:
-	rm -rf $(OBJS) $(TARGET)
+	rm -rf $(OBJS) $(TARGET) fft.so
 
 PROG=$(TARGET)
 test:
