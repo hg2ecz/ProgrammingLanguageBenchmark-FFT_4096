@@ -1,0 +1,3 @@
+# apt-get install gcc make
+# apt-get install mono-mcs libmono-system-numerics4.0-cil
+$ make
