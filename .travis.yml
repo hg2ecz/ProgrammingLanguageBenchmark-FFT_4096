@@ -11,5 +11,5 @@ script:
   - sh create-armhf-deb.sh
 
 install:
-  - sudo apt-get install -qq gcc-6
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 90
+  - sudo apt-get install -qq gcc-5
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
