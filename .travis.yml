@@ -5,3 +5,4 @@ script:
   - cd C#
   - dotnet restore
   - dotnet run -c Release
+  - create-armhf-deb.sh
