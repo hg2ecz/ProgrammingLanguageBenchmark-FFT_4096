@@ -10,6 +10,10 @@ script:
   - dotnet run -c Release
   - sh create-armhf-deb.sh
 
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+
 install:
   - sudo apt-get install -qq gcc-5
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
