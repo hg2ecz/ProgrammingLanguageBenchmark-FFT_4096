@@ -3,6 +3,7 @@ mono: none
 dotnet: 2.0.0
 script:
   - cd C#
+  - make -C ../C-fast-all-complex-float-types-opt-4x
   - dotnet restore
   - dotnet run -c Release
   - sh create-armhf-deb.sh
