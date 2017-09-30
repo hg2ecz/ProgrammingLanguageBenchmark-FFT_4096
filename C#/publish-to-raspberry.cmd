@@ -1,10 +1,14 @@
 @echo off
 
+echo ----------------------------------------------------------------
+echo Configuration
+echo ----------------------------------------------------------------
+
+set ssh_key="c:\Users\robert.fuszenecker\ssh_login.ppk"
+set remote="fuszenecker@192.168.1.200"
+
 set pscp="c:\Program Files\pscp.exe"
 set plink="c:\Program Files\plink.exe"
-set ssh_key="c:\Users\robert.fuszenecker\ssh_login.ppk"
-
-set remote="fuszenecker@192.168.1.200"
 
 echo ----------------------------------------------------------------
 echo Building the source
