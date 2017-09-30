@@ -24,7 +24,7 @@ echo Post-deploy setup
 echo ----------------------------------------------------------------
 
 "c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "chmod 755 packaging/opt/fft-benchmark/fft-benchmark"
-"c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "chmod 755 packaging/opt/DEBIAN/postinst"
+"c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "chmod 755 packaging/DEBIAN/postinst"
 
 echo ----------------------------------------------------------------
 echo Creating packages
