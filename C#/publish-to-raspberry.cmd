@@ -1,5 +1,11 @@
 @echo off
 
+set pscp="c:\Program Files\pscp.exe"
+set plink="c:\Program Files\plink.exe"
+set ssh_key="c:\Users\robert.fuszenecker\ssh_login.ppk"
+
+set remote="fuszenecker@192.168.1.200"
+
 echo ----------------------------------------------------------------
 echo Building the source
 echo ----------------------------------------------------------------
@@ -17,23 +23,23 @@ echo ----------------------------------------------------------------
 echo Deploying artifacts
 echo ----------------------------------------------------------------
 
-"c:\Program Files\pscp.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk -r -C packaging fuszenecker@192.168.1.200:
+%pscp% -i %ssh_key% -r -C packaging %remote%:
 
 echo ----------------------------------------------------------------
 echo Post-deploy setup
 echo ----------------------------------------------------------------
 
-"c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "chmod 755 packaging/opt/fft-benchmark/fft-benchmark"
-"c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "chmod 755 packaging/DEBIAN/postinst"
+%plink% -i %ssh_key% %remote% "chmod 755 packaging/opt/fft-benchmark/fft-benchmark"
+%plink% -i %ssh_key% %remote% "chmod 755 packaging/DEBIAN/postinst"
 
 echo ----------------------------------------------------------------
 echo Creating packages
 echo ----------------------------------------------------------------
 
-"c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "dpkg-deb -b packaging fft-benchmark.armhf.deb"
+%plink% -i %ssh_key% %remote% "dpkg-deb -b packaging fft-benchmark.armhf.deb"
 
 echo ----------------------------------------------------------------
 echo Downloading package
 echo ----------------------------------------------------------------
 
-"c:\Program Files\pscp.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk -r -C fuszenecker@192.168.1.200:fft-benchmark.armhf.deb .
+%pscp% -i %ssh_key% -r -C %remote%:fft-benchmark.armhf.deb .
