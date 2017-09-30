@@ -30,4 +30,4 @@ echo ----------------------------------------------------------------
 echo Creating packages
 echo ----------------------------------------------------------------
 
-"c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "dpkg-deb -b packaging fft-benchmark-1.3.armhf.deb"
+"c:\Program Files\plink.exe" -i c:\Users\robert.fuszenecker\ssh_login.ppk fuszenecker@192.168.1.200 "dpkg-deb -b packaging fft-benchmark.armhf.deb"
