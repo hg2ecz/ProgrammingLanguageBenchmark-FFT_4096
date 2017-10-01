@@ -13,7 +13,7 @@ SIZE = 1<<LOG2FFTSIZE
 xy = [0+0j]*SIZE
 
 if __name__ == "__main__":
-    xy = [1.+0j]*(SIZE/2) + [-1.+0j]*(SIZE/2)
+    xy = [1.+0j]*(SIZE//2) + [-1.+0j]*(SIZE//2)
 
     timestart = time.time()
     for i in range(FFT_REPEAT):
