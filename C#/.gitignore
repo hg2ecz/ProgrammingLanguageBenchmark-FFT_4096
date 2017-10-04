@@ -6,3 +6,4 @@ dist-x86_64
 **/*.deb
 **/*.rpm
 packaging/opt
+dist-windows
