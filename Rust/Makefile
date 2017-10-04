@@ -4,7 +4,7 @@ all:
 	rustc -O -C link-arg=-s benchmark.rs
 
 clean:
-	rm $(TARGET)
+	rm -f $(TARGET)
 
 PROG=$(TARGET)
 test:
