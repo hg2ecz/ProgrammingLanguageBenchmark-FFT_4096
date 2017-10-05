@@ -1,6 +1,18 @@
 #include <math.h>
 #include "fft.h"
-#include <arm_neon.h>
+
+#if defined (__i386) || defined (__x86_64)
+# include <immintrin.h>
+#elif defined(__arm__) || defined (__aarch64__)
+# include <arm_neon.h>
+#endif
+
+#if defined(__ARM_NEON)
+typedef float32x4_t VECTORTYPE; // 4 pcs parallel
+#elif defined(__SSE__)
+typedef __m128 VECTORTYPE; // 4 pcs parallel
+#endif
+
 
 // Internal variables
 static int phasevec_exist = 0;
@@ -93,12 +105,12 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 	FLOAT_VFO_TYPE wphase_X = phasevec[l2pt][0];
 	FLOAT_VFO_TYPE wphase_Y = phasevec[l2pt][1];
 
-	float32x4_t wphase_Xvec, wphase_Yvec;
+	VECTORTYPE wphase_Xvec, wphase_Yvec;
 	wphase_Xvec[0] = wphase_Xvec[1] = wphase_Xvec[2] = wphase_Xvec[3]= phasevec[l2pt-2][0];
 	wphase_Yvec[0] = wphase_Yvec[1] = wphase_Yvec[2] = wphase_Yvec[3]= phasevec[l2pt-2][1];
 	l2pt++;
 
-	float32x4_t w_Xvec, w_Yvec;
+	VECTORTYPE w_Xvec, w_Yvec;
 	w_Xvec[0] = 1.;
 	w_Yvec[0] = 0.;
 
@@ -141,21 +153,21 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 		xy_out.re[i+3     ] += tempX4;
 		xy_out.im[i+3     ] += tempY4;
 */
-		float32x4_t *reg1_re = (float32x4_t *)&xy_out.re[i+mmax]; // 4 lanes reg
-		float32x4_t *reg1_im = (float32x4_t *)&xy_out.im[i+mmax]; // 4 lanes reg
+		VECTORTYPE *reg1_re = (VECTORTYPE *)&xy_out.re[i+mmax]; // 4 lanes reg
+		VECTORTYPE *reg1_im = (VECTORTYPE *)&xy_out.im[i+mmax]; // 4 lanes reg
 
-		float32x4_t temp_re = w_Xvec * *reg1_re - w_Yvec * *reg1_im; // 4 lanes mul
-		float32x4_t temp_im = w_Xvec * *reg1_im + w_Yvec * *reg1_re; // 4 lanes mul
+		VECTORTYPE temp_re = w_Xvec * *reg1_re - w_Yvec * *reg1_im; // 4 lanes mul
+		VECTORTYPE temp_im = w_Xvec * *reg1_im + w_Yvec * *reg1_re; // 4 lanes mul
 
-		float32x4_t *reg2_re = (float32x4_t *)&xy_out.re[i]; // 4 lanes reg
-		float32x4_t *reg2_im = (float32x4_t *)&xy_out.im[i]; // 4 lanes reg
+		VECTORTYPE *reg2_re = (VECTORTYPE *)&xy_out.re[i]; // 4 lanes reg
+		VECTORTYPE *reg2_im = (VECTORTYPE *)&xy_out.im[i]; // 4 lanes reg
 
 		*reg1_re = *reg2_re - temp_re; // 4 lanes sub&store
 		*reg1_im = *reg2_im - temp_im; // 4 lanes sub&store 
 		*reg2_re += temp_re; // 4 lanes add&store
 		*reg2_im += temp_im; // 4 lanes add&store
 	    }
-	    float32x4_t w_Xtmp;
+	    VECTORTYPE w_Xtmp;
 	    w_Xtmp = w_Xvec * wphase_Xvec - w_Yvec * wphase_Yvec; // 4 lanes rotate
 	    w_Yvec = w_Xvec * wphase_Yvec + w_Yvec * wphase_Xvec; // 4 lanes rotate
 	    w_Xvec = w_Xtmp;
