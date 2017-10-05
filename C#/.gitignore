@@ -9,3 +9,5 @@ packaging/opt
 *.zip
 *.deb
 *.o
+dist-windows
+Setup.exe
