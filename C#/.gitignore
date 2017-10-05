@@ -7,3 +7,4 @@ dist-x86_64
 **/*.rpm
 packaging/opt
 dist-windows
+Setup.exe

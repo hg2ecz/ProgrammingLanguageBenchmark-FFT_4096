@@ -3,7 +3,7 @@
 
 #define MyAppName "FFT Benchmark"
 #define MyAppVersion "1.3"
-#define MyAppPublisher "Zsolt Krüpl, HG2ECZ"
+#define MyAppPublisher "Zsolt Krï¿½pl, HG2ECZ"
 #define MyAppURL "http://www.example.com/"
 #define MyAppExeName "fft-benchmark.exe"
 
@@ -19,7 +19,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}\{#MyAppVersion}
+DefaultDirName={pf64}\{#MyAppName}\{#MyAppVersion}
 DisableProgramGroupPage=yes
 OutputBaseFilename=Setup
 Compression=lzma
