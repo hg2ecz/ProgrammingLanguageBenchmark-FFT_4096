@@ -91,11 +91,12 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 //	double theta = -2*M_PI/istep;
 //	COMPLEX_TYPE wphase_XY = cos(theta) + sin(theta)*I;
 	FLOAT_VFO_TYPE wphase_X = phasevec[l2pt][0];
-	FLOAT_VFO_TYPE wphase_Y = phasevec[l2pt][1]; l2pt++;
+	FLOAT_VFO_TYPE wphase_Y = phasevec[l2pt][1];
 
 	float32x4_t wphase_Xvec, wphase_Yvec;
-	wphase_Xvec[0] = wphase_Xvec[1] = wphase_Xvec[2] = wphase_Xvec[3]= phasevec[l2pt+1][0];
-	wphase_Yvec[0] = wphase_Yvec[1] = wphase_Yvec[2] = wphase_Yvec[3]= phasevec[l2pt+1][1];
+	wphase_Xvec[0] = wphase_Xvec[1] = wphase_Xvec[2] = wphase_Xvec[3]= phasevec[l2pt-2][0];
+	wphase_Yvec[0] = wphase_Yvec[1] = wphase_Yvec[2] = wphase_Yvec[3]= phasevec[l2pt-2][1];
+	l2pt++;
 
 	float32x4_t w_Xvec, w_Yvec;
 	w_Xvec[0] = 1.;
