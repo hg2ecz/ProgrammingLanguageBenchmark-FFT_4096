@@ -6,3 +6,8 @@ dist-x86_64
 **/*.deb
 **/*.rpm
 packaging/opt
+*.zip
+*.deb
+*.o
+dist-windows
+Setup.exe
