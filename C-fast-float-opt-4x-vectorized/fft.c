@@ -153,19 +153,23 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 		xy_out.re[i+3     ] += tempX4;
 		xy_out.im[i+3     ] += tempY4;
 */
-		VECTORTYPE *reg1_re = (VECTORTYPE *)&xy_out.re[i+mmax]; // 4 lanes reg
-		VECTORTYPE *reg1_im = (VECTORTYPE *)&xy_out.im[i+mmax]; // 4 lanes reg
+		VECTORTYPE *reg1_reptr = (VECTORTYPE *)&xy_out.re[i+mmax]; // 4 lanes reg
+		VECTORTYPE *reg1_imptr = (VECTORTYPE *)&xy_out.im[i+mmax]; // 4 lanes reg
+		VECTORTYPE reg1_re = *reg1_reptr;
+		VECTORTYPE reg1_im = *reg1_imptr;
 
-		VECTORTYPE temp_re = w_Xvec * *reg1_re - w_Yvec * *reg1_im; // 4 lanes mul
-		VECTORTYPE temp_im = w_Xvec * *reg1_im + w_Yvec * *reg1_re; // 4 lanes mul
+		VECTORTYPE temp_re = w_Xvec * reg1_re - w_Yvec * reg1_im; // 4 lanes mul
+		VECTORTYPE temp_im = w_Xvec * reg1_im + w_Yvec * reg1_re; // 4 lanes mul
 
-		VECTORTYPE *reg2_re = (VECTORTYPE *)&xy_out.re[i]; // 4 lanes reg
-		VECTORTYPE *reg2_im = (VECTORTYPE *)&xy_out.im[i]; // 4 lanes reg
+		VECTORTYPE *reg2_reptr = (VECTORTYPE *)&xy_out.re[i]; // 4 lanes reg
+		VECTORTYPE *reg2_imptr = (VECTORTYPE *)&xy_out.im[i]; // 4 lanes reg
+		VECTORTYPE reg2_re = *reg2_reptr;
+		VECTORTYPE reg2_im = *reg2_imptr;
 
-		*reg1_re = *reg2_re - temp_re; // 4 lanes sub&store
-		*reg1_im = *reg2_im - temp_im; // 4 lanes sub&store 
-		*reg2_re += temp_re; // 4 lanes add&store
-		*reg2_im += temp_im; // 4 lanes add&store
+		*reg1_reptr = reg2_re - temp_re; // 4 lanes sub&store
+		*reg1_imptr = reg2_im - temp_im; // 4 lanes sub&store 
+		*reg2_reptr = reg2_re + temp_re; // 4 lanes add&store
+		*reg2_imptr = reg2_im + temp_im; // 4 lanes add&store
 	    }
 	    VECTORTYPE w_Xtmp;
 	    w_Xtmp = w_Xvec * wphase_Xvec - w_Yvec * wphase_Yvec; // 4 lanes rotate
