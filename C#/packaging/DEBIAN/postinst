@@ -1,1 +1,2 @@
 echo "The FFT benchmark is installed as /opt/fft-benchmark/fft-benchmark"
+ln -s /opt/fft-benchmark/fft-benchmark /usr/local/bin/fft-benchmark
