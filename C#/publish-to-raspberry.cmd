@@ -37,7 +37,7 @@ echo Setting permissions of fft-benchmark
 %plink% -i %ssh_key% %remote% "chmod 755 packaging/opt/fft-benchmark/fft-benchmark"
 
 echo Setting permissions of postinst
-%plink% -i %ssh_key% %remote% "chmod 755 packaging/DEBIAN/postinst"
+%plink% -i %ssh_key% %remote% "chmod 755 packaging/DEBIAN/post-inst"
 
 echo ----------------------------------------------------------------
 echo Creating packages
