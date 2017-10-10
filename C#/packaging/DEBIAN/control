@@ -1,8 +1,8 @@
 Package: fft-benchmark
-Version: 1.2.1
+Version: 1.3.0.3
 Section: base
 Priority: optional
 Architecture: armhf
-Depends: 
+Depends: libc-bin (>= 2.19)
 Maintainer: Robert Fuszenecker <robert.fuszenecker@outlook.com>
 Description: The FFT benchmark from Zsolt Krüpl
