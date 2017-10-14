@@ -28,8 +28,8 @@ void dft_test(const COMPLEX_TYPE *fftout, const COMPLEX_TYPE *in, int log2fft, d
     fprintf(stderr, "\n Max absolute value: %f, relative error limit: %f\n", maxval, relerror);
     for (int i=0; i < (1<<log2fft); i++) {
 	if (fabs(creal(fftout[i])-creal(dftout[i])) > err || fabs(cimag(fftout[i])-cimag(dftout[i])) > err) {
-	    fprintf(stderr, " Inaccuracy error: fft%d: %d., re reok: %.5f %.5f :: im, imok: %.5fj %.5fj\n",
-                log2fft, i, creal(fftout[i]), creal(dftout[i]), cimag(fftout[i]), cimag(dftout[i]));
+	    fprintf(stderr, " Inaccuracy error: fft%d: %d., re reok: %.5f %.5f :: im, imok: %.5fj %.5fj, relerr: %.9f\n",
+                log2fft, i, creal(fftout[i]), creal(dftout[i]), cimag(fftout[i]), cimag(dftout[i]), (cabs(fftout[i])-cabs(dftout[i]))/maxval);
 	}
     }
 }
