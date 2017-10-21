@@ -1,0 +1,14 @@
+For a new projekt:
+    # apt-get install cargo
+    $ cargo new --bin fftbenchmark
+         The main program is main.rs
+
+For development: check the source code:
+    cargo check
+
+
+Build:
+    cargo build --release
+
+Clean:
+    cargo clean
