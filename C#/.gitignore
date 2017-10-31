@@ -8,3 +8,5 @@ dist-x86_64
 packaging/opt
 dist-windows
 Setup.exe
+**/*.zip
+**/*.o
