@@ -32,5 +32,5 @@ clean:
 
 PROG=$(TARGET)
 test:
-	./$(PROG)
+	./$(PROG) check
 	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py
