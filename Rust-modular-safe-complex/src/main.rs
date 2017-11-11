@@ -10,11 +10,11 @@ const FFT_REPEAT: u32 = 1000;
 const SIZE: usize = (1<<LOG2FFTSIZE);
 
 fn main() {
-    let mut xy         : [Complex<f64>; SIZE] = [Complex {re:0.0, im:0.0}; SIZE];
-    let mut xy_out_fft : [Complex<f64>; SIZE] = [Complex {re:0.0, im:0.0}; SIZE];
+    let mut xy         : [Complex<f64>; SIZE] = [Complex::new(0.0, 0.0); SIZE];
+    let mut xy_out_fft : [Complex<f64>; SIZE] = [Complex::new(0.0, 0.0); SIZE];
 
-    for i in 0..SIZE/2    { xy[i].re = 1.0; xy[i].im=0.0; }
-    for i in SIZE/2..SIZE { xy[i].re = -1.0; xy[i].im=0.0; }
+    for i in 0..SIZE/2    { xy[i] = Complex::new(1.0, 0.0); }
+    for i in SIZE/2..SIZE { xy[i] = Complex::new(-1.0, 0.0); }
 
 // FFT
     let start_time = Instant::now();

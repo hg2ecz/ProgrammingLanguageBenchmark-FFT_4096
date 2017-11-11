@@ -8,13 +8,13 @@ pub struct Fft {
 // Public function
 impl Fft {
     pub fn new() -> Fft {
-	let mut pvec: [Complex<f64>; 32] = [Complex {re:0.0, im:0.0}; 32];
+	let mut pvec: [Complex<f64>; 32] = [Complex::new(0.0, 0.0); 32];
 	for i in 0..32 {
 	    let point: i32 = 2<<i;
-	    pvec[i] = Complex {
-		re: (-2.0*std::f64::consts::PI/(point as f64)).cos(),
-		im: (-2.0*std::f64::consts::PI/(point as f64)).sin()
-	    }
+	    pvec[i] = Complex::new(
+		(-2.0*std::f64::consts::PI/(point as f64)).cos(),
+		(-2.0*std::f64::consts::PI/(point as f64)).sin()
+	    );
 	}
 	Fft { phasevec: pvec}
     }
@@ -42,7 +42,7 @@ impl Fft {
 	    let wphase_xy: Complex<f64>;
 	    wphase_xy = self.phasevec[l2pt];
 	    l2pt+=1;
-	    let mut w_xy: Complex<f64> = Complex{re:1.0, im:0.0};
+	    let mut w_xy: Complex<f64> = Complex::new(1.0, 0.0);
 
 	    for m in 0..mmax {;
 		let mut i = m;
