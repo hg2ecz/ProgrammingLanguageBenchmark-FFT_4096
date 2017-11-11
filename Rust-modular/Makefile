@@ -1,20 +1,27 @@
-RC=rustc
-RCFLAGS=-O -L.
-RLFLAGS=-C link-arg=-s -L.
+CARGO=cargo
+CARGO_BUILDOPTS=--release
+CARGO_INSTALLOPTS=--root=/tmp --force
 
-OBJS=libfft.rlib
-TARGET=benchmark
+all: build
 
-lib%.rlib: %.rs
-	$(RC) $(RCFLAGS) --crate-type=lib $<
+check:
+	$(CARGO) check
 
-all: $(OBJS)
-	$(RC) $(RLFLAGS) $(TARGET).rs
+build:
+	$(CARGO) build $(CARGO_BUILDOPTS)
+
+doc:
+	$(CARGO) doc
+
+test:
+	$(CARGO) test
+
+bench:
+	$(CARGO) bench
+
+install:
+	$(CARGO) install $(CARGO_INSTALLOPTS)
 
 clean:
-	rm -f $(OBJS) $(TARGET)
-
-PROG=$(TARGET)
-test:
-	./$(PROG)
-	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py
+	$(CARGO) clean
+	rm -f Cargo.lock

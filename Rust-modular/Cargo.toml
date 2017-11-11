@@ -7,4 +7,5 @@ authors = ["Zsolt Krüpl <hg2ecz@ham.hu>"]
 
 [lib]
 name = "fft"
+path = "src/fft.rs"
 crate-type = ["rlib"]
