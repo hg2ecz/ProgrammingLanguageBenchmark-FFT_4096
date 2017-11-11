@@ -12,12 +12,13 @@ CFLAGS+= $(PARAMS_CPU)
 
 CFLAGS+=-DLOG2FFTSIZE=12
 CFLAGS+=-DFFT_REPEAT=1000
+CFLAGS+=-DCHECKFFT
 
 # improve speed
 CFLAGS+=-DMOD_SPEED
 
 LDFLAGS=-lm -s
-OBJS=fft.o benchmark.o
+OBJS=dft_test.o fft.o benchmark.o
 
 TARGET=benchmark
 

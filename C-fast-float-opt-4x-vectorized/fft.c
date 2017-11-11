@@ -55,9 +55,6 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 
     l2pt++;
     for (int i=0; i < n; i += 2) {
-//	COMPLEX_TYPE tempXY = xy_out[i+mmax]; // w_XY = 1
-//	xy_out[i+mmax]  = xy_out[i] - tempXY;
-//	xy_out[i     ] += tempXY;
 	FLOAT_TYPE tempX = xy_out.re[i+mmax];
 	FLOAT_TYPE tempY = xy_out.im[i+mmax];
 	xy_out.re[i+mmax]  = xy_out.re[i] - tempX;
@@ -70,13 +67,6 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
     FLOAT_VFO_TYPE w_X2 = phasevec[l2pt][0];
     FLOAT_VFO_TYPE w_Y2 = phasevec[l2pt][1]; l2pt++;
     for (int i=0; i < n; i += 4) {
-//	COMPLEX_TYPE tempXY = xy_out[i+mmax]; // w_XY = 1
-//	xy_out[i+mmax]  = xy_out[i] - tempXY;
-//	xy_out[i     ] += tempXY;
-
-//	COMPLEX_TYPE tempXY2 = w_XY2 * xy_out[i+1+mmax];
-//	xy_out[i+1+mmax]  = xy_out[i+1] - tempXY2;
-//	xy_out[i+1     ] += tempXY2;
 	FLOAT_TYPE tempX = xy_out.re[i+mmax];
 	FLOAT_TYPE tempY = xy_out.im[i+mmax];
 	xy_out.re[i+mmax]  = xy_out.re[i] - tempX;
@@ -93,15 +83,8 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
     }
     mmax<<=1;
 
-#ifdef MOD_SPEED
-    while (l2pt < log2point) {
-	int istep = 2<<l2pt;
-#else
     while (n>mmax) {
 	int istep = mmax<<1;
-#endif
-//	double theta = -2*M_PI/istep;
-//	COMPLEX_TYPE wphase_XY = cos(theta) + sin(theta)*I;
 	FLOAT_VFO_TYPE wphase_X = phasevec[l2pt][0];
 	FLOAT_VFO_TYPE wphase_Y = phasevec[l2pt][1];
 
@@ -125,34 +108,6 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 
 	for (int m=0; m < mmax; m+=4) { // optimization: tempXY and tempXY2
 	    for (int i=m; i < n; i += istep) {
-/*		FLOAT_TYPE tempX = (FLOAT_TYPE)w_X * xy_out.re[i+mmax] - (FLOAT_TYPE)w_Y * xy_out.im[i+mmax];
-		FLOAT_TYPE tempY = (FLOAT_TYPE)w_X * xy_out.im[i+mmax] + (FLOAT_TYPE)w_Y * xy_out.re[i+mmax];
-		xy_out.re[i+mmax]  = xy_out.re[i] - tempX;
-		xy_out.im[i+mmax]  = xy_out.im[i] - tempY;
-		xy_out.re[i     ] += tempX;
-		xy_out.im[i     ] += tempY;
-
-		FLOAT_TYPE tempX2 = (FLOAT_TYPE)w_X2 * xy_out.re[i+1+mmax] - (FLOAT_TYPE)w_Y2 * xy_out.im[i+1+mmax];
-		FLOAT_TYPE tempY2 = (FLOAT_TYPE)w_X2 * xy_out.im[i+1+mmax] + (FLOAT_TYPE)w_Y2 * xy_out.re[i+1+mmax];
-		xy_out.re[i+1+mmax]  = xy_out.re[i+1] - tempX2;
-		xy_out.im[i+1+mmax]  = xy_out.im[i+1] - tempY2;
-		xy_out.re[i+1     ] += tempX2;
-		xy_out.im[i+1     ] += tempY2;
-
-		FLOAT_TYPE tempX3 = (FLOAT_TYPE)w_X3 * xy_out.re[i+2+mmax] - (FLOAT_TYPE)w_Y3 * xy_out.im[i+2+mmax];
-		FLOAT_TYPE tempY3 = (FLOAT_TYPE)w_X3 * xy_out.im[i+2+mmax] + (FLOAT_TYPE)w_Y3 * xy_out.re[i+2+mmax];
-		xy_out.re[i+2+mmax]  = xy_out.re[i+2] - tempX3;
-		xy_out.im[i+2+mmax]  = xy_out.im[i+2] - tempY3;
-		xy_out.re[i+2     ] += tempX3;
-		xy_out.im[i+2     ] += tempY3;
-
-		FLOAT_TYPE tempX4 = (FLOAT_TYPE)w_X4 * xy_out.re[i+3+mmax] - (FLOAT_TYPE)w_Y4 * xy_out.im[i+3+mmax];
-		FLOAT_TYPE tempY4 = (FLOAT_TYPE)w_X4 * xy_out.im[i+3+mmax] + (FLOAT_TYPE)w_Y4 * xy_out.re[i+3+mmax];
-		xy_out.re[i+3+mmax]  = xy_out.re[i+3] - tempX4;
-		xy_out.im[i+3+mmax]  = xy_out.im[i+3] - tempY4;
-		xy_out.re[i+3     ] += tempX4;
-		xy_out.im[i+3     ] += tempY4;
-*/
 		VECTORTYPE *reg1_reptr = (VECTORTYPE *)&xy_out.re[i+mmax]; // 4 lanes reg
 		VECTORTYPE *reg1_imptr = (VECTORTYPE *)&xy_out.im[i+mmax]; // 4 lanes reg
 		VECTORTYPE reg1_re = *reg1_reptr;

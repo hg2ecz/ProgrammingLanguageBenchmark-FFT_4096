@@ -1,12 +1,27 @@
-TARGET=benchmark
+CARGO=cargo
+CARGO_BUILDOPTS=--release
+CARGO_INSTALLOPTS=--root=/tmp --force
 
-all:
-	rustc -O -C link-arg=-s benchmark.rs
+all: build
+
+check:
+	$(CARGO) check
+
+build:
+	$(CARGO) build $(CARGO_BUILDOPTS)
+
+doc:
+	$(CARGO) doc
+
+test:
+	$(CARGO) test
+
+bench:
+	$(CARGO) bench
+
+install:
+	$(CARGO) install $(CARGO_INSTALLOPTS)
 
 clean:
-	rm -f $(TARGET)
-
-PROG=$(TARGET)
-test:
-	./$(PROG)
-	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py
+	$(CARGO) clean
+	rm -f Cargo.lock
