@@ -31,13 +31,13 @@ pub fn cmul(a: Cplx, b: Cplx) -> Cplx {
 }
 
 pub struct Fft {
-    phasevec: [Cplx; 32]   // = [Cplx{re: 0.0, im: 0.0}; 32],
+    phasevec: [Cplx; 32],
 }
 
 impl Fft {
   pub fn new() -> Fft {
-    let mut fft: Fft = Fft {phasevec: [Cplx{re:0.0, im: 0.0}; 32]};
-    for i in 0..32 {
+    let mut fft: Fft = Fft{phasevec: [Cplx{re:0.0, im: 0.0}; 32]};
+    for i in 0..fft.phasevec.len() {
 	let point: i32 = 2<<i;
 	fft.phasevec[i].re = (-2.0*std::f64::consts::PI/(point as f64)).cos();
 	fft.phasevec[i].im = (-2.0*std::f64::consts::PI/(point as f64)).sin();
