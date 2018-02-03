@@ -1,5 +1,5 @@
-extern crate num;
-use num::Complex;
+extern crate num_complex;
+use num_complex::Complex;
 
 pub struct Fft {
     phasevec: [Complex<f64>; 32]
