@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Zsolt Krüpl <hg2ecz@ham.hu>"]
 
 [dependencies]
-num = "0.1.40"
+num-complex = "0.1.*"
 
 [lib]
 name = "fft"
