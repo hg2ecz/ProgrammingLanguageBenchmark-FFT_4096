@@ -26,8 +26,7 @@ void fft_init() {
 }
 
 // Public function
-struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
-    static struct _complexblock xy_out;
+void fft(int log2point, struct _complexblock *xy_out, const struct _complexblock xy_in) {
     for (int i=0; i < (1<<log2point); i+=2) {
 	unsigned int brev = i;
 	brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
@@ -37,12 +36,12 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 	brev = (brev >> 16) | (brev << 16);
 
 	brev >>= 32-log2point;
-	xy_out.re[brev] = xy_in.re[i];
-	xy_out.im[brev] = xy_in.im[i];
+	xy_out->re[brev] = xy_in.re[i];
+	xy_out->im[brev] = xy_in.im[i];
 
 	unsigned int brev2 = brev | (1<<(log2point-1));
-	xy_out.re[brev2] = xy_in.re[i+1];
-	xy_out.im[brev2] = xy_in.im[i+1];
+	xy_out->re[brev2] = xy_in.re[i+1];
+	xy_out->im[brev2] = xy_in.im[i+1];
     }
 
     // here begins the Danielson-Lanczos section
@@ -53,31 +52,31 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 
     l2pt++;
     for (int i=0; i < n; i += 2) {
-	FLOAT_TYPE tempX = xy_out.re[i+mmax];
-	FLOAT_TYPE tempY = xy_out.im[i+mmax];
-	xy_out.re[i+mmax]  = xy_out.re[i] - tempX;
-	xy_out.im[i+mmax]  = xy_out.im[i] - tempY;
-	xy_out.re[i     ] += tempX;
-	xy_out.im[i     ] += tempY;
+	FLOAT_TYPE tempX = xy_out->re[i+mmax];
+	FLOAT_TYPE tempY = xy_out->im[i+mmax];
+	xy_out->re[i+mmax]  = xy_out->re[i] - tempX;
+	xy_out->im[i+mmax]  = xy_out->im[i] - tempY;
+	xy_out->re[i     ] += tempX;
+	xy_out->im[i     ] += tempY;
     }
     mmax<<=1;
 
     FLOAT_VFO_TYPE w_X2 = phasevec[l2pt][0];
     FLOAT_VFO_TYPE w_Y2 = phasevec[l2pt][1]; l2pt++;
     for (int i=0; i < n; i += 4) {
-	FLOAT_TYPE tempX = xy_out.re[i+mmax];
-	FLOAT_TYPE tempY = xy_out.im[i+mmax];
-	xy_out.re[i+mmax]  = xy_out.re[i] - tempX;
-	xy_out.im[i+mmax]  = xy_out.im[i] - tempY;
-	xy_out.re[i     ] += tempX;
-	xy_out.im[i     ] += tempY;
+	FLOAT_TYPE tempX = xy_out->re[i+mmax];
+	FLOAT_TYPE tempY = xy_out->im[i+mmax];
+	xy_out->re[i+mmax]  = xy_out->re[i] - tempX;
+	xy_out->im[i+mmax]  = xy_out->im[i] - tempY;
+	xy_out->re[i     ] += tempX;
+	xy_out->im[i     ] += tempY;
 
-	FLOAT_TYPE tempX2 = (FLOAT_TYPE)w_X2 * xy_out.re[i+1+mmax] - (FLOAT_TYPE)w_Y2 * xy_out.im[i+1+mmax];
-	FLOAT_TYPE tempY2 = (FLOAT_TYPE)w_X2 * xy_out.im[i+1+mmax] + (FLOAT_TYPE)w_Y2 * xy_out.re[i+1+mmax];
-	xy_out.re[i+1+mmax]  = xy_out.re[i+1] - tempX2;
-	xy_out.im[i+1+mmax]  = xy_out.im[i+1] - tempY2;
-	xy_out.re[i+1     ] += tempX2;
-	xy_out.im[i+1     ] += tempY2;
+	FLOAT_TYPE tempX2 = (FLOAT_TYPE)w_X2 * xy_out->re[i+1+mmax] - (FLOAT_TYPE)w_Y2 * xy_out->im[i+1+mmax];
+	FLOAT_TYPE tempY2 = (FLOAT_TYPE)w_X2 * xy_out->im[i+1+mmax] + (FLOAT_TYPE)w_Y2 * xy_out->re[i+1+mmax];
+	xy_out->re[i+1+mmax]  = xy_out->re[i+1] - tempX2;
+	xy_out->im[i+1+mmax]  = xy_out->im[i+1] - tempY2;
+	xy_out->re[i+1     ] += tempX2;
+	xy_out->im[i+1     ] += tempY2;
     }
     mmax<<=1;
 
@@ -106,16 +105,16 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 
 	for (int m=0; m < mmax; m+=4) { // optimization: tempXY and tempXY2
 	    for (int i=m; i < n; i += istep) {
-		VECTORTYPE *reg1_reptr = (VECTORTYPE *)&xy_out.re[i+mmax]; // 4 lanes reg
-		VECTORTYPE *reg1_imptr = (VECTORTYPE *)&xy_out.im[i+mmax]; // 4 lanes reg
+		VECTORTYPE *reg1_reptr = (VECTORTYPE *)&xy_out->re[i+mmax]; // 4 lanes reg
+		VECTORTYPE *reg1_imptr = (VECTORTYPE *)&xy_out->im[i+mmax]; // 4 lanes reg
 		VECTORTYPE reg1_re = *reg1_reptr;
 		VECTORTYPE reg1_im = *reg1_imptr;
 
 		VECTORTYPE temp_re = w_Xvec * reg1_re - w_Yvec * reg1_im; // 4 lanes mul
 		VECTORTYPE temp_im = w_Xvec * reg1_im + w_Yvec * reg1_re; // 4 lanes mul
 
-		VECTORTYPE *reg2_reptr = (VECTORTYPE *)&xy_out.re[i]; // 4 lanes reg
-		VECTORTYPE *reg2_imptr = (VECTORTYPE *)&xy_out.im[i]; // 4 lanes reg
+		VECTORTYPE *reg2_reptr = (VECTORTYPE *)&xy_out->re[i]; // 4 lanes reg
+		VECTORTYPE *reg2_imptr = (VECTORTYPE *)&xy_out->im[i]; // 4 lanes reg
 		VECTORTYPE reg2_re = *reg2_reptr;
 		VECTORTYPE reg2_im = *reg2_imptr;
 
@@ -131,5 +130,4 @@ struct _complexblock *fft(int log2point,const struct _complexblock xy_in) {
 	}
 	mmax=istep;
     }
-    return &xy_out;
 }

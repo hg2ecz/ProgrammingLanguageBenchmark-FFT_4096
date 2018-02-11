@@ -8,4 +8,4 @@ struct _complexblock {
 };
 // step: N*log2(N)
 void fft_init();
-struct _complexblock *fft(int log2point,const struct _complexblock xy_in);
+void fft(int log2point, struct _complexblock *xy_out, const struct _complexblock xy_in);
