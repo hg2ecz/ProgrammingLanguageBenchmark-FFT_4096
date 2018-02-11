@@ -4,3 +4,12 @@ version = "0.1.0"
 authors = ["Zsolt Krüpl <hg2ecz@ham.hu>"]
 
 [dependencies]
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = false
+debug-assertions = false
+codegen-units = 1
+panic = 'unwind'
