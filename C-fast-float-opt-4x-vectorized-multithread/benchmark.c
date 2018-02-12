@@ -14,14 +14,13 @@ struct _complexblock xy[MAXTHREAD];
 struct _complexblock xy_out[MAXTHREAD];
 
 int main(int argc, char **argv) {
-    int i;
     double eltime;
     struct timeval tstart, tend;
 
     //for(i=0; i<SIZE/2; i++) { xy.re[i]= 1.; xy.im[i]= 0.; }
     //for(   ; i<SIZE  ; i++) { xy.re[i]=-1.; xy.im[i]= 0.; }
     for (int j=0; j<MAXTHREAD; j++) {
-	for(i=0; i<SIZE; i++) { xy[j].re[i]= 1.+(j+1)*i/1000.; xy[j].im[i]= (j+1)*i/2000.; }
+	for(int i=0; i<SIZE; i++) { xy[j].re[i]= 1.+(j+1)*i/1000.; xy[j].im[i]= (j+1)*i/2000.; }
     }
 
 // FFT
@@ -35,7 +34,7 @@ int main(int argc, char **argv) {
 	tid = omp_get_thread_num(); // thread id
 	if (tid == 0) printf("Number of threads = %d\n", nthreads);
 	if (tid < MAXTHREAD) // vectorsize !!!
-           for (i=0; i<FFT_REPEAT/nthreads; i++)  fft(LOG2FFTSIZE, &xy_out[tid], xy[tid]);
+           for (int i=0; i<FFT_REPEAT/nthreads; i++)  fft(LOG2FFTSIZE, &xy_out[tid], xy[tid]);
     }
 
     gettimeofday(&tend, NULL);
@@ -52,11 +51,11 @@ int main(int argc, char **argv) {
 	dft_test(&xy_out[3], &xy[3], LOG2FFTSIZE, 1e-6); // compare & relative error
     }
 #endif
-    for(i=0; i<6; i++) {
+    for(int i=0; i<6; i++) {
 	printf("%3d %16.4f %16.4f\n", i, xy_out[0].re[i], xy_out[0].im[i]);
     }
     puts("");
-    for(i=0; i<6; i++) {
+    for(int i=0; i<6; i++) {
 	printf("%3d %16.4f %16.4f\n", i, xy_out[1].re[i], xy_out[1].im[i]);
     }
     return 0;

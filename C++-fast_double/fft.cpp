@@ -10,8 +10,7 @@ fft::fft(void) {
 }
 
 void fft::calc(int log2point, std::complex<double> *xy_out, const std::complex<double> *xy_in) {
-    int i;
-    for (i=0; i < (1<<log2point); i++) {
+    for (int i=0; i < (1<<log2point); i++) {
 	unsigned int brev = i;
 	brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
 	brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);

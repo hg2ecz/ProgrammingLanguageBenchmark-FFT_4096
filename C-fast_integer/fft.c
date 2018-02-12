@@ -7,16 +7,15 @@ static struct _sample phasevec[32];
 
 // Public function
 void fft(int log2point, struct _sample *restrict xy_out, const struct _sample *restrict xy_in) {
-    int i;
     if (!phasevec_exist) {
-	for (i=0; i<32; i++) {
+	for (int i=0; i<32; i++) {
 	    int point = 2<<i;
 	    phasevec[i].i = (1UL<<INTMUL)*cos(-2*M_PI/point);
 	    phasevec[i].q = (1UL<<INTMUL)*sin(-2*M_PI/point);
 	}
 	phasevec_exist = 1;
     }
-    for (i=0; i < (1<<log2point); i++) {
+    for (int i=0; i < (1<<log2point); i++) {
 	unsigned int brev = i;
 	brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
 	brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);
