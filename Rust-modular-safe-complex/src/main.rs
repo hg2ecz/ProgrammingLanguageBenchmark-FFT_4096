@@ -1,9 +1,9 @@
 //mod fft;        // -- if we used as module
 extern crate fft; // -- if we used as lib 
-extern crate num;
+extern crate num_complex;
 
 use std::time::Instant;
-use num::Complex;
+use num_complex::Complex;
 
 const LOG2FFTSIZE: u32 = 12;
 const FFT_REPEAT: u32 = 1000;

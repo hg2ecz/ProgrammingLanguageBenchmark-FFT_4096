@@ -12,16 +12,15 @@ COMPLEX_TYPE xy[SIZE];
 COMPLEX_TYPE xy_out[SIZE];
 
 int main() {
-    int i;
     double eltime;
     struct timespec gstart, gend;
 
-    for(i=0; i<SIZE/2; i++) xy[i]= 1.;
-    for(   ; i<SIZE  ; i++) xy[i]=-1.;
+    for(int i=0; i<SIZE/2; i++) xy[i]= 1.;
+    for(int i=SIZE/2; i<SIZE; i++) xy[i]=-1.;
 
 // FFT
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &gstart);
-    for (i=0; i<FFT_REPEAT; i++) fft(LOG2FFTSIZE, xy_out, xy);
+    for (int i=0; i<FFT_REPEAT; i++) fft(LOG2FFTSIZE, xy_out, xy);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &gend);
 
     eltime = 1000.0*(gend.tv_sec - gstart.tv_sec) + (gend.tv_nsec - gstart.tv_nsec)/1000000.;
@@ -30,7 +29,7 @@ int main() {
 #ifdef CHECKFFT
     dft_test(xy_out, xy, LOG2FFTSIZE, 1e-6); // compare & relative error
 #endif
-    for(i=0; i<6; i++) {
+    for(int i=0; i<6; i++) {
 	printf("%3d %16.4f %16.4f\n", i, creal(xy_out[i]), cimag(xy_out[i]));
     }
     return 0;
