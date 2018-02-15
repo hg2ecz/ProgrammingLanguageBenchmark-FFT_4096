@@ -42,11 +42,11 @@ fn main() {
     for tid in 0..num_cores {
         let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize];
 
-        children.push(thread::spawn(move || -> (u32, [fft::Cplx; SIZE]) {
-            let mut xy_out_slice: [fft::Cplx; SIZE] = [fft::Cplx { re: 1.0, im: 0.0 }; SIZE];
+        children.push(thread::spawn(move || -> (u32, Box<[fft::Cplx; SIZE]>) {
+            let mut xy_out_slice: Box<[fft::Cplx; SIZE]> = Box::new([fft::Cplx { re: 1.0, im: 0.0 }; SIZE]);
             let f = fft::Fft::new();
             for _i in 0..FFT_REPEAT / num_cores {
-                f.fft(LOG2FFTSIZE, &mut xy_out_slice, &xy_slice);
+                f.fft(LOG2FFTSIZE, &mut *xy_out_slice, &xy_slice);
             }
             return (tid, xy_out_slice);
         })); // push
