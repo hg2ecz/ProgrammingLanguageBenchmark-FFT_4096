@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["Zsolt Krüpl <hg2ecz@ham.hu>"]
 
 [dependencies]
+num_cpus = "1.0"
+
+[profile.release]
+lto = false
