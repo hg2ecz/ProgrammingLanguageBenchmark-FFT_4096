@@ -40,7 +40,7 @@ fn main() {
     let mut children = vec![];
 
     for tid in 0..num_cores {
-        let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize].clone();
+        let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize];
 
         children.push(thread::spawn(move || -> (u32, [fft::Cplx; SIZE]) {
             let mut xy_out_slice: [fft::Cplx; SIZE] = [fft::Cplx { re: 1.0, im: 0.0 }; SIZE];
