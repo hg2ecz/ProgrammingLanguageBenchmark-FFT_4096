@@ -33,7 +33,6 @@ fn main() {
             for _i in 0..FFT_REPEAT/num_cores {
                 f.fft(LOG2FFTSIZE, &mut xy_out_slice, &xy_slice);
             }
-            println!("bent: {} {}", xy_out_slice[1].re, xy_out_slice[1].im);
             return (tid, xy_out_slice);
         })); // push
     }
