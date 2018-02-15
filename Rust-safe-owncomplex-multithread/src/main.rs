@@ -1,3 +1,5 @@
+extern crate num_cpus;
+
 mod fft;
 
 use std::time::Instant;
@@ -7,22 +9,23 @@ const LOG2FFTSIZE: u32 = 12;
 const FFT_REPEAT: u32 = 1000;
 
 const SIZE: usize = (1 << LOG2FFTSIZE);
-const MAXTHREAD: usize = 64;
 
 fn main() {
+    let max_threads = num_cpus::get();
+
     let mut xy = Vec::new();
 
-    for _i in 0..MAXTHREAD {
+    for _i in 0..max_threads {
         xy.push([fft::Cplx { re: 1.0, im: 0.0 }; SIZE]);
     }
 
     let mut xy_out_fft = Vec::new();
 
-    for _i in 0..MAXTHREAD {
+    for _i in 0..max_threads {
         xy_out_fft.push([fft::Cplx { re: 1.0, im: 0.0 }; SIZE]);
     }
 
-    for j in 0..MAXTHREAD {
+    for j in 0..max_threads {
         for i in 0..SIZE / 2 {
             xy[j][i].re = 1.0;
             xy[j][i].im = 0.0;
@@ -36,19 +39,18 @@ fn main() {
     // FFT
     let start_time = Instant::now();
 
-    let num_cores = 4;
     let mut children = vec![];
 
-    for tid in 0..num_cores {
+    for tid in 0..max_threads {
         let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize];
 
         children.push(thread::spawn(move || -> (u32, Box<[fft::Cplx; SIZE]>) {
             let mut xy_out_slice: Box<[fft::Cplx; SIZE]> = Box::new([fft::Cplx { re: 1.0, im: 0.0 }; SIZE]);
             let f = fft::Fft::new();
-            for _i in 0..FFT_REPEAT / num_cores {
+            for _i in 0..FFT_REPEAT / max_threads as u32 {
                 f.fft(LOG2FFTSIZE, &mut *xy_out_slice, &xy_slice);
             }
-            return (tid, xy_out_slice);
+            return (tid as u32, xy_out_slice);
         })); // push
     }
 
