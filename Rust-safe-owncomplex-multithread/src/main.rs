@@ -10,8 +10,17 @@ const SIZE: usize = (1<<LOG2FFTSIZE);
 const MAXTHREAD: usize = 64;
 
 fn main() {
-    let mut xy         : [[fft::Cplx; SIZE]; MAXTHREAD] = [[fft::Cplx {re: 1.0, im: 0.0}; SIZE]; MAXTHREAD];
-    let mut xy_out_fft : [[fft::Cplx; SIZE]; MAXTHREAD] = [[fft::Cplx {re: 1.0, im: 0.0}; SIZE]; MAXTHREAD];
+    let mut xy         = Vec::new();
+
+    for _i in 0..MAXTHREAD {
+        xy.push([fft::Cplx {re: 1.0, im: 0.0}; SIZE]);
+    }
+
+    let mut xy_out_fft = Vec::new();
+
+    for _i in 0..MAXTHREAD {
+        xy_out_fft.push([fft::Cplx {re: 1.0, im: 0.0}; SIZE]);
+    }
 
     for j in 0..MAXTHREAD {
         for i in 0..SIZE/2    { xy[j][i].re =  1.0; xy[j][i].im = 0.0; }
@@ -45,7 +54,8 @@ fn main() {
             xy_out_fft[tid as usize][i].re = xyout[i].re;
             xy_out_fft[tid as usize][i].im = xyout[i].im;
         }
-        //println!("{} {}", xy_out_fft[0][1].re, xy_out_fft[0][1].im);
+        
+        println!("{} {}", xy_out_fft[0][1].re, xy_out_fft[0][1].im);
     }
 
     let elapsed_time = start_time.elapsed();
@@ -55,13 +65,15 @@ fn main() {
     println!("{} piece(s) of {} pt FFT;    {} ms/piece\n\n", FFT_REPEAT, SIZE, milliseconds/FFT_REPEAT as f64);
 
     println!("{}", xy_out_fft[0].len());
-//    println!("{} {}", xy_out_fft[0][0].re, xy_out_fft[0][0].im);
-    
+    println!("{} {}", xy_out_fft[0][0].re, xy_out_fft[0][0].im);
+
     for i in 0..6 {
-//	println!("{}  {} {}", i, xy_out_fft[0][i].re, xy_out_fft[0][i].im);
+	    println!("{}  {} {}", i, xy_out_fft[0][i].re, xy_out_fft[0][i].im);
     }
+
     println!("");
+
     for i in 0..6 {
-//	println!("{}  {} {}", i, xy_out_fft[1][i].re, xy_out_fft[1][i].im);
+	    println!("{}  {} {}", i, xy_out_fft[1][i].re, xy_out_fft[1][i].im);
     }
 }
