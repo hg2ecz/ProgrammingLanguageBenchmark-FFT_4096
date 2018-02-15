@@ -14,8 +14,8 @@ fn main() {
     let mut xy_out_fft : [[fft::Cplx; SIZE]; MAXTHREAD] = [[fft::Cplx {re: 1.0, im: 0.0}; SIZE]; MAXTHREAD];
 
     for j in 0..MAXTHREAD {
-        for i in 0..SIZE/2    { xy[j][i].re =  1.0; xy[j][i].im = 0.0; }
-        for i in SIZE/2..SIZE { xy[j][i].re = -1.0; xy[j][i].im = 0.0; }
+        for i in 0..SIZE/2    { xy[j][i].re =  1.0 * j as f64 + 1.0; xy[j][i].im = 0.0; }
+        for i in SIZE/2..SIZE { xy[j][i].re = -1.0 * j as f64 - 1.0; xy[j][i].im = 0.0; }
     }
 
 // FFT
@@ -25,7 +25,7 @@ fn main() {
     let mut children = vec![];
 
     for tid in 0..num_cores {
-        let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize].clone();
+        let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize];
 
         children.push(thread::spawn(move || -> (u32, [fft::Cplx; SIZE]) {
             let mut xy_out_slice : [fft::Cplx; SIZE] = [fft::Cplx {re: 1.0, im: 0.0}; SIZE];
