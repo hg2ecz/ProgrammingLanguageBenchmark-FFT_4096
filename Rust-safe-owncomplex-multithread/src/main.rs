@@ -27,23 +27,24 @@ fn main() {
     for tid in 0..num_cores {
         let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize].clone();
 
-        children.push(thread::spawn(move || -> [fft::Cplx; SIZE] {
+        children.push(thread::spawn(move || -> (u32, [fft::Cplx; SIZE]) {
             let mut xy_out_slice : [fft::Cplx; SIZE] = [fft::Cplx {re: 1.0, im: 0.0}; SIZE];
             let f = fft::Fft::new();
             for _i in 0..FFT_REPEAT/num_cores {
                 f.fft(LOG2FFTSIZE, &mut xy_out_slice, &xy_slice);
             }
             println!("bent: {} {}", xy_out_slice[1].re, xy_out_slice[1].im);
-            return xy_out_slice;
+            return (tid, xy_out_slice);
         })); // push
     }
 
     for child in children {
-        let x = child.join().unwrap();
-        println!("join: {} {}", x[1].re, x[1].im);
+        let (tid, xyout) = child.join().unwrap();
+        println!("join: tid: {} re: {} im: {}", tid, xyout[1].re, xyout[1].im);
 
         for i in 0..SIZE {
-            xy_out_fft[0][i] = x[i];
+            xy_out_fft[tid as usize][i].re = xyout[i].re;
+            xy_out_fft[tid as usize][i].im = xyout[i].im;
         }
         //println!("{} {}", xy_out_fft[0][1].re, xy_out_fft[0][1].im);
     }
