@@ -1,12 +1,12 @@
 CFLAGS=-O3
-OBJS = fft.cmx benchmark.cmx
+OBJS = fft.o benchmark.o
 TARGET = benchmark
 
-%.cmx : %.ml
+%.o : %.ml
 	ocamlopt $(CFLAGS) -c $<
 
 all: $(OBJS)
-	ocamlopt $(OBJS) -o $(TARGET)
+	ocamlopt $(OBJS:.o=.cmx) -o $(TARGET)
 
 clean:
-	rm -f $(OBJS:.cmx=.cmi) $(OBJS) $(TARGET)
+	rm -f $(OBJS:.o=.cmx) $(OBJS:.o=.cmi) $(OBJS) $(TARGET)
