@@ -1,3 +1,5 @@
+extern crate num_cpus;
+
 mod fft;
 
 use std::time::Instant;
@@ -6,34 +8,49 @@ use std::thread;
 const LOG2FFTSIZE: u32 = 12;
 const FFT_REPEAT: u32 = 1000;
 
-const SIZE: usize = (1<<LOG2FFTSIZE);
-const MAXTHREAD: usize = 64;
+const SIZE: usize = (1 << LOG2FFTSIZE);
 
 fn main() {
-    let mut xy         : [[fft::Cplx; SIZE]; MAXTHREAD] = [[fft::Cplx {re: 1.0, im: 0.0}; SIZE]; MAXTHREAD];
-    let mut xy_out_fft : [[fft::Cplx; SIZE]; MAXTHREAD] = [[fft::Cplx {re: 1.0, im: 0.0}; SIZE]; MAXTHREAD];
+    let max_threads = num_cpus::get();
 
-    for j in 0..MAXTHREAD {
-        for i in 0..SIZE/2    { xy[j][i].re =  1.0; xy[j][i].im = 0.0; }
-        for i in SIZE/2..SIZE { xy[j][i].re = -1.0; xy[j][i].im = 0.0; }
+    let mut xy = Vec::new();
+
+    for _i in 0..max_threads {
+        xy.push([fft::Cplx { re: 1.0, im: 0.0 }; SIZE]);
     }
 
-// FFT
+    let mut xy_out_fft = Vec::new();
+
+    for _i in 0..max_threads {
+        xy_out_fft.push([fft::Cplx { re: 1.0, im: 0.0 }; SIZE]);
+    }
+
+    for j in 0..max_threads {
+        for i in 0..SIZE / 2 {
+            xy[j][i].re = 1.0;
+            xy[j][i].im = 0.0;
+        }
+        for i in SIZE / 2..SIZE {
+            xy[j][i].re = -1.0;
+            xy[j][i].im = 0.0;
+        }
+    }
+
+    // FFT
     let start_time = Instant::now();
 
-    let num_cores = 4;
     let mut children = vec![];
 
-    for tid in 0..num_cores {
-        let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize].clone();
+    for tid in 0..max_threads {
+        let xy_slice: [fft::Cplx; SIZE] = xy[tid as usize];
 
-        children.push(thread::spawn(move || -> (u32, [fft::Cplx; SIZE]) {
-            let mut xy_out_slice : [fft::Cplx; SIZE] = [fft::Cplx {re: 1.0, im: 0.0}; SIZE];
+        children.push(thread::spawn(move || -> (u32, Box<[fft::Cplx; SIZE]>) {
+            let mut xy_out_slice: Box<[fft::Cplx; SIZE]> = Box::new([fft::Cplx { re: 1.0, im: 0.0 }; SIZE]);
             let f = fft::Fft::new();
-            for _i in 0..FFT_REPEAT/num_cores {
-                f.fft(LOG2FFTSIZE, &mut xy_out_slice, &xy_slice);
+            for _i in 0..FFT_REPEAT / max_threads as u32 {
+                f.fft(LOG2FFTSIZE, &mut *xy_out_slice, &xy_slice);
             }
-            return (tid, xy_out_slice);
+            return (tid as u32, xy_out_slice);
         })); // push
     }
 
@@ -45,23 +62,31 @@ fn main() {
             xy_out_fft[tid as usize][i].re = xyout[i].re;
             xy_out_fft[tid as usize][i].im = xyout[i].im;
         }
-        //println!("{} {}", xy_out_fft[0][1].re, xy_out_fft[0][1].im);
+
+        println!("{} {}", xy_out_fft[0][1].re, xy_out_fft[0][1].im);
     }
 
     let elapsed_time = start_time.elapsed();
-    let milliseconds = (elapsed_time.as_secs() as f64 * 1000.0) +
-		       (elapsed_time.subsec_nanos() as f64 / 1_000_000.0);
+    let milliseconds = (elapsed_time.as_secs() as f64 * 1000.0)
+        + (elapsed_time.subsec_nanos() as f64 / 1_000_000.0);
 
-    println!("{} piece(s) of {} pt FFT;    {} ms/piece\n\n", FFT_REPEAT, SIZE, milliseconds/FFT_REPEAT as f64);
+    println!(
+        "{} piece(s) of {} pt FFT;    {} ms/piece\n\n",
+        FFT_REPEAT,
+        SIZE,
+        milliseconds / FFT_REPEAT as f64
+    );
 
     println!("{}", xy_out_fft[0].len());
-//    println!("{} {}", xy_out_fft[0][0].re, xy_out_fft[0][0].im);
-    
+    println!("{} {}", xy_out_fft[0][0].re, xy_out_fft[0][0].im);
+
     for i in 0..6 {
-//	println!("{}  {} {}", i, xy_out_fft[0][i].re, xy_out_fft[0][i].im);
+        println!("{}  {} {}", i, xy_out_fft[0][i].re, xy_out_fft[0][i].im);
     }
+
     println!("");
+
     for i in 0..6 {
-//	println!("{}  {} {}", i, xy_out_fft[1][i].re, xy_out_fft[1][i].im);
+        println!("{}  {} {}", i, xy_out_fft[1][i].re, xy_out_fft[1][i].im);
     }
 }
