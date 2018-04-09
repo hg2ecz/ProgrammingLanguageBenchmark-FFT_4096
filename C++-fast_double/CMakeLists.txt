@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 project (benchmark)
 
-option(USE_CLANG "build application with clang" ON)
-
 add_executable(benchmark 
     benchmark.cpp
     fft.cpp
@@ -19,6 +17,9 @@ add_definitions(
 target_include_directories(benchmark PUBLIC 
     "." 
 )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
+set(CMAKE_EXE_LINKER_FLAGS "-s")
 
 install (TARGETS benchmark DESTINATION bin)
 
