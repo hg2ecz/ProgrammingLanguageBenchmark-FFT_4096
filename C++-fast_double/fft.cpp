@@ -5,7 +5,7 @@
 fft::fft(void) {
     for (int i=0; i<32; i++) {
 	int point = 2<<i;
-	phasevec[i] = cos(-2*M_PI/point) + sin(-2*M_PI/point)*1i;
+	phasevec[i] = std::complex<double>(cos(-2*M_PI/point), sin(-2*M_PI/point));
     }
 }
 
@@ -37,7 +37,7 @@ void fft::calc(int log2point, std::complex<double> *xy_out, const std::complex<d
 //	double complex wphase_XY = cos(theta) + sin(theta)*I;
 	std::complex<double> wphase_XY = phasevec[l2pt++];
 
-	std::complex<double> w_XY = 1.0 + 0.0i;
+	std::complex<double> w_XY = std::complex<double>(1.0 + 0.0);
 	for (int m=0; m < mmax; m++) {
 	    for (int i=m; i < n; i += istep) {
 		std::complex<double> tempXY = w_XY *xy_out[i+mmax];
