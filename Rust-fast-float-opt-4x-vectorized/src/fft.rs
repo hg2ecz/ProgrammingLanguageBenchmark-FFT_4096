@@ -21,8 +21,9 @@ impl Fft {
 	return f;
     }
 
-    pub fn fft(&self, log2point: u32, xy_out: &mut (Vec<FloatType>, Vec<FloatType>), xy_in: &(Vec<FloatType>, Vec<FloatType>)) {
+    pub fn fft(&self, log2point: u32, xy_in: &(Vec<FloatType>, Vec<FloatType>)) -> (Vec<FloatType>, Vec<FloatType>) {
 	let mut i=0;
+	let mut xy_out: (Vec<FloatType>, Vec<FloatType>) = (vec![0.; 1<<log2point], vec![0.; 1<<log2point]);
 	while i < 1<<log2point {
 	    let mut brev: usize = i;
 	    brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
@@ -138,5 +139,6 @@ impl Fft {
 	    }
 	    mmax=istep;
 	}
+	return xy_out;
     }
 }

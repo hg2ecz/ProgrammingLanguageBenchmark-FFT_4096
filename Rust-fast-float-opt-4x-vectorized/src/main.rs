@@ -20,7 +20,7 @@ fn main() {
     let start_time = Instant::now();
     let ffto = fft::Fft::new();
     for _i in 0..FFT_REPEAT {
-	ffto.fft(LOG2FFTSIZE, &mut xy_out_fft, &xy)
+	xy_out_fft = ffto.fft(LOG2FFTSIZE, &xy);
     }
     let elapsed_time = start_time.elapsed();
     let milliseconds = (elapsed_time.as_secs() as f64 * 1000.0) +
