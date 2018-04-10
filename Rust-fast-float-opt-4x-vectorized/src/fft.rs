@@ -89,10 +89,8 @@ impl Fft {
 	    let wphase_x: FloatVfoType = self.phasevec.0[l2pt];
 	    let wphase_y: FloatVfoType = self.phasevec.1[l2pt];
 
-	    let phvec = self.phasevec.0[l2pt-2];
-	    let wphase_xvec: VectorType = VectorType::new(phvec, phvec, phvec, phvec);
-	    let phvec = self.phasevec.1[l2pt-2];
-	    let wphase_yvec: VectorType = VectorType::new(phvec, phvec, phvec, phvec); 
+	    let wphase_xvec: VectorType = VectorType::splat(self.phasevec.0[l2pt-2]);
+	    let wphase_yvec: VectorType = VectorType::splat(self.phasevec.1[l2pt-2]);
 	    l2pt+=1;
 
 
