@@ -22,8 +22,8 @@ impl Fft {
     }
 
     pub fn fft(&self, log2point: u32, xy_out: &mut (Vec<FloatType>, Vec<FloatType>), xy_in: &(Vec<FloatType>, Vec<FloatType>)) {
-	for i2 in 0 .. 1<<(log2point-1) {
-	    let mut i = 2*i2;
+	let mut i=0;
+	while i < 1<<log2point {
 	    let mut brev: usize = i;
 	    brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
 	    brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);
@@ -38,6 +38,7 @@ impl Fft {
 	    let brev2 = brev | (1<<(log2point-1));
 	    xy_out.0[brev2] = xy_in.0[i+1];
 	    xy_out.1[brev2] = xy_in.1[i+1];
+	    i+=2;
 	}
 
 	// here begins the Danielson-Lanczos section;
@@ -47,21 +48,24 @@ impl Fft {
 
 
 	l2pt+=1;
-	for i2 in 0..1<<(log2point-1) {
-	    let i=2*i2;
+
+	i=0;
+	while i < 1<<log2point {
 	    let tempx: FloatType = xy_out.0[i+mmax];
 	    let tempy: FloatType = xy_out.1[i+mmax];
 	    xy_out.0[i+mmax]  = xy_out.0[i] - tempx;
 	    xy_out.1[i+mmax]  = xy_out.1[i] - tempy;
 	    xy_out.0[i     ] += tempx;
 	    xy_out.1[i     ] += tempy;
+	    i+=2;
 	}
 	mmax<<=1;
 
 	let w_x2: FloatVfoType = self.phasevec.0[l2pt];
 	let w_y2: FloatVfoType = self.phasevec.1[l2pt]; l2pt+=1;
-	for i4 in 0..n/4 {
-	    let i = 4*i4;
+
+	i=0;
+	while i < n {
 	    let tempx: FloatType = xy_out.0[i+mmax];
 	    let tempy: FloatType = xy_out.1[i+mmax];
 	    xy_out.0[i+mmax]  = xy_out.0[i] - tempx;
@@ -75,6 +79,7 @@ impl Fft {
 	    xy_out.1[i+1+mmax]  = xy_out.1[i+1] - tempy2;
 	    xy_out.0[i+1     ] += tempx2;
 	    xy_out.1[i+1     ] += tempy2;
+	    i+=4;
 	}
 	mmax<<=1;
 
@@ -106,17 +111,18 @@ impl Fft {
 	    let mut w_yvec = VectorType::new(w_y0, w_y1, w_y2, w_y3);
 
 
-	    for m4 in 0..mmax/4 { // optimization: tempXY and tempXY2
-		let mut i = 4*m4;
+	    let mut m=0;
+	    while  m < mmax { // optimization: tempXY and tempXY2
+		let mut i=m;
 		while i < n {
-		    let mut reg1_re = VectorType::load_unaligned(&xy_out.0[i+mmax..i+mmax+4]); // 4 lanes reg
-		    let mut reg1_im = VectorType::load_unaligned(&xy_out.1[i+mmax..i+mmax+4]); // 4 lanes reg
+		    let reg1_re = VectorType::load_unaligned(&xy_out.0[i+mmax..i+mmax+4]); // 4 lanes reg
+		    let reg1_im = VectorType::load_unaligned(&xy_out.1[i+mmax..i+mmax+4]); // 4 lanes reg
 
 		    let temp_re: VectorType = w_xvec * reg1_re - w_yvec * reg1_im; // 4 lanes mul
 		    let temp_im: VectorType = w_xvec * reg1_im + w_yvec * reg1_re; // 4 lanes mul
 
-		    let mut reg2_re = VectorType::load_unaligned(&xy_out.0[i..i+4]); // 4 lanes reg
-		    let mut reg2_im = VectorType::load_unaligned(&xy_out.1[i..i+4]); // 4 lanes reg
+		    let reg2_re = VectorType::load_unaligned(&xy_out.0[i..i+4]); // 4 lanes reg
+		    let reg2_im = VectorType::load_unaligned(&xy_out.1[i..i+4]); // 4 lanes reg
 
 		    (reg2_re - temp_re).store_unaligned(&mut xy_out.0[i+mmax..i+mmax+4]); // 4 lanes sub&store
 		    (reg2_im - temp_im).store_unaligned(&mut xy_out.1[i+mmax..i+mmax+4]); // 4 lanes sub&store 
@@ -125,9 +131,10 @@ impl Fft {
 
 		    i+=istep;
 		}
-		let w_xtmp: VectorType = w_yvec * wphase_xvec - w_yvec * wphase_yvec; // 4 lanes rotate
+		let w_xtmp: VectorType = w_xvec * wphase_xvec - w_yvec * wphase_yvec; // 4 lanes rotate
 		w_yvec = w_xvec * wphase_yvec + w_yvec * wphase_xvec; // 4 lanes rotate
 		w_xvec = w_xtmp;
+		m+=4;
 	    }
 	    mmax=istep;
 	}

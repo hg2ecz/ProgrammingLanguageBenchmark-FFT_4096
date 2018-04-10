@@ -11,8 +11,10 @@ fn main() {
     let mut xy         = (vec![0f32; SIZE], vec![0f32; SIZE]); // vectoization-friendly
     let mut xy_out_fft = (vec![0f32; SIZE], vec![0f32; SIZE]);
 
-    for i in 0..SIZE/2    { xy.0[i] = 1.0; xy.1[i] = 0.0; }
-    for i in SIZE/2..SIZE { xy.0[i] = -1.0; xy.1[i] = 0.0; }
+    //for i in 0..SIZE/2    { xy.0[i] = 1.0; xy.1[i] = 0.0; }
+    //for i in SIZE/2..SIZE { xy.0[i] = -1.0; xy.1[i] = 0.0; }
+    for i in 0..SIZE { xy.0[i] = 1.+i as f32/1000.; xy.1[i]= i as f32/2000.; }
+
 
 // FFT
     let start_time = Instant::now();
