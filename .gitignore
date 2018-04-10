@@ -6,3 +6,14 @@
 *.class
 *.lock
 **/benchmark
+CMakeCache.txt
+*.cmake
+CMakeFiles
+callgrind*
+CPack*
+*.rpm
+*.spec.*
+*.spec
+*.err
+*.out
+install_manifest.txt
