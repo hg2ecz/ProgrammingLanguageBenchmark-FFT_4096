@@ -4,7 +4,7 @@ extern crate fft; // -- if we used as lib
 use std::time::Instant;
 
 const LOG2FFTSIZE: u32 = 12;
-const FFT_REPEAT: u32 = 10000;
+const FFT_REPEAT: u32 = 100_000;
 const SIZE: usize = (1<<LOG2FFTSIZE);
 
 fn main() {
