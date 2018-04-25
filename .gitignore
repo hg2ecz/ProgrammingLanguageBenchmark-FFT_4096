@@ -17,3 +17,4 @@ CPack*
 *.err
 *.out
 install_manifest.txt
+README.md
