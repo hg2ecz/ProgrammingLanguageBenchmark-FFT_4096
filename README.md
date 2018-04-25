@@ -1,4 +1,4 @@
-Quick sync: (sync)[https://github.com/fuszenecker/ProgrammingLanguageBenchmark-FFT_4096/compare/master...hg2ecz:master]
+Quick sync: [sync](https://github.com/fuszenecker/ProgrammingLanguageBenchmark-FFT_4096/compare/master...hg2ecz:master)
 
 # 4096 point FFT test result
 
