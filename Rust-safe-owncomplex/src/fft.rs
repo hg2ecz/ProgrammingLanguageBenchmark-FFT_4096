@@ -1,16 +1,17 @@
 use std;
 
+#[derive(Copy,Clone)]
 pub struct Cplx {
     pub re: f64,
     pub im: f64,
 }
 
-impl Copy for Cplx { }
-impl Clone for Cplx {
-    fn clone(&self) -> Cplx {
-        *self
-    }
-}
+//impl Copy for Cplx { }
+//impl Clone for Cplx {
+//    fn clone(&self) -> Cplx {
+//        *self
+//    }
+//}
 
 pub fn cadd(a: Cplx, b: Cplx) -> Cplx {
     let re = a.re + b.re;
