@@ -11,7 +11,7 @@ fft :: fft(void)
 	}
 }
 
-std::vector<std::complex<double>> fft :: calc(int log2point, const std::vector<std::complex<double>> &xy_in)
+std::vector<std::complex<double>> fft :: calc(int log2point, const std::vector<std::complex<double>>& xy_in)
 {
 	std::vector<std::complex<double>> xy_out(xy_in.size());
 
