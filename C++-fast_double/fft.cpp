@@ -61,4 +61,6 @@ std::vector<std::complex<double>> fft :: calc(int log2point, const std::vector<s
 
 		mmax = istep;
 	}
+
+	return xy_out;
 }
