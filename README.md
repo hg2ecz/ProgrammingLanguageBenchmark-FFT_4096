@@ -28,7 +28,7 @@
 <tr><td>C-fast_longlong_64bit</td><td>-</td><td>1.46</td><td>1.38</td></tr>
 <tr><td>C-fast_float-nocomplex-floatemu</td><td>4.77</td><td>4.21</td><td>5.87</td></tr>
 <tr><th colspan="4">C++</th></tr>
-<tr><td>C++-fast_double</td><td>1.24</td><td>1.13</td><td>1.02</td></tr>
+<tr><td>C++-fast_double</td><td>1.03 (clang 6)</td><td>1.13</td><td>1.02</td></tr>
 </table>
 
 <p>Other compiled language speed compared with C-fast_double</p>
