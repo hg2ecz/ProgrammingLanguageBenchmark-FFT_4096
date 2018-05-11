@@ -45,7 +45,7 @@ std::vector<std::complex<double>> fft :: calc(int log2point, const std::vector<s
 		//	double theta = -2*M_PI/istep;
 		//	double complex wphase_XY = cos(theta) + sin(theta)*I;
 		std::complex<double> wphase_XY = this->phasevec[l2pt++];
-		std::complex<double> w_XY = std::complex<double>(1.0 + 0.0);
+		std::complex<double> w_XY = std::complex<double>(1.0, 0.0);
 
 		for (int m = 0; m < mmax; m++)
 		{
