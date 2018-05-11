@@ -1,5 +1,3 @@
-Quick sync: [sync](https://github.com/fuszenecker/ProgrammingLanguageBenchmark-FFT_4096/compare/master...hg2ecz:master)
-
 # 4096 point FFT test result
 
 - Raspberry Pi3: ARM Cortex A53, 1.2 GHz, 32 bit Raspbian 9 beta (gcc-6.2)
@@ -30,7 +28,7 @@ Quick sync: [sync](https://github.com/fuszenecker/ProgrammingLanguageBenchmark-F
 <tr><td>C-fast_longlong_64bit</td><td>-</td><td>1.46</td><td>1.38</td></tr>
 <tr><td>C-fast_float-nocomplex-floatemu</td><td>4.77</td><td>4.21</td><td>5.87</td></tr>
 <tr><th colspan="4">C++</th></tr>
-<tr><td>C++-fast_double</td><td>1.24</td><td>1.13</td><td>1.02</td></tr>
+<tr><td>C++-fast_double</td><td>1.03 (clang 6)</td><td>1.13</td><td>1.02</td></tr>
 </table>
 
 <p>Other compiled language speed compared with C-fast_double</p>

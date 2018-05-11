@@ -1,12 +1,13 @@
 #include <complex>
+#include <vector>
 
 class fft {
+private:
     // Internal variables
-    private:
-	std::complex<double> phasevec[32];
+	std::vector<std::complex<double>> phasevec;
 
-    public:
-	fft(void);
+public:
+	fft();
 	// step: N*log2(N)
-	void calc(int log2point, std::complex<double> *xy_out, const std::complex<double> *xy_in);
+	std::vector<std::complex<double>> calc(int log2point, const std::vector<std::complex<double>>& xy_in);
 };
