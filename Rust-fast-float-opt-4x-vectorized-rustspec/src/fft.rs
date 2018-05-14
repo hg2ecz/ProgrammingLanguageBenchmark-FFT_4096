@@ -24,16 +24,10 @@ impl Fft {
 
     pub fn fft(&self, log2point: u32, xy_in: &(Vec<FloatType>, Vec<FloatType>)) -> (Vec<FloatType>, Vec<FloatType>) {
 	let mut xy_out: (Vec<FloatType>, Vec<FloatType>) = (vec![0.; 1<<log2point], vec![0.; 1<<log2point]);
-	let mut i: usize = u32::max_value() as usize + 1;
-	let shift =
-	    if i > u32::max_value() as usize {
-		64-log2point
-	    } else {
-		32-log2point
-	    };
-	i = 0;
+	let shift = if u32::max_value() as usize + 1 > u32::max_value() as usize { 64-log2point } else { 32-log2point };
+	let mut i: usize = 0;
 	while i < 1<<log2point {
-	    let brev: usize = i.reverse_bits() >> shift;    // reverce_bits() !!!
+	    let brev: usize = i.reverse_bits() >> shift;    // reverse_bits() !!!
 	    xy_out.0[brev] = xy_in.0[i];
 	    xy_out.1[brev] = xy_in.1[i];
 
