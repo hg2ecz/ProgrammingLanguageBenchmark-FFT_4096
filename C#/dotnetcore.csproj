@@ -7,6 +7,7 @@
     <RuntimeIdentifiers>linux-x64;linux-arm</RuntimeIdentifiers>
     <AssemblyName>fft-benchmark</AssemblyName>
     <RootNamespace>FftBenchmark</RootNamespace>
+    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
   <ItemGroup>
