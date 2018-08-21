@@ -1,5 +1,14 @@
 module Fft
-    function fft(log2point, xy_in)
+    function fft_init()
+	phasevec = repeat([0.0 + 0.0im], 32)
+	for i=1:32
+	    point = 1<<i
+	    phasevec[i] = cos(-2*pi/point) + sin(-2*pi/point)*1.0im
+	end
+	return phasevec
+    end
+
+    function fft(log2point, xy_in, phasevec)
 	size = 1<<log2point
 	xy_out = repeat([0.0 + 0.0im], size)
 	for i=1:size
@@ -16,15 +25,16 @@ module Fft
 
 	# here begins the Danielson-Lanczos section
 	n = size
-	l2pt=0
+	l2pt=1
 	mmax=1
 
 	while n>mmax
 	    istep = mmax<<1
 
-	    theta = -2*pi/istep;
-	    wphase_XY = cos(theta) + sin(theta)*1.0im;
-	    #wphase_XY = phasevec[l2pt++]
+	    #theta = -2*pi/istep;
+	    #wphase_XY = cos(theta) + sin(theta)*1.0im;
+	    wphase_XY = phasevec[l2pt]
+	    l2pt+=1
 
 	    w_XY = 1.0 + 0.0im
 	    for m=1:mmax
