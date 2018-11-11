@@ -5,7 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug with LLDB",
+            "program": "${workspaceFolder}/benchmark",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Debug with GDB",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/benchmark",

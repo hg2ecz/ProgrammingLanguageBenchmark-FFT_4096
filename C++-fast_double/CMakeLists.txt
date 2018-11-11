@@ -18,8 +18,13 @@ target_include_directories(benchmark PUBLIC
     "." 
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g3 -fstandalone-debug")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fstandalone-debug")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -flto")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto")
+endif()
 
 install (TARGETS benchmark DESTINATION bin)
 
