@@ -7,7 +7,7 @@ fft :: fft(void)
 	for (int i = 0; i < 32; i++)
 	{
 		int point = 2 << i;
-		this->phasevec.push_back(std::complex<double>(cos(-2 * M_PI / point), sin(-2 * M_PI / point)));
+		this->phasevec.emplace_back(std::complex<double>(cos(-2 * M_PI / point), sin(-2 * M_PI / point)));
 	}
 }
 
