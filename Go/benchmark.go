@@ -6,7 +6,7 @@ import (
 )
 
 const LOG2FFTSIZE uint = 12
-const FFT_REPEAT int = 10000
+const FFT_REPEAT int = 1000
 
 const SIZE = (1 << LOG2FFTSIZE)
 
