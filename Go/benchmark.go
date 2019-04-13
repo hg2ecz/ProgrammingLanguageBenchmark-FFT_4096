@@ -36,7 +36,7 @@ func main() {
 	for j := 0; j < FftRepeat; j++ {
 		xyOutFft := Fft(Log2OffsetSize, xy, phaseVect)
 
-		if j == 0 {
+		if j == FftRepeat-1 {
 			var endTime = time.Now().UnixNano()
 
 			fmt.Printf("%8d piece(s) of %d pt FFT;    %.3f ms/piece\n\n", FftRepeat, Size, float64(endTime-startTime)/float64(1e6)/float64(FftRepeat))
