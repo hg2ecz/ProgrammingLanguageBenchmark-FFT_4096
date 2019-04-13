@@ -2,25 +2,24 @@ package main
 
 import "math"
 
-// Internal variables
-var phasevecExist = false
-var phasevec [32]complex128
+func initializePhaseVector() *[32]complex128 {
+	var phaseVect [32]complex128
 
-// Public function
-func Fft(log2point uint, xyIn *[4096]complex128) *[4096]complex128 {
-	var xyOut [4096]complex128
-
-	if !phasevecExist {
-		for i := 0; i < 32; i++ {
-			var num uint = 2
-			var point float64 = float64(num << uint(i))
-			phasevec[i] = complex(math.Cos(-2*math.Pi/point), math.Sin(-2*math.Pi/point))
-		}
-		phasevecExist = true
+	for i := 0; i < 32; i++ {
+		num := 2
+		point := float64(num << uint(i))
+		phaseVect[i] = complex(math.Cos(-2*math.Pi/point), math.Sin(-2*math.Pi/point))
 	}
 
+	return &phaseVect
+}
+
+// Fft Public function
+func Fft(log2point uint, xyIn *[4096]complex128, phaseVect *[32]complex128) *[4096]complex128 {
+	var xyOut [4096]complex128
+
 	for i := 0; i < (1 << log2point); i++ {
-		var brev uint = uint(i)
+		var brev = uint(i)
 		brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1)
 		brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2)
 		brev = ((brev & 0xf0f0f0f0) >> 4) | ((brev & 0x0f0f0f0f) << 4)
@@ -32,27 +31,31 @@ func Fft(log2point uint, xyIn *[4096]complex128) *[4096]complex128 {
 	}
 
 	// here begins the Danielson-Lanczos section
-	var n int = 1 << log2point
-	var l2pt int = 0
-	var mmax int = 1
+	n := 1 << log2point
+	l2pt := 0
+	mmax := 1
 
 	for n > mmax {
-		var istep int = mmax << 1
+		istep := mmax << 1
 		//	double theta = -2*M_PI/istep
 		//	double complex wphase_XY = cos(theta) + sin(theta)*I
-		var wphase_XY complex128 = phasevec[l2pt]
+		wphaseXY := phaseVect[l2pt]
 		l2pt++
 
-		var w_XY complex128 = complex(1.0, 0.0)
+		wXY := complex(1.0, 0.0)
+
 		for m := 0; m < mmax; m++ {
 			for i := m; i < n; i += istep {
-				var tempXY complex128 = w_XY * xyOut[i+mmax]
+				tempXY := wXY * xyOut[i+mmax]
 				xyOut[i+mmax] = xyOut[i] - tempXY
 				xyOut[i] += tempXY
 			}
-			w_XY *= wphase_XY // rotate
+
+			wXY *= wphaseXY
 		}
+
 		mmax = istep
 	}
+
 	return &xyOut
 }
