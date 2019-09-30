@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS =-Wall -Ofast -funroll-all-loops
+CXXFLAGS =-Wall -Ofast -funroll-all-loops -flto
 
 PARAMS_CPU = -march=native
 ifeq ($(shell uname -m), armv7l)
@@ -13,7 +13,7 @@ CXXFLAGS+=-DFFT_REPEAT=1000
 # improve speed
 CXXFLAGS+=-DMOD_SPEED
 
-LDFLAGS=-lm -s
+LDFLAGS=-lm -s -flto
 OBJS=fft.o benchmark.o
 
 TARGET=benchmark
