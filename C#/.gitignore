@@ -1,12 +1,9 @@
 bin
 obj
 project.lock.json
-dist-arm
-dist-x86_64
 **/*.deb
 **/*.rpm
 packaging/opt
-dist-windows
-Setup.exe
+dist-*
 **/*.zip
 **/*.o
