@@ -1,4 +1,4 @@
-#!/usr/bin/pypy
+#!/usr/bin/python3
 
 import os
 import sys
@@ -13,10 +13,10 @@ snum = 0
 nums=[]
 for row in sys.stdin:
     if 'piece' in row:
-	num = float(row.split(';')[1].split()[0].replace(',', '.'))
-	nums.append(num)
-	snum += num
-	i+=1
+        num = float(row.split(';')[1].split()[0].replace(',', '.'))
+        nums.append(num)
+        snum += num
+        i+=1
 
 avg = snum/float(i)
 
@@ -26,4 +26,4 @@ for num in nums:
 
 var = math.sqrt(var/float(i-1))
 
-print "----> %s (%s) ----> AVG: %.3f RELVAR: %.2f %%"%(os.getcwd().split('/')[-1], param, avg, 100.*var/avg)
+print ("----> %s (%s) ----> AVG: %.3f RELVAR: %.2f %%"%(os.getcwd().split('/')[-1], param, avg, 100.*var/avg))
