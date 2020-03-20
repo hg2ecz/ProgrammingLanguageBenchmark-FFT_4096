@@ -65,7 +65,7 @@ impl Fft {
         }
 
         // here begins the Danielson-Lanczos section;
-        let n: usize = 1 << log2point;
+        let n = 1 << log2point;
         let mut l2pt = 0;
         let mut mmax = 1;
 
