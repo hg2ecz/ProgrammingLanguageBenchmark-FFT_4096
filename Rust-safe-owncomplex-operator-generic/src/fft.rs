@@ -74,12 +74,12 @@ impl Fft {
         }
 
         // here begins the Danielson-Lanczos section;
-        let n: usize = 1 << log2point;
-        let mut l2pt: usize = 0;
-        let mut mmax: usize = 1;
+        let n = 1 << log2point;
+        let mut l2pt = 0;
+        let mut mmax = 1;
 
         while n > mmax {
-            let istep: usize = mmax << 1;
+            let istep = mmax << 1;
             let wphase_xy = self.phasevec[l2pt];
             l2pt += 1;
             let mut w_xy = Cplx { re: 1.0, im: 0.0 };
