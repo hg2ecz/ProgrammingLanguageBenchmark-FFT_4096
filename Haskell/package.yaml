@@ -23,6 +23,9 @@ ghc-options: -Wall
 library:
   dependencies:
   - base
+  - vector
+  - primitive
+  - time
   source-dirs: library
 
 executables:
