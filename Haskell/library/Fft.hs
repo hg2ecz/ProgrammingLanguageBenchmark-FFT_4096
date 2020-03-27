@@ -8,12 +8,12 @@ import Control.Monad.Primitive (PrimState)
 import qualified Data.Vector.Unboxed.Mutable as MVector
 
 -- | The main FFT function.
-fft :: Int -> [Complex Float] -> IO (MVector.MVector (PrimState IO) (Complex Float))
+fft :: Int -> [Complex Double] -> IO (MVector.MVector (PrimState IO) (Complex Double))
 fft log2point input = do
     let size = length input
     output <- MVector.new size
 
-    forM_ [0 .. 1 `shift` log2point - 1] $ \i -> do
+    forM_ [0 .. size - 1] $ \i -> do
         let brev0 = i
 
         let brev1 = ((brev0 .&. 0xaaaaaaaa) `shift` (-1)) .|. ((brev0 .&. 0x55555555) `shift` 1)
@@ -22,11 +22,11 @@ fft log2point input = do
         let brev4 = ((brev3 .&. 0xff00ff00) `shift` (-8)) .|. ((brev3 .&. 0x00ff00ff) `shift` 8)
         let brev5 = (brev4 `shift` (-16)) .|. (brev4 `shift` 16)
 
-        let brev6 = brev5 `shift` (-32 + log2point);
+        let brev6 = brev5 `shift` (-(32 - log2point))
 
         MVector.write output brev6 $ input !! i
 
-    forM_ [0 .. log2point] $ \l2pt -> do
+    forM_ [0 .. log2point - 1] $ \l2pt -> do
         let wphase_xy = phasevec !! l2pt
         let mmax = 1 `shift` l2pt
 
@@ -35,16 +35,17 @@ fft log2point input = do
 
         forM_ [0 .. mmax - 1] $ \m -> do
             let f = mmax `shift` 1
-            forM_ [m `div` f .. 1 `shift` log2point `div` f - 1] $ \i -> do
+
+            forM_ [m + f * x | x <- [0 .. ((size - m) `div` f) - 1]] $ \i -> do
                 temp1 <- MVector.read w_xy 0
-                temp2 <- MVector.read output $ i * f + mmax
+                temp2 <- MVector.read output $ i + mmax
                 let temp = temp1 * temp2
 
-                out1 <- MVector.read output $ i * f
-                MVector.write output (i * f + mmax) $ out1 - temp
+                out1 <- MVector.read output $ i
+                MVector.write output (i + mmax) $ out1 - temp
 
-                out2 <- MVector.read output (i * f)
-                MVector.write output (i * f) $ out2 + temp
+                out2 <- MVector.read output i
+                MVector.write output i $ out2 + temp
 
             w_xy1 <- MVector.read w_xy 0
             MVector.write w_xy 0 $ w_xy1 * wphase_xy
@@ -52,6 +53,6 @@ fft log2point input = do
     return output
 
     where
-        points = [2 `shift` x | x <- [0 .. 32]] :: [Int]
+        points = [2 `shift` x | x <- [0 .. 31]] :: [Int]
         phasevec = [cos (-2.0 * pi / fromIntegral x) :+
             sin (-2.0 * pi / fromIntegral x) | x <- points]

@@ -16,8 +16,8 @@ main = do
     results <- forM [1 .. fftRepeat] $ \_ -> Fft.fft log2FftSize xy
     let result = head results
 
-    firstResults <- forM [1 .. 6] $ \i -> MVector.read result i
-    putStrLn $ concatMap formatResult $ zip [1..] firstResults
+    firstResults <- forM [0 .. 6] $ \i -> MVector.read result i
+    putStrLn $ concatMap formatResult $ zip [0..] firstResults
 
     end <- getCurrentTime
     let totalTime = diffUTCTime end start
@@ -25,8 +25,8 @@ main = do
     putStrLn $ "Total time: " ++ (show totalTime)
 
     where
-        xy = [0.0 :+ 0.0 | _ <- [0 .. (size `div` 2) - 1]] <>
-             [1.0 :+ 0.0 | _ <- [size `div` 2 .. size - 1]]
+        xy = [1.0 :+ 0.0 | _ <- [0 .. (size `div` 2) - 1]] <>
+             [(-1.0) :+ 0.0 | _ <- [size `div` 2 .. size - 1]]
 
         log2FftSize :: Int
         log2FftSize = 12
@@ -37,5 +37,5 @@ main = do
         size :: Int
         size = 1 `shift` log2FftSize
 
-        formatResult :: (Int, Complex Float) -> String
+        formatResult :: (Int, Complex Double) -> String
         formatResult r = (show $ fst r) ++ " -> " ++ (show $ snd r) ++ "\n"
