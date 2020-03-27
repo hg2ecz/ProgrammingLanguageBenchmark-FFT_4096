@@ -26,6 +26,29 @@ fft log2point input = do
 
         MVector.write output brev6 $ input !! i
 
+    forM_ [0 .. log2point] $ \l2pt -> do
+        let wphase_xy = phasevec !! l2pt
+        let mmax = 1 `shift` l2pt
+
+        w_xy <- MVector.new 1
+        MVector.write w_xy 0 $ 1.0 :+ 0.0
+
+        forM_ [0 .. mmax - 1] $ \m -> do
+            let f = mmax `shift` 1
+            forM_ [m `div` f .. 1 `shift` log2point `div` f - 1] $ \i -> do
+                temp1 <- MVector.read w_xy 0
+                temp2 <- MVector.read output $ i * f + mmax
+                let temp = temp1 * temp2
+
+                out1 <- MVector.read output $ i * f
+                MVector.write output (i * f + mmax) $ out1 - temp
+
+                out2 <- MVector.read output (i * f)
+                MVector.write output (i * f) $ out2 + temp
+
+            w_xy1 <- MVector.read w_xy 0
+            MVector.write w_xy 0 $ w_xy1 * wphase_xy
+
     return output
 
     where

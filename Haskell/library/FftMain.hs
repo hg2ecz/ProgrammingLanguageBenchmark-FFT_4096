@@ -25,30 +25,17 @@ main = do
     putStrLn $ "Total time: " ++ (show totalTime)
 
     where
-        xy = [0.0 :+ 0.0 | _ <- [1 .. (size `div` 2) - 1]] <>
+        xy = [0.0 :+ 0.0 | _ <- [0 .. (size `div` 2) - 1]] <>
              [1.0 :+ 0.0 | _ <- [size `div` 2 .. size - 1]]
 
         log2FftSize :: Int
         log2FftSize = 12
 
         fftRepeat :: Integer
-        fftRepeat = 10000
+        fftRepeat = 10
 
         size :: Int
         size = 1 `shift` log2FftSize
 
         formatResult :: (Int, Complex Float) -> String
         formatResult r = (show $ fst r) ++ " -> " ++ (show $ snd r) ++ "\n"
-
-{-
-
-fn main() {
-
-// FFT
-    println!("{} piece(s) of {} pt FFT;    {} ms/piece\n\n", FFT_REPEAT, SIZE, milliseconds/FFT_REPEAT as f64);
-
-    for i in 0..6 {
-	println!("{}  {} {}", i, xy_out_fft[i].re, xy_out_fft[i].im);
-    }
-}
--}
