@@ -13,7 +13,7 @@ main :: IO ()
 main = do
     start <- getCurrentTime
 
-    results <- forM [1 .. fftRepeat] $ \_ -> Fft.fft xy
+    results <- forM [1 .. fftRepeat] $ \_ -> Fft.fft log2FftSize xy
     let result = head results
 
     firstResults <- forM [1 .. 6] $ \i -> MVector.read result i
