@@ -32,7 +32,7 @@ main = do
         log2FftSize = 12
 
         fftRepeat :: Integer
-        fftRepeat = 10
+        fftRepeat = 10000
 
         size :: Int
         size = 1 `shift` log2FftSize

@@ -36,7 +36,7 @@ fft log2point input = do
         forM_ [0 .. mmax - 1] $ \m -> do
             let f = mmax `shift` 1
 
-            forM_ [m + f * x | x <- [0 .. ((size - m) `div` f) - 1]] $ \i -> do
+            forM_ [m + f * x | x <- [0 .. ((size - m - 1) `div` f)]] $ \i -> do
                 temp1 <- MVector.read w_xy 0
                 temp2 <- MVector.read output $ i + mmax
                 let temp = temp1 * temp2
