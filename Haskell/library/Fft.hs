@@ -9,7 +9,7 @@ import Control.Monad.Primitive (PrimState)
 import qualified Data.Vector.Unboxed.Mutable as MVector
 
 -- | The main FFT function.
-fft :: Word32 -> [Complex Double] -> IO (MVector.MVector (PrimState IO) (Complex Double))
+fft :: Int -> [Complex Double] -> IO (MVector.MVector (PrimState IO) (Complex Double))
 fft log2point input = do
     let size = fromIntegral $ length input :: Word32
     output <- MVector.new $ fromIntegral size
@@ -23,13 +23,13 @@ fft log2point input = do
         let brev4 = ((brev3 .&. 0xff00ff00) `shift` (-8)) .|. ((brev3 .&. 0x00ff00ff) `shift` 8)
         let brev5 = (brev4 `shift` (-16)) .|. (brev4 `shift` 16)
 
-        let brev6 = brev5 `shift` (-(32 - fromIntegral log2point))
+        let brev6 = brev5 `shift` (-(32 - log2point))
 
         MVector.write output (fromIntegral brev6) $ input !! fromIntegral i
 
     forM_ [0 .. log2point - 1] $ \l2pt -> do
-        let wphase_xy = phasevec !! fromIntegral l2pt
-        let mmax = 1 `shift` (fromIntegral l2pt) :: Word32
+        let wphase_xy = phasevec !! l2pt
+        let mmax = 1 `shift` l2pt :: Word32
 
         w_xy <- MVector.new 1
         MVector.write w_xy 0 $ 1.0 :+ 0.0
