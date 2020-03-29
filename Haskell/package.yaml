@@ -44,19 +44,6 @@ executables:
     - -O
     - -optl-static
 
-benchmarks:
-  Haskell-benchmarks:
-    source-dirs: benchmark
-    main: Main.hs
-    dependencies:
-    - base
-    - Haskell
-    - criterion
-    ghc-options:
-    - -rtsopts
-    - -threaded
-    - -with-rtsopts=-N
-
 tests:
   Haskell-test-suite:
     source-dirs: test-suite
