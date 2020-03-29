@@ -23,6 +23,7 @@ main = do
     let totalTime = diffUTCTime end start
 
     putStrLn $ "Total time: " ++ (show totalTime)
+    putStrLn $ "Total iterations: " ++ (show fftRepeat)
 
     where
         xy = [1.0 :+ 0.0 | _ <- [0 .. (size `div` 2) - 1]] <>
