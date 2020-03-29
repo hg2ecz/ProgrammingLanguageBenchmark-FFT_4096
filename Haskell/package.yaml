@@ -37,6 +37,10 @@ executables:
     main: Main.hs
     dependencies:
     - base
+    - vector
+    - primitive
+    - time
+    - async
     - Haskell
     ghc-options:
     - -rtsopts
