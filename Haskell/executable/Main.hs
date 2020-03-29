@@ -14,10 +14,10 @@ main :: IO ()
 main = do
     start <- getCurrentTime
 
-    results <- forM [1 .. fftRepeat] $ \_ -> Fft.fft log2FftSize xy
+    results <- forConcurrently [1 .. fftRepeat] $ \_ -> Fft.fft log2FftSize xy
     let result = head results
 
-    firstResults <- forConcurrently [0 .. 6] $ \i -> MVector.read result i
+    firstResults <- forM [0 .. 6] $ \i -> MVector.read result i
     putStrLn $ concatMap formatResult $ zip [0..] firstResults
 
     end <- getCurrentTime
