@@ -23,7 +23,6 @@ main = do
     let totalTime = diffUTCTime end start
 
     putStrLn $ "Total time: " ++ (show totalTime)
-    putStrLn $ "Total iterarions: " ++ (show fftRepeat)
 
     where
         xy = [1.0 :+ 0.0 | _ <- [0 .. (size `div` 2) - 1]] <>
@@ -33,7 +32,7 @@ main = do
         log2FftSize = 12
 
         fftRepeat :: Integer
-        fftRepeat = 1000
+        fftRepeat = 10000
 
         size :: Int
         size = 1 `shift` log2FftSize

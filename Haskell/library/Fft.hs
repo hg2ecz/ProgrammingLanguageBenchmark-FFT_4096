@@ -11,8 +11,8 @@ import qualified Data.Vector.Unboxed.Mutable as MVector
 -- | The main FFT function.
 fft :: Int -> [Complex Double] -> IO (MVector.MVector (PrimState IO) (Complex Double))
 fft log2point input = do
-    let size = fromIntegral $ length input :: Word32
-    output <- MVector.new $ fromIntegral size
+    let size = length input
+    output <- MVector.new size
 
     forM_ [0 .. size - 1] $ \i -> do
         let brev0 = fromIntegral i :: Word32
@@ -25,28 +25,28 @@ fft log2point input = do
 
         let brev6 = brev5 `shift` (-(32 - log2point))
 
-        MVector.write output (fromIntegral brev6) $ input !! fromIntegral i
+        MVector.write output (fromIntegral brev6) $ input !! i
 
     forM_ [0 .. log2point - 1] $ \l2pt -> do
         let wphase_xy = phasevec !! l2pt
-        let mmax = 1 `shift` l2pt :: Word32
+        let mmax = 1 `shift` l2pt
 
         w_xy <- MVector.new 1
         MVector.write w_xy 0 $ 1.0 :+ 0.0
 
         forM_ [0 .. mmax - 1] $ \m -> do
-            let f = mmax `shift` 1 :: Word32
+            let f = mmax `shift` 1
 
             forM_ [m + f * x | x <- [0 .. ((size - m - 1) `div` f)]] $ \i -> do
                 temp1 <- MVector.read w_xy 0
-                temp2 <- MVector.read output $ fromIntegral $ i + mmax
+                temp2 <- MVector.read output $ i + mmax
                 let temp = temp1 * temp2
 
-                out1 <- MVector.read output $ fromIntegral i
-                MVector.write output (fromIntegral (i + mmax)) $ out1 - temp
+                out1 <- MVector.read output $ i
+                MVector.write output (i + mmax) $ out1 - temp
 
-                out2 <- MVector.read output $ fromIntegral i
-                MVector.write output (fromIntegral i) $ out2 + temp
+                out2 <- MVector.read output i
+                MVector.write output i $ out2 + temp
 
             w_xy1 <- MVector.read w_xy 0
             MVector.write w_xy 0 $ w_xy1 * wphase_xy
