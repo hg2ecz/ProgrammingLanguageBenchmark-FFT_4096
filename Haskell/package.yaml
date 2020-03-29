@@ -26,6 +26,7 @@ library:
   - vector
   - primitive
   - time
+  - async
   source-dirs: library
   ghc-options:
   - -O

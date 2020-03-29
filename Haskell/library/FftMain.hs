@@ -5,6 +5,7 @@ import Control.Monad
 import Data.Complex
 import Data.Bits
 import Data.Time
+import Control.Concurrent.Async
 
 import qualified Fft (fft)
 import qualified Data.Vector.Unboxed.Mutable as MVector
@@ -16,7 +17,7 @@ main = do
     results <- forM [1 .. fftRepeat] $ \_ -> Fft.fft log2FftSize xy
     let result = head results
 
-    firstResults <- forM [0 .. 6] $ \i -> MVector.read result i
+    firstResults <- forConcurrently [0 .. 6] $ \i -> MVector.read result i
     putStrLn $ concatMap formatResult $ zip [0..] firstResults
 
     end <- getCurrentTime
