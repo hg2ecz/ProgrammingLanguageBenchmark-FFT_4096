@@ -2,6 +2,7 @@ module Fft (fft) where
 
 import Data.Bits
 import Data.Complex
+import Data.Word
 import Control.Monad
 import Control.Monad.Primitive (PrimState)
 
@@ -14,7 +15,7 @@ fft log2point input = do
     output <- MVector.new size
 
     forM_ [0 .. size - 1] $ \i -> do
-        let brev0 = i
+        let brev0 = fromIntegral i :: Word32
 
         let brev1 = ((brev0 .&. 0xaaaaaaaa) `shift` (-1)) .|. ((brev0 .&. 0x55555555) `shift` 1)
         let brev2 = ((brev1 .&. 0xcccccccc) `shift` (-2)) .|. ((brev1 .&. 0x33333333) `shift` 2)
@@ -24,7 +25,7 @@ fft log2point input = do
 
         let brev6 = brev5 `shift` (-(32 - log2point))
 
-        MVector.write output brev6 $ input !! i
+        MVector.write output (fromIntegral brev6) $ input !! i
 
     forM_ [0 .. log2point - 1] $ \l2pt -> do
         let wphase_xy = phasevec !! l2pt

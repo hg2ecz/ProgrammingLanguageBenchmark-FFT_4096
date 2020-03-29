@@ -27,6 +27,8 @@ library:
   - primitive
   - time
   source-dirs: library
+  ghc-options:
+  - -O
 
 executables:
   Haskell:
@@ -39,19 +41,8 @@ executables:
     - -rtsopts
     - -threaded
     - -with-rtsopts=-N
-
-benchmarks:
-  Haskell-benchmarks:
-    source-dirs: benchmark
-    main: Main.hs
-    dependencies:
-    - base
-    - Haskell
-    - criterion
-    ghc-options:
-    - -rtsopts
-    - -threaded
-    - -with-rtsopts=-N
+    - -O
+    - -optl-static
 
 tests:
   Haskell-test-suite:
