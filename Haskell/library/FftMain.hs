@@ -30,13 +30,13 @@ main = do
         xy = [1.0 :+ 0.0 | _ <- [0 .. (size `div` 2) - 1]] <>
              [(-1.0) :+ 0.0 | _ <- [size `div` 2 .. size - 1]]
 
-        log2FftSize :: Word32
+        log2FftSize :: Word64
         log2FftSize = 12
 
         fftRepeat :: Integer
         fftRepeat = 1000
 
-        size :: Word32
+        size :: Word64
         size = 1 `shift` (fromIntegral log2FftSize)
 
         formatResult :: (Int, Complex Double) -> String
