@@ -14,8 +14,10 @@ main :: IO ()
 main = do
     start <- getCurrentTime
 
-    results <- forConcurrently [1 .. fftRepeat] $ \_ -> Fft.fft log2FftSize xy
-    let result = head results
+    results <- forConcurrently [1 .. concurrencyLevel] $ \_ ->
+        forM [1 .. fftRepeat `div` concurrencyLevel] $ \_ -> Fft.fft log2FftSize xy
+
+    let result = head $ concat results
 
     firstResults <- forM [0 .. 6] $ \i -> MVector.read result i
     putStrLn $ concatMap formatResult $ zip [0..] firstResults
@@ -27,6 +29,8 @@ main = do
     putStrLn $ "Total iterations: " ++ (show fftRepeat)
 
     where
+        concurrencyLevel = 4
+
         xy = [1.0 :+ 0.0 | _ <- [0 .. (size `div` 2) - 1]] <>
              [(-1.0) :+ 0.0 | _ <- [size `div` 2 .. size - 1]]
 
