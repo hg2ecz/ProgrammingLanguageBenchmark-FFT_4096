@@ -41,7 +41,7 @@ executables:
     - primitive
     - time
     - async
-    - Haskell
+    - fft-hs
     ghc-options:
     - -rtsopts
     - -threaded
