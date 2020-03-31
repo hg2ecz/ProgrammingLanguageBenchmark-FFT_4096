@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.4.1</VersionPrefix>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RuntimeIdentifiers>linux-x64;linux-arm;linux-arm64;win10-x64</RuntimeIdentifiers>
