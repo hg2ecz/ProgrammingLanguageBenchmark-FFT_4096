@@ -55,5 +55,6 @@ fft log2point input = do
 
     where
         points = [2 `shift` x | x <- [0 .. 31]] :: [Int]
+
         phasevec = [cos (-2.0 * pi / fromIntegral x) :+
             sin (-2.0 * pi / fromIntegral x) | x <- points]
