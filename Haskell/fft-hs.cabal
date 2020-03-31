@@ -1,0 +1,73 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 6eb0a07ed56fffd6fa2b64b1af6b254bde1a0a0c54f26711ab9e430fa19a16f5
+
+name:           fft-hs
+version:        1.0.0
+homepage:       https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096#readme
+bug-reports:    https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/issues
+author:         Róbert Fuszenecker
+maintainer:     Róbert Fuszenecker
+license:        MIT
+build-type:     Simple
+extra-source-files:
+    CHANGELOG.md
+    LICENSE.md
+    package.yaml
+    README.md
+    stack.yaml
+
+source-repository head
+  type: git
+  location: https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096
+
+library
+  exposed-modules:
+      Fft
+  other-modules:
+      Paths_fft_hs
+  hs-source-dirs:
+      library
+  ghc-options: -Wall -O -O
+  build-depends:
+      async
+    , base
+    , primitive
+    , time
+    , vector
+  default-language: Haskell2010
+
+executable Haskell
+  main-is: Main.hs
+  other-modules:
+      Paths_fft_hs
+  hs-source-dirs:
+      executable
+  ghc-options: -Wall -O -rtsopts -threaded -with-rtsopts=-N -O -optl-static
+  build-depends:
+      Haskell
+    , async
+    , base
+    , primitive
+    , time
+    , vector
+  default-language: Haskell2010
+
+test-suite Haskell-test-suite
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_fft_hs
+  hs-source-dirs:
+      test-suite
+  ghc-options: -Wall -O -rtsopts -threaded -with-rtsopts=-N
+  build-depends:
+      Haskell
+    , base
+    , tasty
+    , tasty-hspec
+  default-language: Haskell2010
