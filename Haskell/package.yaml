@@ -1,7 +1,7 @@
 # This YAML file describes your package. Stack will automatically generate a
 # Cabal file when you run `stack build`. See the hpack website for help with
 # this file: <https://github.com/sol/hpack>.
-name: Haskell
+name: fft-hs
 version: '1.0.0'
 github: "hg2ecz/ProgrammingLanguageBenchmark-FFT_4096"
 license: MIT
@@ -18,7 +18,7 @@ extra-source-files:
 - README.md
 - stack.yaml
 
-ghc-options: -Wall
+ghc-options: -Wall -O
 
 library:
   dependencies:
@@ -26,17 +26,22 @@ library:
   - vector
   - primitive
   - time
+  - async
   source-dirs: library
   ghc-options:
   - -O
 
 executables:
-  Haskell:
+  fft-hs:
     source-dirs: executable
     main: Main.hs
     dependencies:
     - base
-    - Haskell
+    - vector
+    - primitive
+    - time
+    - async
+    - fft-hs
     ghc-options:
     - -rtsopts
     - -threaded
@@ -45,7 +50,7 @@ executables:
     - -optl-static
 
 tests:
-  Haskell-test-suite:
+  fft-hs-test-suite:
     source-dirs: test-suite
     main: Main.hs
     dependencies:

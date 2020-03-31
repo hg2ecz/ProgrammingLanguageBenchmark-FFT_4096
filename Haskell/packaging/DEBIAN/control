@@ -1,0 +1,8 @@
+Package: fft-hs
+Version: 1.0.0
+Section: base
+Priority: optional
+Architecture: armhf
+Depends: libc-bin (>= 2.19)
+Maintainer: Róbert Fuszenecker <robert.fuszenecker@outlook.com>
+Description: The FFT benchmark from Zsolt Krüpl
