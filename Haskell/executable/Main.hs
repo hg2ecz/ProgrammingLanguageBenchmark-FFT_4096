@@ -12,6 +12,7 @@ import qualified Data.Vector.Unboxed.Mutable as MVector
 
 main :: IO ()
 main = do
+    putStrLn "Starting..."
     start <- getCurrentTime
 
     results <- forConcurrently [1 .. concurrencyLevel] $ \_ ->
