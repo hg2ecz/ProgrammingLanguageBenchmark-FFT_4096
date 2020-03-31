@@ -2,6 +2,8 @@
 
 **This is not an idiomatic Hadkell code, please do not write code like this.**
 
+In order to run the code, you need to install `The Haskell Tool Stack`: please visit the the [How to install](https://docs.haskellstack.org/en/stable/README/#how-to-install) section.
+
 Once you've done that, start working on your project with the Stack commands
 you know and love.
 
@@ -9,14 +11,11 @@ you know and love.
 # Build the project.
 stack build
 
-# Run the test suite.
-stack test
+# Run the code.
+stack run
 
-# Run the benchmarks.
-stack bench
-
-# Generate documentation.
-stack haddock
+# Debug the code.
+stack repl
 ```
 
-Thanks again, and happy hacking!
+Thanks again, and happy haskelling!
