@@ -5,7 +5,7 @@ use std::time::Instant;
 const LOG2FFTSIZE: u32 = 12;
 const FFT_REPEAT: u32 = 1000;
 
-const SIZE: usize = (1<<LOG2FFTSIZE);
+const SIZE: usize = 1<<LOG2FFTSIZE;
 
 fn main() {
     let mut xy         : [[f64; 2]; SIZE] = [[0.0; 2]; SIZE];
