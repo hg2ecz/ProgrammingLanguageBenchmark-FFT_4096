@@ -5,7 +5,7 @@ use num_complex::Complex;
 
 const LOG2FFTSIZE: u32 = 12;
 const FFT_REPEAT: u32 = 10000;
-const SIZE: usize = (1<<LOG2FFTSIZE);
+const SIZE: usize = 1<<LOG2FFTSIZE;
 
 fn main() {
     let mut xy         = [Complex::new(0.0, 0.0); SIZE];
