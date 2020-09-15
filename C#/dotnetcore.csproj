@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.4.1</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5</TargetFramework>
     <RuntimeIdentifiers>linux-x64;linux-arm;linux-arm64;win10-x64</RuntimeIdentifiers>
     <AssemblyName>fft-benchmark</AssemblyName>
     <RootNamespace>FftBenchmark</RootNamespace>
