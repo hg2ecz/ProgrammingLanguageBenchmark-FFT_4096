@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace CSharpFftDemo
 {
