@@ -20,7 +20,7 @@ namespace CSharpFftDemo
 
             public override string ToString()
             {
-                return $"(Re: {Real}, Im: {Imaginary}";
+                return $"(Re: {Real}, Im: {Imaginary})";
             }
         }
 
