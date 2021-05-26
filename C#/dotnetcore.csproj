@@ -4,6 +4,7 @@
     <VersionPrefix>1.5.1</VersionPrefix>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6</TargetFramework>
+    <RuntimeIdentifier>linux-arm</RuntimeIdentifier>
     <RuntimeIdentifiers>linux-x64;linux-arm;linux-arm64;win10-x64</RuntimeIdentifiers>
     <AssemblyName>fft-benchmark</AssemblyName>
     <RootNamespace>FftBenchmark</RootNamespace>
@@ -12,8 +13,10 @@
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishReadyToRunUseCrossgen2>true</PublishReadyToRunUseCrossgen2>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <Configuration>Release</Configuration>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <ItemGroup>
