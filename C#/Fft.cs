@@ -41,7 +41,7 @@ namespace CSharpFftDemo
         };
 
         // Public function
-        public void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
+        public static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
         {
             for (int i = 0; i < (1 << Log2FftSize); i++)
             {
@@ -54,7 +54,7 @@ namespace CSharpFftDemo
                 brev = (brev >> 16) | (brev << 16);
 
                 brev >>= 32 - Log2FftSize;
-                xy_out[brev] = xy_in[i]; 
+                xy_out[brev] = xy_in[i];
             }
 
             int n = 1 << Log2FftSize;
@@ -64,10 +64,7 @@ namespace CSharpFftDemo
             while (n > mmax)
             {
                 int istep = mmax << 1;
-
                 var wphase_XY = phasevec[l2pt++];
-
-                // Same.
                 var w_XY = s_one;
 
                 for (int m = 0; m < mmax; m++)
@@ -77,10 +74,10 @@ namespace CSharpFftDemo
                         var tempXY = w_XY * xy_out[i + mmax];
 
                         xy_out[i + mmax] = xy_out[i] - tempXY;
-                        xy_out[i] = xy_out[i] + tempXY;
+                        xy_out[i] += tempXY;
                     }
 
-                    w_XY = w_XY * wphase_XY;
+                    w_XY *= wphase_XY;
                 }
 
                 mmax = istep;

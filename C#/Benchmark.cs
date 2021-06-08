@@ -6,7 +6,7 @@ namespace CSharpFftDemo
 {
     public static class Benchmark
     {
-        static void Main()
+        private static void Main()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("---- MANAGED ----");
@@ -29,7 +29,7 @@ namespace CSharpFftDemo
             }
         }
 
-        static void Managed(int log2FftSize, int fftRepeat)
+        private static void Managed(int log2FftSize, int fftRepeat)
         {
             int i;
             int size = 1 << log2FftSize;
@@ -42,12 +42,10 @@ namespace CSharpFftDemo
             for (i = size / 2; i < size; i++)
                 xy[i] = new Complex(-1.0, 0.0);
 
-            Fft fft = new Fft();
-
             // JIT warm up ... possible give more speed
             for (i = 0; i < fftRepeat; i++)
             {
-                fft.Calculate(log2FftSize, xy, xy_out);
+                Fft.Calculate(log2FftSize, xy, xy_out);
             }
 
             // FFT
@@ -55,7 +53,7 @@ namespace CSharpFftDemo
 
             for (i = 0; i < fftRepeat; i++)
             {
-                fft.Calculate(log2FftSize, xy, xy_out);
+                Fft.Calculate(log2FftSize, xy, xy_out);
             }
 
             stopwatch.Stop();
