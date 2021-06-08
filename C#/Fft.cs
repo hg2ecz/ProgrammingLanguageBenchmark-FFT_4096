@@ -41,9 +41,24 @@ namespace CSharpFftDemo
         };
 
         // Public function
-        public static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
+        public static void Calculate(
+            int Log2FftSize,
+            Complex[] xy_in,
+            Complex[] xy_out)
         {
-            for (int i = 0; i < (1 << Log2FftSize); i++)
+            // if (xy_in is null)
+            // {
+            //     throw new ArgumentNullException(nameof(xy_in));
+            // }
+
+            // if (xy_out is null)
+            // {
+            //     throw new ArgumentNullException(nameof(xy_out));
+            // }
+
+            var n = 1 << Log2FftSize;
+
+            for (int i = 0; i < n; i++)
             {
                 long brev = i;
 
@@ -57,7 +72,6 @@ namespace CSharpFftDemo
                 xy_out[brev] = xy_in[i];
             }
 
-            int n = 1 << Log2FftSize;
             int l2pt = 0;
             int mmax = 1;
 
