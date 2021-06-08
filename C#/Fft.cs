@@ -2,7 +2,7 @@
 
 namespace CSharpFftDemo
 {
-    public class Fft {
+    public sealed class Fft {
         // Internal variables
         private static Complex s_one = Complex.One;
         private static readonly Complex[] phasevec = new[] {
