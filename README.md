@@ -35,7 +35,7 @@
 
 <table border="1">
 <tr><th>Language</th><th>Raspberry Pi3</th><th>Odroid-C2@64 bit</th><th>i5-3337u</th></tr>
-<tr><td>C# (.NET 6-preview3)</td><td>1.22</td><td></td><td></td></tr>
+<tr><td>C# (.NET 6)</td><td>1.26</td><td></td><td></td></tr>
 <tr><td>Rust (rustc-1.14)</td><td></td><td>1.34</td><td>1.35</td></tr>
 <tr><td>Go (gccgo-6.3)</td><td>1.45</td><td>1.30</td><td>1.49</td></tr>
 <tr><td>C# (mono-5.18)</td><td>2.78</td><td></td><td></td></tr>
