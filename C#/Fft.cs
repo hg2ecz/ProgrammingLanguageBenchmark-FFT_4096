@@ -41,10 +41,7 @@ namespace CSharpFftDemo
         };
 
         // Public function
-        public static void Calculate(
-            int Log2FftSize,
-            Complex[] xy_in,
-            Complex[] xy_out)
+        public static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
         {
             // if (xy_in is null)
             // {

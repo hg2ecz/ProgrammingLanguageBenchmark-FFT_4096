@@ -25,7 +25,7 @@ namespace CSharpFftDemo
             catch (Exception e)
             {
                 Console.WriteLine($"Can not run native method: {e.Message}");
-                Console.WriteLine($"Have you successfully compiled the project in ../C-tests/C-fast_double/?");
+                Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
             }
         }
 
