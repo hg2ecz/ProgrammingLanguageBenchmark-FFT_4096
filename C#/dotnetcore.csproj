@@ -22,7 +22,7 @@
 
   <Target Name="package">
     <Message Importance="normal" Text="Creating Debian package..." />
-    <Exec Command="dotnet publish -c Release -r linux-arm -o packaging/opt/fft-benchmark" />
+    <Exec Command="dotnet publish -c Release -r linux-arm --self-contained -o packaging/opt/fft-benchmark" />
     <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix).deb" />
   </Target>
 
