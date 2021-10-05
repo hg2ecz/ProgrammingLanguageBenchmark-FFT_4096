@@ -4,19 +4,14 @@
     <VersionPrefix>1.5.3</VersionPrefix>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6</TargetFramework>
-    <RuntimeIdentifier>linux-arm</RuntimeIdentifier>
-    <RuntimeIdentifiers>linux-x64;linux-arm;linux-arm64;win10-x64</RuntimeIdentifiers>
     <AssemblyName>fft-benchmark</AssemblyName>
     <RootNamespace>FftBenchmark</RootNamespace>
     <TieredCompilation>true</TieredCompilation>
-    <PublishTrimmed>true</PublishTrimmed>
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
-    <PublishReadyToRun>true</PublishReadyToRun>
-    <PublishReadyToRunUseCrossgen2>true</PublishReadyToRunUseCrossgen2>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <Configuration>Release</Configuration>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <AnalysisLevel>preview</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +22,7 @@
 
   <Target Name="package">
     <Message Importance="normal" Text="Creating Debian package..." />
-    <Exec Command="dotnet publish -c Release -r linux-arm -o packaging/opt/fft-benchmark" />
+    <Exec Command="dotnet publish -c Release -r linux-arm --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true" />
     <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix).deb" />
   </Target>
 
