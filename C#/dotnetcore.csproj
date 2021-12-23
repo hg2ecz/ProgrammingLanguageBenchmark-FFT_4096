@@ -4,9 +4,10 @@
     <VersionPrefix>1.5.3</VersionPrefix>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
     <AssemblyName>fft-benchmark</AssemblyName>
     <RootNamespace>FftBenchmark</RootNamespace>
-    <TieredCompilation>true</TieredCompilation>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <Configuration>Release</Configuration>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>

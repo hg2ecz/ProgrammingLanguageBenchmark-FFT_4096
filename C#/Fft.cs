@@ -4,7 +4,7 @@ namespace CSharpFftDemo
 {
     public sealed class Fft {
         // Internal variables
-        private static Complex s_one = Complex.One;
+        private static readonly Complex s_one = Complex.One;
         private static readonly Complex[] phasevec = new[] {
             new Complex(-1, -1.22464679914735E-16),
             new Complex(6.12323399573677E-17, -1),
@@ -43,16 +43,6 @@ namespace CSharpFftDemo
         // Public function
         public static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
         {
-            // if (xy_in is null)
-            // {
-            //     throw new ArgumentNullException(nameof(xy_in));
-            // }
-
-            // if (xy_out is null)
-            // {
-            //     throw new ArgumentNullException(nameof(xy_out));
-            // }
-
             var n = 1 << Log2FftSize;
 
             for (int i = 0; i < n; i++)
