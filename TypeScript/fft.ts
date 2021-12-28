@@ -1,6 +1,6 @@
 export default class Fft {
 	private static phasevec_exist: boolean = false;
-	private static phasevec: Array<Array<number>> = [];
+	private static phasevec: number[][] = [];
 
 	public static Fft(log2point: number, xy_in: number[][]): number[][] {
 		if (!Fft.phasevec_exist) {
