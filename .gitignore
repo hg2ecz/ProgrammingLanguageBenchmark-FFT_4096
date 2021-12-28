@@ -17,3 +17,5 @@ CPack*
 *.err
 *.out
 install_manifest.txt
+C#/.ionide/symbolCache.db
+dist

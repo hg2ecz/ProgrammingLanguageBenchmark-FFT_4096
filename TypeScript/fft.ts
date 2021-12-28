@@ -1,6 +1,6 @@
 export default class Fft {
 	private static phasevec_exist: boolean = false;
-	private static phasevec = [];
+	private static phasevec: Array<Array<number>> = [];
 
 	public static Fft(log2point: number, xy_in: number[][]): number[][] {
 		if (!Fft.phasevec_exist) {
@@ -35,7 +35,7 @@ export default class Fft {
 
 			//	double theta = -2*M_PI/istep;
 			//	double complex wphase_XY = cos(theta) + sin(theta)*I;
-			var wphase_XY: number = Fft.phasevec[l2pt++];
+			var wphase_XY: number[] = Fft.phasevec[l2pt++];
 
 			var w_XY: number[] = [1.0, 0.0];
 			for (var m: number = 0; m < mmax; m++) {

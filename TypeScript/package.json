@@ -1,17 +1,15 @@
 {
-  "name": "javacript",
+  "name": "fft-benchmark",
   "version": "1.0.0",
   "description": "",
-  "main": "benchmark.js",
+  "main": "benchmark.ts",
   "scripts": {
-    "build": "node_modules/.bin/webpack",
-    "start": "node output.js"
+    "build": "tsc",
+    "start": "node dist/benchmark.js"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "ts-loader": "^1.3.3",
-    "typescript": "^2.1.4",
-    "webpack": "^1.14.0"
+    "typescript": "^4.5.4"
   }
 }
