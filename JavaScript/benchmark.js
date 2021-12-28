@@ -7,12 +7,11 @@ import { fft, initialize } from './fft.js';
 const LOG2FFTSIZE = 12
 const FFT_REPEAT = 1000
 
-const xy = []
-let xy_out = []
-
 function main() {
     const SIZE = 1 << LOG2FFTSIZE
-
+    const xy = []
+    let xy_out = []    
+    
     for (var i = 0; i < SIZE / 2; i++) xy[i] = [1., 0]
     for (; i < SIZE; i++) xy[i] = [-1., 0]
     initialize()
