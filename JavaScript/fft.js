@@ -1,18 +1,18 @@
 "use strict"
 
 // Internal variables
-let phasevec = []
+const phasevec = []
 
 export function initialize() {
     for (let i = 0; i < 32; i++) {
-        let point = 2 << i
+        const point = 2 << i
         phasevec[i] = [Math.cos(-2 * Math.PI / point), Math.sin(-2 * Math.PI / point)]
     }
 }
 
 // Public function
 export function fft(log2point, xy_in) {
-    let xy_out = []
+    const xy_out = []
 
     for (let i = 0; i < (1 << log2point); i++) {
         let brev = i
@@ -27,21 +27,21 @@ export function fft(log2point, xy_in) {
     }
 
     // here begins the Danielson-Lanczos section
-    let n = 1 << log2point
+    const n = 1 << log2point
     let l2pt = 0
     let mmax = 1
 
     while (n > mmax) {
-        let istep = mmax << 1
+        const istep = mmax << 1
 
         //	double theta = -2*M_PI/istep
         //	double complex wphase_XY = cos(theta) + sin(theta)*I
-        let wphase_XY = phasevec[l2pt++]
-        let w_XY = [1.0, 0.0]
+        const wphase_XY = phasevec[l2pt++]
+        const w_XY = [1.0, 0.0]
 
         for (let m = 0; m < mmax; m++) {
             for (let i = m; i < n; i += istep) {
-                let tempXY = [w_XY[0] * xy_out[i + mmax][0] - w_XY[1] * xy_out[i + mmax][1],
+                const tempXY = [w_XY[0] * xy_out[i + mmax][0] - w_XY[1] * xy_out[i + mmax][1],
                 w_XY[0] * xy_out[i + mmax][1] + w_XY[1] * xy_out[i + mmax][0]]
 
                 xy_out[i + mmax][0] = xy_out[i][0] - tempXY[0]
@@ -51,7 +51,7 @@ export function fft(log2point, xy_in) {
                 xy_out[i][1] += tempXY[1]
             }
 
-            let w_XY_t = w_XY[0] * wphase_XY[0] - w_XY[1] * wphase_XY[1]
+            const w_XY_t = w_XY[0] * wphase_XY[0] - w_XY[1] * wphase_XY[1]
             w_XY[1] = w_XY[0] * wphase_XY[1] + w_XY[1] * wphase_XY[0]
             w_XY[0] = w_XY_t
         }
