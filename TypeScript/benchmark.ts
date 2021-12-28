@@ -5,12 +5,11 @@ import Fft from './fft';
 const LOG2FFTSIZE: number = 12;
 const FFT_REPEAT: number = 1000;
 
-const xy: number[][] = [];
-const xy_out: number[][] = [];
-
 function main() {
     const SIZE: number = 1 << LOG2FFTSIZE;
-
+    const xy: number[][] = [];
+    let xy_out: number[][] = [];    
+    
     for (var i = 0; i < SIZE / 2; i++) xy[i] = [1., 0];
     for (; i < SIZE; i++) xy[i] = [-1., 0];
     const fft = new Fft();
