@@ -2,8 +2,8 @@ import 'package:complex/complex.dart';
 
 class Fft {
   // Internal variables
-  final sOne = Complex.one;
-  final phasevec = [
+  final Cartesian _sOne = Complex.one;
+  final List<Complex> _phasevec = [
     Complex(-1, -1.22464679914735E-16),
     Complex(6.12323399573677E-17, -1),
     Complex(0.707106781186548, -0.707106781186548),
@@ -60,8 +60,8 @@ class Fft {
 
     while (n > mmax) {
       int istep = mmax << 1;
-      var wphaseXY = phasevec[l2pt++];
-      var wXY = sOne;
+      var wphaseXY = _phasevec[l2pt++];
+      var wXY = _sOne;
 
       for (int m = 0; m < mmax; m++) {
         for (int i = m; i < n; i += istep) {

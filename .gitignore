@@ -19,3 +19,4 @@ CPack*
 install_manifest.txt
 C#/.ionide/symbolCache.db
 dist
+dart/bin/benchmark.exe
