@@ -1,0 +1,12 @@
+{
+  "name": "fft-benchmark",
+  "version": "1.0.0",
+  "description": "",
+  "main": "benchmark.js",
+  "type": "module",
+  "scripts": {
+    "start": "node benchmark.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
