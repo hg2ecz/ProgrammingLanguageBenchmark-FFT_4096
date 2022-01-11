@@ -11,6 +11,7 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <Configuration>Release</Configuration>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AnalysisLevel>preview</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>

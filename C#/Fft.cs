@@ -41,7 +41,7 @@ namespace CSharpFftDemo
         };
 
         // Public function
-        public static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
+        public unsafe static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
         {
             var n = 1 << Log2FftSize;
 
