@@ -5,16 +5,15 @@ namespace CSharpFftDemo
 {
     public static class Benchmark
     {
-        const int Log2FftSize = 12;
-        const int FftRepeat = 1000;
+        private const int Log2FftSize = 12;
+        private const int FftRepeat = 1000;
 
-        static void Main()
+        private static void Main()
         {
             int i;
-            int size = 1 << Log2FftSize;
+            const int size = 1 << Log2FftSize;
             double[,] xy = new double[size,2];
             double[,] xy_out = new double[xy.Length,2];
-
 
             for (i = 0; i < size / 2; i++) {
                 xy[i,0] = 1.0;
@@ -35,7 +34,6 @@ namespace CSharpFftDemo
             }
             // FFT
             var stopwatch = Stopwatch.StartNew();
-
 
             for (i = 0; i < FftRepeat; i++)
             {

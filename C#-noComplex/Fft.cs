@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace CSharpFftDemo
 {
     public class Fft {
         // Internal variables
-        private double[,] phasevec = new double[32,2];
+        private readonly double[,] phasevec = new double[32,2];
 
         public Fft()
         {
