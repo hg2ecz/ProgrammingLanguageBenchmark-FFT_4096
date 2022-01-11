@@ -11,16 +11,17 @@ namespace CSharpFftDemo
             for (int i = 0; i < 32; i++)
             {
                 int point = 2 << i;
-                phasevec[i,0] = Math.Cos(-2 * Math.PI / point);
-                phasevec[i,1] = Math.Sin(-2 * Math.PI / point);
+                phasevec[i, 0] = Math.Cos(-2 * Math.PI / point);
+                phasevec[i, 1] = Math.Sin(-2 * Math.PI / point);
             }
         }
 
         // Public function
-        public void Calc(int Log2FftSize, double[,] xy_in, double[,] xy_out)
+        public unsafe void Calc(int Log2FftSize, double[,] xy_in, double[,] xy_out)
         {
+            int n = 1 << Log2FftSize;
 
-            for (int i = 0; i < (1 << Log2FftSize); i++)
+            for (int i = 0; i < n; i++)
             {
                 long brev = i;
 
@@ -31,13 +32,12 @@ namespace CSharpFftDemo
                 brev = (brev >> 16) | (brev << 16);
 
                 brev >>= 32 - Log2FftSize;
-                xy_out[brev,0] = xy_in[i,0];
-                xy_out[brev,1] = xy_in[i,1];
+                xy_out[brev, 0] = xy_in[i, 0];
+                xy_out[brev, 1] = xy_in[i, 1];
                 // Complex is a struct in .NET, so passed by value.
                 // new Complex(xy_in[i].Real, xy_in[i].Imaginary);
             }
 
-            int n = 1 << Log2FftSize;
             int l2pt = 0;
             int mmax = 1;
 
@@ -45,8 +45,8 @@ namespace CSharpFftDemo
             {
                 int istep = mmax << 1;
 
-                double wphase_X = phasevec[l2pt,0];
-                double wphase_Y = phasevec[l2pt,1];
+                double wphase_X = phasevec[l2pt, 0];
+                double wphase_Y = phasevec[l2pt, 1];
                 l2pt++;
 
                 double w_X = 1.0;
@@ -56,13 +56,13 @@ namespace CSharpFftDemo
                 {
                     for (int i = m; i < n; i += istep)
                     {
-                        var tempX = w_X * xy_out[i + mmax,0] - w_Y * xy_out[i + mmax,1];
-                        var tempY = w_X * xy_out[i + mmax,1] + w_Y * xy_out[i + mmax,0];
+                        var tempX = w_X * xy_out[i + mmax, 0] - w_Y * xy_out[i + mmax, 1];
+                        var tempY = w_X * xy_out[i + mmax, 1] + w_Y * xy_out[i + mmax, 0];
 
-                        xy_out[i + mmax,0] = xy_out[i,0] - tempX;
-                        xy_out[i + mmax,1] = xy_out[i,1] - tempY;
-                        xy_out[i,0] += tempX;
-                        xy_out[i,1] += tempY;
+                        xy_out[i + mmax, 0] = xy_out[i, 0] - tempX;
+                        xy_out[i + mmax, 1] = xy_out[i, 1] - tempY;
+                        xy_out[i, 0] += tempX;
+                        xy_out[i, 1] += tempY;
                     }
 
                     var w_Xtemp = w_X * wphase_X - w_Y * wphase_Y;
