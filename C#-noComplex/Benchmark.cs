@@ -6,7 +6,7 @@ namespace CSharpFftDemo
     public static class Benchmark
     {
         private const int Log2FftSize = 12;
-        private const int FftRepeat = 1000;
+        private const int FftRepeat = 20000;
 
         private static void Main()
         {
