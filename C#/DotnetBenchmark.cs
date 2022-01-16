@@ -14,7 +14,6 @@ public class DotnetBenchmark
     private readonly FftNative.DoubleComplex[] xyNative = new FftNative.DoubleComplex[size];
     private readonly FftNative.DoubleComplex[] xyOutNative = new FftNative.DoubleComplex[size];
 
-
     public DotnetBenchmark()
     {
         int i;
