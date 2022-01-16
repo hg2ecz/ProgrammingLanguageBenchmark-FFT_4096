@@ -1,7 +1,7 @@
 TARGET=Benchmark.exe
 
 all:
-	csc /o+ Fft.cs Benchmark.cs /out:$(TARGET)
+	csc /o+ Fft.cs Benchmark.cs /out:$(TARGET) /unsafe
 
 clean:
 	rm -f $(TARGET)
