@@ -11,6 +11,13 @@ clean:
 	make -C ../C-tests/C-fast_double clean
 	rm -fr $(TARGET) bin obj *.so BenchmarkDotNet.Artifacts dist
 
+package:
+	dotnet msbuild /t:package
+
+docker:
+	dotnet publish -c Release -o dist --self-contained -r linux-x64
+	docker build -t fft-benchmark:latest .
+
 PROG=$(TARGET)
 test:
 	./$(PROG)

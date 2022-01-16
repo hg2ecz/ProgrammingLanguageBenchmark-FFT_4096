@@ -37,3 +37,17 @@ jobs:
     - name: Build
       working-directory: C#
       run: make
+
+  build-with-make:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      working-directory: C#
+      run: make package
