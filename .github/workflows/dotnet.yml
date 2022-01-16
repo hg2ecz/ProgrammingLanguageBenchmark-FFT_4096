@@ -38,7 +38,7 @@ jobs:
       working-directory: C#
       run: make
 
-  build-with-make:
+  package-deb:
 
     runs-on: ubuntu-latest
 
@@ -51,3 +51,4 @@ jobs:
     - name: Build
       working-directory: C#
       run: make package
+
