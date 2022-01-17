@@ -10,7 +10,7 @@ all:
 
 clean:
 	make -C ../C-tests/C-fast_double clean
-	rm -fr $(TARGET) bin obj *.so BenchmarkDotNet.Artifacts dist
+	rm -fr $(TARGET) bin obj *.so BenchmarkDotNet.Artifacts dist *.deb
 
 package:
 	dotnet msbuild /t:package /p:Arch=$(ARCH)
