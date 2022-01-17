@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>1.6.0</VersionPrefix>
+    <Arch>x64</Arch>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6</TargetFramework>
     <LangVersion>10</LangVersion>
@@ -28,8 +29,8 @@
 
   <Target Name="package">
     <Message Importance="normal" Text="Creating Debian package..." />
-    <Exec Command="dotnet publish -c Release -r linux-x64 --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true fft-benchmark.csproj" />
-    <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix)-x64.deb" />
+    <Exec Command="dotnet publish -c Release -r linux-$(Arch) --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true fft-benchmark.csproj" />
+    <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix)-$(Arch).deb" />
   </Target>
 
 </Project>
