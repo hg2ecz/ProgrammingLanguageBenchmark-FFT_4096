@@ -51,4 +51,9 @@ jobs:
     - name: Build
       working-directory: C#
       run: make package
-
+    - name: Pushlish artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: Debian package
+        path: C#/*.deb
+        retention-days: 3
