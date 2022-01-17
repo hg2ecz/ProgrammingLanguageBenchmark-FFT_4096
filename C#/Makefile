@@ -6,7 +6,7 @@ all:
 	gcc -shared -fPIC -o libfft.so ../C-tests/C-fast_double/fft.o
 	# mcs -optimize -unsafe -r:System.Numerics.dll Fft.cs Benchmark.cs Params.cs Native.cs -out:$(TARGET)
 	dotnet build -c Release
-	dotnet publish -c Release -o dist --self-contained -r $(ARCH)
+	dotnet publish -c Release -o dist --self-contained -r linux-$(ARCH) -p:PublishTrimmed=True
 
 clean:
 	make -C ../C-tests/C-fast_double clean
@@ -16,7 +16,7 @@ package:
 	dotnet msbuild /t:package /p:Arch=$(ARCH)
 
 docker:
-	dotnet publish -c Release -o dist --self-contained -r $(ARCH)
+	dotnet publish -c Release -o dist --self-contained -r linux-$(ARCH) -p:PublishTrimmed=True
 	docker build -t fft-benchmark:latest .
 
 PROG=$(TARGET)
