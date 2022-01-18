@@ -19,7 +19,7 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       working-directory: C#
-      run: dotnet restore
+      run: dotnet restore fft-benchmark.csproj
     - name: Build
       working-directory: C#
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore fft-benchmark.csproj
