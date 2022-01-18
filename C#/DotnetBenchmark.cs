@@ -31,9 +31,9 @@ public class DotnetBenchmark
             xyNative[i] = new FftNative.DoubleComplex(-1.0f, 0.0f);
     }
 
-    [Benchmark(OperationsPerInvoke = Params.FftRepeat)]
+    [Benchmark]
     public void Managed() => Fft.Calculate(Params.Log2FftSize, xyManaged, xyOutManaged);
 
-    [Benchmark(OperationsPerInvoke = Params.FftRepeat)]
+    [Benchmark]
     public void Native() => FftNative.fft(Params.Log2FftSize, xyNative, xyOutNative);
 }
