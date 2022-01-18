@@ -3,6 +3,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace CSharpFftDemo;
 
+[MinColumn, MaxColumn]
 public class DotnetBenchmark
 {
     private const int size = 1 << Params.Log2FftSize;
