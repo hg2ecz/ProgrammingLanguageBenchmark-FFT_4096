@@ -3,6 +3,8 @@ using BenchmarkDotNet.Attributes;
 
 namespace CSharpFftDemo;
 
+[MediumRunJob]
+[MarkdownExporterAttribute.GitHub]
 [MinColumn, MaxColumn]
 public class DotnetBenchmark
 {
