@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Numerics;
+using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Validators;
 
 namespace CSharpFftDemo
 {
@@ -8,6 +13,8 @@ namespace CSharpFftDemo
     {
         private static void Main()
         {
+            DotnetBenchmark();
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("---- MANAGED ----");
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -27,6 +34,15 @@ namespace CSharpFftDemo
                 Console.WriteLine($"Can not run native method: {e.Message}");
                 Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
             }
+        }
+
+        private static void DotnetBenchmark()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("---- Benchmark.NET ----");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            BenchmarkRunner.Run<DotnetBenchmark>();
         }
 
         private static void Managed(int log2FftSize, int fftRepeat)

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetcore", "dotnetcore.csproj", "{05940CCA-0B9E-45AB-8A82-853736271F64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetcore", "fft-benchmark.csproj", "{05940CCA-0B9E-45AB-8A82-853736271F64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

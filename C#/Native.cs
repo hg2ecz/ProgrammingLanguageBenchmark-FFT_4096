@@ -25,7 +25,7 @@ namespace CSharpFftDemo
         }
 
         [DllImport("fft.so")]
-        public static extern void fft(int log2point, [Out] DoubleComplex[] xy_out, DoubleComplex[] xy_in);
+        internal static extern void fft(int log2point, [Out] DoubleComplex[] xy_out, DoubleComplex[] xy_in);
 
         public static void Native(int log2FftSize, int fftRepeat)
         {

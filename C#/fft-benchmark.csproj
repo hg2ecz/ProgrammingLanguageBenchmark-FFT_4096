@@ -6,7 +6,6 @@
     <TargetFramework>net6</TargetFramework>
     <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
-    <AssemblyName>fft-benchmark</AssemblyName>
     <RootNamespace>FftBenchmark</RootNamespace>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <Configuration>Release</Configuration>
@@ -20,6 +19,10 @@
     <Content Include="*.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>  
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
   </ItemGroup>
 
   <Target Name="package">
