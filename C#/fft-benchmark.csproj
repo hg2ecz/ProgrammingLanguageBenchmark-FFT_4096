@@ -27,7 +27,7 @@
 
   <Target Name="package">
     <Message Importance="normal" Text="Creating Debian package..." />
-    <Exec Command="dotnet publish -c Release -r linux-arm --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true" />
+    <Exec Command="dotnet publish -c Release -r linux-arm --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true fft-benchmark.csproj" />
     <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix).deb" />
   </Target>
 

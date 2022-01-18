@@ -1,11 +1,12 @@
 ﻿using System.Numerics;
 
-namespace CSharpFftDemo
+namespace CSharpFftDemo;
+
+public sealed class Fft
 {
-    public sealed class Fft {
-        // Internal variables
-        private static readonly Complex s_one = Complex.One;
-        private static readonly Complex[] phasevec = new[] {
+    // Internal variables
+    private static readonly Complex s_one = Complex.One;
+    private static readonly Complex[] phasevec = new[] {
             new Complex(-1, -1.22464679914735E-16),
             new Complex(6.12323399573677E-17, -1),
             new Complex(0.707106781186548, -0.707106781186548),
@@ -40,49 +41,48 @@ namespace CSharpFftDemo
             new Complex(1, 0)
         };
 
-        // Public function
-        public unsafe static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
+    // Public function
+    public unsafe static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
+    {
+        var n = 1 << Log2FftSize;
+
+        for (int i = 0; i < n; i++)
         {
-            var n = 1 << Log2FftSize;
+            long brev = i;
 
-            for (int i = 0; i < n; i++)
+            brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
+            brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);
+            brev = ((brev & 0xf0f0f0f0) >> 4) | ((brev & 0x0f0f0f0f) << 4);
+            brev = ((brev & 0xff00ff00) >> 8) | ((brev & 0x00ff00ff) << 8);
+            brev = (brev >> 16) | (brev << 16);
+
+            brev >>= 32 - Log2FftSize;
+            xy_out[brev] = xy_in[i];
+        }
+
+        int l2pt = 0;
+        int mmax = 1;
+
+        while (n > mmax)
+        {
+            int istep = mmax << 1;
+            var wphase_XY = phasevec[l2pt++];
+            var w_XY = s_one;
+
+            for (int m = 0; m < mmax; m++)
             {
-                long brev = i;
-
-                brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
-                brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);
-                brev = ((brev & 0xf0f0f0f0) >> 4) | ((brev & 0x0f0f0f0f) << 4);
-                brev = ((brev & 0xff00ff00) >> 8) | ((brev & 0x00ff00ff) << 8);
-                brev = (brev >> 16) | (brev << 16);
-
-                brev >>= 32 - Log2FftSize;
-                xy_out[brev] = xy_in[i];
-            }
-
-            int l2pt = 0;
-            int mmax = 1;
-
-            while (n > mmax)
-            {
-                int istep = mmax << 1;
-                var wphase_XY = phasevec[l2pt++];
-                var w_XY = s_one;
-
-                for (int m = 0; m < mmax; m++)
+                for (int i = m; i < n; i += istep)
                 {
-                    for (int i = m; i < n; i += istep)
-                    {
-                        var tempXY = w_XY * xy_out[i + mmax];
+                    var tempXY = w_XY * xy_out[i + mmax];
 
-                        xy_out[i + mmax] = xy_out[i] - tempXY;
-                        xy_out[i] += tempXY;
-                    }
-
-                    w_XY *= wphase_XY;
+                    xy_out[i + mmax] = xy_out[i] - tempXY;
+                    xy_out[i] += tempXY;
                 }
 
-                mmax = istep;
+                w_XY *= wphase_XY;
             }
+
+            mmax = istep;
         }
     }
 }
