@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CommandLine;
 using System.Diagnostics;
 using System.Numerics;
 using BenchmarkDotNet.Columns;
@@ -11,29 +12,51 @@ namespace CSharpFftDemo;
 
 public static class Benchmark
 {
-    private static void Main()
+    private static int Main(string[] args)
     {
-        DotnetBenchmark();
+        var dotnetBenchmarkOption = new Option<bool>(
+            new [] {
+                "-d",
+                "--dotnet-benchmark"
+            },
+            getDefaultValue: () => false,
+            "An option whose argument is parsed as a bool");
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("---- MANAGED ----");
-        Console.ForegroundColor = ConsoleColor.Gray;
-
-        Managed(Params.Log2FftSize, Params.FftRepeat);
-
-        try
+        var rootCommand = new RootCommand
         {
+            dotnetBenchmarkOption
+        };
+
+        rootCommand.Description = "FFT Benchmark from Zsolt Krüpl.";
+
+        rootCommand.SetHandler((bool dotnetBookmark) => {
+            if (dotnetBookmark)
+            {
+                DotnetBenchmark();
+            }
+
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- NATIVE ----");
+            Console.WriteLine("---- MANAGED ----");
             Console.ForegroundColor = ConsoleColor.Gray;
 
-            FftNative.Native(Params.Log2FftSize, Params.FftRepeat);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Can not run native method: {e.Message}");
-            Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
-        }
+            Managed(Params.Log2FftSize, Params.FftRepeat);
+
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("---- NATIVE ----");
+                Console.ForegroundColor = ConsoleColor.Gray;
+
+                FftNative.Native(Params.Log2FftSize, Params.FftRepeat);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Can not run native method: {e.Message}");
+                Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
+            }
+        }, dotnetBenchmarkOption);
+
+        return rootCommand.Invoke(args);
     }
 
     private static void DotnetBenchmark()
