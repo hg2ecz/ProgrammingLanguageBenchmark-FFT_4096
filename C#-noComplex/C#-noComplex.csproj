@@ -1,8 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <VersionPrefix>1.5.3</VersionPrefix>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+    <AssemblyName>fft-benchmark</AssemblyName>
+    <RootNamespace>FftBenchmark</RootNamespace>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <Configuration>Release</Configuration>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AnalysisLevel>preview</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="*.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>  
+  </ItemGroup>
+
+  <Target Name="package">
+    <Message Importance="normal" Text="Creating Debian package..." />
+    <Exec Command="dotnet publish -c Release -r linux-arm --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true" />
+    <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix).deb" />
+  </Target>
 
 </Project>

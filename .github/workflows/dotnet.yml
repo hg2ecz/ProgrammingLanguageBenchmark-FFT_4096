@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-with-msbuild:
 
     runs-on: ubuntu-latest
 
@@ -19,7 +19,36 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       working-directory: C#
-      run: dotnet restore
+      run: dotnet restore fft-benchmark.csproj
     - name: Build
       working-directory: C#
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore fft-benchmark.csproj
+
+  build-with-make:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      working-directory: C#
+      run: make
+
+  package-deb:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      working-directory: C#
+      run: make package
+

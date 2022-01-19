@@ -1,73 +1,94 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Numerics;
+using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Validators;
 
-namespace CSharpFftDemo
+namespace CSharpFftDemo;
+
+public static class Benchmark
 {
-    public static class Benchmark
+    private static void Main()
     {
-        private static void Main()
+        DotnetBenchmark();
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("---- MANAGED ----");
+        Console.ForegroundColor = ConsoleColor.Gray;
+
+        Managed(Params.Log2FftSize, Params.FftRepeat);
+
+        try
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MANAGED ----");
+            Console.WriteLine("---- NATIVE ----");
             Console.ForegroundColor = ConsoleColor.Gray;
 
-            Managed(Params.Log2FftSize, Params.FftRepeat);
+            FftNative.Native(Params.Log2FftSize, Params.FftRepeat);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Can not run native method: {e.Message}");
+            Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
+        }
+    }
 
-            try
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("---- NATIVE ----");
-                Console.ForegroundColor = ConsoleColor.Gray;
+    private static void DotnetBenchmark()
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("---- Benchmark.NET ----");
+        Console.ForegroundColor = ConsoleColor.Gray;
 
-                FftNative.Native(Params.Log2FftSize, Params.FftRepeat);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Can not run native method: {e.Message}");
-                Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
-            }
+        var config = new ManualConfig()
+            .WithOptions(ConfigOptions.DisableOptimizationsValidator)
+            .AddValidator(JitOptimizationsValidator.DontFailOnError)
+            .AddLogger(ConsoleLogger.Default)
+            .AddColumnProvider(DefaultColumnProviders.Instance);
+
+        BenchmarkRunner.Run<DotnetBenchmark>(config);
+    }
+
+    private static void Managed(int log2FftSize, int fftRepeat)
+    {
+        int i;
+        int size = 1 << log2FftSize;
+        Complex[] xy = new Complex[size];
+        Complex[] xy_out = new Complex[xy.Length];
+
+        for (i = 0; i < size / 2; i++)
+            xy[i] = new Complex(1.0, 0.0);
+
+        for (i = size / 2; i < size; i++)
+            xy[i] = new Complex(-1.0, 0.0);
+
+        // JIT warm up ... possible give more speed
+        for (i = 0; i < fftRepeat; i++)
+        {
+            Fft.Calculate(log2FftSize, xy, xy_out);
         }
 
-        private static void Managed(int log2FftSize, int fftRepeat)
+        // FFT
+        var stopwatch = Stopwatch.StartNew();
+
+        for (i = 0; i < fftRepeat; i++)
         {
-            int i;
-            int size = 1 << log2FftSize;
-            Complex[] xy = new Complex[size];
-            Complex[] xy_out = new Complex[xy.Length];
+            Fft.Calculate(log2FftSize, xy, xy_out);
+        }
 
-            for (i = 0; i < size / 2; i++)
-                xy[i] = new Complex(1.0, 0.0);
+        stopwatch.Stop();
 
-            for (i = size / 2; i < size; i++)
-                xy[i] = new Complex(-1.0, 0.0);
+        Console.WriteLine($"Total ({fftRepeat}): {stopwatch.ElapsedMilliseconds}");
 
-            // JIT warm up ... possible give more speed
-            for (i = 0; i < fftRepeat; i++)
-            {
-                Fft.Calculate(log2FftSize, xy, xy_out);
-            }
+        var tpp = stopwatch.ElapsedMilliseconds / (float)fftRepeat;
 
-            // FFT
-            var stopwatch = Stopwatch.StartNew();
+        Console.WriteLine($"{fftRepeat} piece(s) of {1 << log2FftSize} pt FFT;  {tpp} ms/piece\n");
 
-            for (i = 0; i < fftRepeat; i++)
-            {
-                Fft.Calculate(log2FftSize, xy, xy_out);
-            }
-
-            stopwatch.Stop();
-
-            Console.WriteLine($"Total ({fftRepeat}): {stopwatch.ElapsedMilliseconds}");
-
-            var tpp = stopwatch.ElapsedMilliseconds / (float)fftRepeat;
-
-            Console.WriteLine($"{fftRepeat} piece(s) of {1 << log2FftSize} pt FFT;  {tpp} ms/piece\n");
-
-            for (i = 0; i < 6; i++)
-            {
-                Console.WriteLine("{0}\t{1}", i, xy_out[i]);
-            }
+        for (i = 0; i < 6; i++)
+        {
+            Console.WriteLine("{0}\t{1}", i, xy_out[i]);
         }
     }
 }

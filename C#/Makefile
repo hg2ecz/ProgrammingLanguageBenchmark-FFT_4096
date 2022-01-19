@@ -1,15 +1,27 @@
-TARGET=Benchmark.exe
+TARGET=./dist/fft-benchmark
 
 all:
 	make -C ../C-tests/C-fast_double clean all
-	gcc -shared -fPIC -o fft.so ../C-tests/C-fast_double/fft.o
-	mcs -optimize -unsafe -r:System.Numerics.dll Fft.cs Benchmark.cs Params.cs Native.cs -out:$(TARGET)
+	gcc -shared -fPIC -o libfft.so ../C-tests/C-fast_double/fft.o
+	# mcs -optimize -unsafe -r:System.Numerics.dll Fft.cs Benchmark.cs Params.cs Native.cs -out:$(TARGET)
+	dotnet build -c Release
+	dotnet publish -c Release -o dist --self-contained -r linux-x64
 
 clean:
-	make -C ../C-fast-all-complex-float-types-opt-4x clean
-	rm -f $(TARGET)
+	make -C ../C-tests/C-fast_double clean
+	rm -fr $(TARGET) bin obj *.so BenchmarkDotNet.Artifacts dist
+
+package:
+	dotnet msbuild /t:package
+
+docker:
+	dotnet publish -c Release -o dist --self-contained -r linux-x64
+	docker build -t fft-benchmark:latest .
 
 PROG=$(TARGET)
 test:
 	./$(PROG)
 	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py
+
+test2:	test
+

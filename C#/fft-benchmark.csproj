@@ -6,11 +6,11 @@
     <TargetFramework>net6</TargetFramework>
     <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
-    <AssemblyName>fft-benchmark</AssemblyName>
     <RootNamespace>FftBenchmark</RootNamespace>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <Configuration>Release</Configuration>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AnalysisLevel>preview</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
@@ -21,10 +21,14 @@
     </Content>  
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+  </ItemGroup>
+
   <Target Name="package">
     <Message Importance="normal" Text="Creating Debian package..." />
-    <Exec Command="dotnet publish -c Release -r linux-arm --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true" />
-    <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix).deb" />
+    <Exec Command="dotnet publish -c Release -r linux-x64 --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true fft-benchmark.csproj" />
+    <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix)-x64.deb" />
   </Target>
 
 </Project>
