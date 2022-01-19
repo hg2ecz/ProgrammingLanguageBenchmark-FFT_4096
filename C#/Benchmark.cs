@@ -20,27 +20,58 @@ public static class Benchmark
                 "--dotnet-benchmark"
             },
             getDefaultValue: () => false,
-            "An option whose argument is parsed as a bool");
+            "Boolean indicates if we should run the BenchmarkDotNet benchmark");
+
+        var managedBenchmarkOption = new Option<bool>(
+            new [] {
+                "-m",
+                "--managed"
+            },
+            getDefaultValue: () => true,
+            "Boolean indicates if we should run the .NET managed benchmark");
+
+        var nativeBenchmarkOption = new Option<bool>(
+            new [] {
+                "-n",
+                "--native"
+            },
+            getDefaultValue: () => !OperatingSystem.IsWindows(),
+            "Boolean indicates if we should run the native (C-fast_double) benchmark");
 
         var rootCommand = new RootCommand
         {
-            dotnetBenchmarkOption
+            dotnetBenchmarkOption,
+            managedBenchmarkOption,
+            nativeBenchmarkOption
         };
 
         rootCommand.Description = "FFT Benchmark from Zsolt Krüpl.";
 
-        rootCommand.SetHandler((bool dotnetBookmark) => {
-            if (dotnetBookmark)
-            {
-                DotnetBenchmark();
-            }
+        rootCommand.SetHandler((bool dotnetBenchmark, bool  managedBenchmark, bool nativeBenchmark) =>
+            Benchmarks(dotnetBenchmark, managedBenchmark, nativeBenchmark),
+            dotnetBenchmarkOption, managedBenchmarkOption, nativeBenchmarkOption);
 
+        return rootCommand.Invoke(args);
+    }
+
+    private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark)
+    {
+        if (dotnetBenchmark)
+        {
+            DotnetBenchmark();
+        }
+
+        if (managedBenchmark)
+        {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("---- MANAGED ----");
             Console.ForegroundColor = ConsoleColor.Gray;
 
             Managed(Params.Log2FftSize, Params.FftRepeat);
+        }
 
+        if (nativeBenchmark)
+        {
             try
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -53,10 +84,11 @@ public static class Benchmark
             {
                 Console.WriteLine($"Can not run native method: {e.Message}");
                 Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
+                return 1;
             }
-        }, dotnetBenchmarkOption);
+        }
 
-        return rootCommand.Invoke(args);
+        return 0;
     }
 
     private static void DotnetBenchmark()
