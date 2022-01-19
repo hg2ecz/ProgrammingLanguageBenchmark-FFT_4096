@@ -11,7 +11,7 @@ namespace CSharpFftDemo;
 
 [MarkdownExporterAttribute.GitHub]
 [MinColumn, MaxColumn]
-internal class DotnetBenchmark
+public class DotnetBenchmark
 {
     private const int size = 1 << Params.Log2FftSize;
     readonly Complex[] xyManaged = new Complex[size];
