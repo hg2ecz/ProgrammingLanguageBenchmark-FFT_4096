@@ -57,6 +57,9 @@ public static class Benchmark
 
     private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark)
     {
+        long? managedElapsedMillisecond = null;
+        long? nativeElapsedMillisecond = null;
+
         if (dotnetBenchmark)
         {
             DotnetBenchmark();
@@ -68,7 +71,7 @@ public static class Benchmark
             Console.WriteLine("---- MANAGED ----");
             Console.ForegroundColor = ConsoleColor.Gray;
 
-            Managed(Params.Log2FftSize, Params.FftRepeat);
+            managedElapsedMillisecond = Managed(Params.Log2FftSize, Params.FftRepeat);
         }
 
         if (nativeBenchmark)
@@ -79,7 +82,7 @@ public static class Benchmark
                 Console.WriteLine("---- NATIVE ----");
                 Console.ForegroundColor = ConsoleColor.Gray;
 
-                FftNative.Native(Params.Log2FftSize, Params.FftRepeat);
+                nativeElapsedMillisecond = FftNative.Native(Params.Log2FftSize, Params.FftRepeat);
             }
             catch (Exception e)
             {
@@ -87,6 +90,13 @@ public static class Benchmark
                 Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
                 return 1;
             }
+        }
+
+        if (managedElapsedMillisecond.HasValue && nativeElapsedMillisecond.HasValue)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\nRatio: {0:0.4}", managedElapsedMillisecond / nativeElapsedMillisecond);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         return 0;
@@ -107,7 +117,7 @@ public static class Benchmark
         BenchmarkRunner.Run<DotnetBenchmark>(config);
     }
 
-    private static void Managed(int log2FftSize, int fftRepeat)
+    private static long Managed(int log2FftSize, int fftRepeat)
     {
         int i;
         int size = 1 << log2FftSize;
@@ -146,5 +156,7 @@ public static class Benchmark
         {
             Console.WriteLine("{0}\t{1}", i, xy_out[i]);
         }
+
+        return stopwatch.ElapsedMilliseconds;
     }
 }
