@@ -6,7 +6,7 @@ namespace CSharpFftDemo;
 
 internal static class FftManaged
 {
-    public static long Calculate(int log2FftSize, int fftRepeat)
+    public static double Calculate(int log2FftSize, int fftRepeat)
     {
         int i;
         int size = 1 << log2FftSize;
@@ -46,6 +46,6 @@ internal static class FftManaged
             Console.WriteLine("{0}\t{1}", i, xy_out[i]);
         }
 
-        return stopwatch.ElapsedMilliseconds;
+        return tpp;
     }
 }

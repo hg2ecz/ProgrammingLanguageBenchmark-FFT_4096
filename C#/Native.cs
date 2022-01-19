@@ -27,7 +27,7 @@ internal static class FftNative
     [DllImport("fft.so")]
     internal static extern void fft(int log2point, [Out] DoubleComplex[] xy_out, DoubleComplex[] xy_in);
 
-    public static long Calculate(int log2FftSize, int fftRepeat)
+    public static double Calculate(int log2FftSize, int fftRepeat)
     {
         int i;
         int size = 1 << log2FftSize;
@@ -61,6 +61,6 @@ internal static class FftNative
             Console.WriteLine("{0}\t{1}", i, xy_out[i]);
         }
 
-        return stopwatch.ElapsedMilliseconds;
+        return tpp;
     }
 }

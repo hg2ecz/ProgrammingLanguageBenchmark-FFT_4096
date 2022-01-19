@@ -50,8 +50,8 @@ public static class Benchmark
 
     private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark)
     {
-        long? managedElapsedMillisecond = null;
-        long? nativeElapsedMillisecond = null;
+        double? managedElapsedMillisecond = null;
+        double? nativeElapsedMillisecond = null;
 
         if (dotnetBenchmark)
         {
