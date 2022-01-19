@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CommandLine;
 using System.Diagnostics;
+using System.IO;
 using System.Numerics;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
@@ -35,7 +36,7 @@ public static class Benchmark
                 "-n",
                 "--native"
             },
-            getDefaultValue: () => !OperatingSystem.IsWindows(),
+            getDefaultValue: () => File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}libfft.so"),
             "Run the native (C-fast_double) benchmark");
 
         var rootCommand = new RootCommand
