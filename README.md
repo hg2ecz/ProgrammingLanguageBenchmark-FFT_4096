@@ -1,5 +1,10 @@
 # 4096 point FFT test result
 
+[![Rust](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/rust.yml/badge.svg)](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/rust.yml)
+[![Dart](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/dart.yml/badge.svg)](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/dart.yml)
+[![.NET](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/dotnet.yml/badge.svg)](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/dotnet.yml)
+[![Node.js CI](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/node.js.yml/badge.svg)](https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096/actions/workflows/node.js.yml)
+
 - Raspberry Pi3: ARM Cortex A53, 1.2 GHz, 32 bit Raspbian 9 beta (gcc-6.2)
 - Odroid-C2: ARM Cortex A53, 1.5 GHz, 64 bit Ubuntu 17.04 alpha (gcc-6.3)
 - Intel i5-3337u: Ivy Bridge, 1.8 GHz (turbo 2,7 GHz), 64 bit Ubuntu 16.10 (gcc-6.2)
