@@ -89,7 +89,7 @@ public static class Benchmark
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\nRatio: {managedElapsedMillisecond / nativeElapsedMillisecond:0.####}");
-            Console.WriteLine($"\nDiff%: {managedElapsedMillisecond / nativeElapsedMillisecond - 1:0.##%}");
+            Console.WriteLine($"Diff%: {managedElapsedMillisecond / nativeElapsedMillisecond - 1:0.##%}");
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
