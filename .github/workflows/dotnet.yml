@@ -50,6 +50,9 @@ jobs:
         dotnet-version: 6.0.x
     - name: Build
       working-directory: C#
+      run: make
+    - name: Create a package
+      working-directory: C#
       run: make package
     - name: Pushlish artifact
       uses: actions/upload-artifact@v2.3.1
