@@ -1,13 +1,6 @@
 ﻿using System;
 using System.CommandLine;
-using System.Diagnostics;
 using System.IO;
-using System.Numerics;
-using BenchmarkDotNet.Columns;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Loggers;
-using BenchmarkDotNet.Running;
-using BenchmarkDotNet.Validators;
 
 namespace CSharpFftDemo;
 
@@ -62,7 +55,7 @@ public static class Benchmark
 
         if (dotnetBenchmark)
         {
-            DotnetBenchmark();
+            DotnetBenchmark.Calculate();
         }
 
         if (managedBenchmark)
@@ -71,7 +64,7 @@ public static class Benchmark
             Console.WriteLine("---- MANAGED ----");
             Console.ForegroundColor = ConsoleColor.Gray;
 
-            managedElapsedMillisecond = Managed(Params.Log2FftSize, Params.FftRepeat);
+            managedElapsedMillisecond = FftManaged.Calculate(Params.Log2FftSize, Params.FftRepeat);
         }
 
         if (nativeBenchmark)
@@ -82,7 +75,7 @@ public static class Benchmark
                 Console.WriteLine("---- NATIVE ----");
                 Console.ForegroundColor = ConsoleColor.Gray;
 
-                nativeElapsedMillisecond = FftNative.Native(Params.Log2FftSize, Params.FftRepeat);
+                nativeElapsedMillisecond = FftNative.Calculate(Params.Log2FftSize, Params.FftRepeat);
             }
             catch (Exception e)
             {
@@ -100,63 +93,5 @@ public static class Benchmark
         }
 
         return 0;
-    }
-
-    private static void DotnetBenchmark()
-    {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("---- Benchmark.NET ----");
-        Console.ForegroundColor = ConsoleColor.Gray;
-
-        var config = new ManualConfig()
-            .WithOptions(ConfigOptions.DisableOptimizationsValidator)
-            .AddValidator(JitOptimizationsValidator.DontFailOnError)
-            .AddLogger(ConsoleLogger.Default)
-            .AddColumnProvider(DefaultColumnProviders.Instance);
-
-        BenchmarkRunner.Run<DotnetBenchmark>(config);
-    }
-
-    private static long Managed(int log2FftSize, int fftRepeat)
-    {
-        int i;
-        int size = 1 << log2FftSize;
-        Complex[] xy = new Complex[size];
-        Complex[] xy_out = new Complex[xy.Length];
-
-        for (i = 0; i < size / 2; i++)
-            xy[i] = new Complex(1.0, 0.0);
-
-        for (i = size / 2; i < size; i++)
-            xy[i] = new Complex(-1.0, 0.0);
-
-        // JIT warm up ... possible give more speed
-        for (i = 0; i < fftRepeat; i++)
-        {
-            Fft.Calculate(log2FftSize, xy, xy_out);
-        }
-
-        // FFT
-        var stopwatch = Stopwatch.StartNew();
-
-        for (i = 0; i < fftRepeat; i++)
-        {
-            Fft.Calculate(log2FftSize, xy, xy_out);
-        }
-
-        stopwatch.Stop();
-
-        Console.WriteLine($"Total ({fftRepeat}): {stopwatch.ElapsedMilliseconds}");
-
-        var tpp = stopwatch.ElapsedMilliseconds / (float)fftRepeat;
-
-        Console.WriteLine($"{fftRepeat} piece(s) of {1 << log2FftSize} pt FFT;  {tpp} ms/piece\n");
-
-        for (i = 0; i < 6; i++)
-        {
-            Console.WriteLine("{0}\t{1}", i, xy_out[i]);
-        }
-
-        return stopwatch.ElapsedMilliseconds;
     }
 }
