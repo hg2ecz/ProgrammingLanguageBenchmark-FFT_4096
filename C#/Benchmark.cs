@@ -20,7 +20,7 @@ public static class Benchmark
                 "--dotnet-benchmark"
             },
             getDefaultValue: () => false,
-            "Boolean indicates if we should run the BenchmarkDotNet benchmark");
+            "Run the BenchmarkDotNet benchmark");
 
         var managedBenchmarkOption = new Option<bool>(
             new [] {
@@ -28,7 +28,7 @@ public static class Benchmark
                 "--managed"
             },
             getDefaultValue: () => true,
-            "Boolean indicates if we should run the .NET managed benchmark");
+            "Run the .NET managed benchmark");
 
         var nativeBenchmarkOption = new Option<bool>(
             new [] {
@@ -36,7 +36,7 @@ public static class Benchmark
                 "--native"
             },
             getDefaultValue: () => !OperatingSystem.IsWindows(),
-            "Boolean indicates if we should run the native (C-fast_double) benchmark");
+            "Run the native (C-fast_double) benchmark");
 
         var rootCommand = new RootCommand
         {
