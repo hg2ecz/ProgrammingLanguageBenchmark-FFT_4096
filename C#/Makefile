@@ -1,5 +1,5 @@
 TARGET=./dist/fft-benchmark
-ARCH=x64
+ARCH=x64 # arm, arm64, please consult: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids 
 
 all:
 	make -C ../C-tests/C-fast_double clean all
@@ -10,7 +10,7 @@ all:
 
 clean:
 	make -C ../C-tests/C-fast_double clean
-	rm -fr $(TARGET) bin obj *.so BenchmarkDotNet.Artifacts dist
+	rm -fr $(TARGET) bin obj *.so BenchmarkDotNet.Artifacts dist *.deb
 
 package:
 	dotnet msbuild /t:package /p:Arch=$(ARCH)

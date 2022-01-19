@@ -50,5 +50,13 @@ jobs:
         dotnet-version: 6.0.x
     - name: Build
       working-directory: C#
+      run: make
+    - name: Create a package
+      working-directory: C#
       run: make package
-
+    - name: Publish artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: Debian package
+        path: C#/*.deb
+        retention-days: 3
