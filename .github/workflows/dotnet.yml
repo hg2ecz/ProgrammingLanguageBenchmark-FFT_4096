@@ -60,23 +60,3 @@ jobs:
         name: Debian package
         path: C#/*.deb
         retention-days: 3
-
-  package-arch:
-
-    runs-on: arch
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-    - name: Create a package
-      working-directory: C#
-      run: makepkg
-    - name: Publish artifact
-      uses: actions/upload-artifact@v2.3.1
-      with:
-        name: Arch package
-        path: C#/*.pkg.*
-        retention-days: 3
