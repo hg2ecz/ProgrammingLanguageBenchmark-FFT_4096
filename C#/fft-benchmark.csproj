@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.5.3</VersionPrefix>
+    <VersionPrefix>1.6.0</VersionPrefix>
+    <Arch>x64</Arch>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6</TargetFramework>
     <LangVersion>10</LangVersion>
@@ -23,12 +24,13 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta2.21617.1" />
   </ItemGroup>
 
   <Target Name="package">
     <Message Importance="normal" Text="Creating Debian package..." />
-    <Exec Command="dotnet publish -c Release -r linux-x64 --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true fft-benchmark.csproj" />
-    <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix)-x64.deb" />
+    <Exec Command="dotnet publish -c Release -r linux-$(Arch) --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true fft-benchmark.csproj" />
+    <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix)-$(Arch).deb" />
   </Target>
 
 </Project>

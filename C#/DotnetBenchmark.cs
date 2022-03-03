@@ -1,5 +1,11 @@
+using System;
 using System.Numerics;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Validators;
 
 namespace CSharpFftDemo;
 
@@ -13,6 +19,21 @@ public class DotnetBenchmark
 
     private readonly FftNative.DoubleComplex[] xyNative = new FftNative.DoubleComplex[size];
     private readonly FftNative.DoubleComplex[] xyOutNative = new FftNative.DoubleComplex[size];
+
+    public static void Calculate()
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("---- Benchmark.NET ----");
+        Console.ForegroundColor = ConsoleColor.Gray;
+
+        var config = new ManualConfig()
+            .WithOptions(ConfigOptions.DisableOptimizationsValidator)
+            .AddValidator(JitOptimizationsValidator.DontFailOnError)
+            .AddLogger(ConsoleLogger.Default)
+            .AddColumnProvider(DefaultColumnProviders.Instance);
+
+        BenchmarkRunner.Run<DotnetBenchmark>(config);
+    }
 
     public DotnetBenchmark()
     {

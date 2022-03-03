@@ -8,5 +8,6 @@ dist-*
 **/*.zip
 **/*.o
 **/*.so
+*.pkg.*
 
 BenchmarkDotNet.Artifacts
