@@ -28,9 +28,15 @@
   </ItemGroup>
 
   <Target Name="package">
-    <Message Importance="normal" Text="Creating Debian package..." />
-    <Exec Command="dotnet publish -c Release -r linux-$(Arch) --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true fft-benchmark.csproj" />
+    <Message Importance="high" Text="Creating Debian package, version: $(VersionPrefix)..." />
+    <Exec Command="dotnet publish -c Release -r linux-$(Arch) --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=true -p:VersionPrefix=$(VersionPrefix) fft-benchmark.csproj" />
     <Exec Command="dpkg-deb --build packaging $(AssemblyName)-$(VersionPrefix)-$(Arch).deb" />
+  </Target>
+
+  <Target Name="docker">
+    <Message Importance="high" Text="Creating Docker image, version: $(VersionPrefix)...." />
+    <Exec Command="dotnet publish -c Release -o dist --self-contained -r linux-$(ARCH) -p:PublishTrimmed=True -p:VersionPrefix=$(VersionPrefix)" />
+    <Exec Command="docker build -t fft-benchmark:$(VersionPrefix) ." />
   </Target>
 
 </Project>
