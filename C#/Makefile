@@ -18,8 +18,7 @@ package:
 	dotnet msbuild /t:package /p:Arch=$(ARCH) -p:VersionPrefix=$(VERSION)
 
 docker:
-	dotnet publish -c Release -o dist --self-contained -r linux-$(ARCH) -p:PublishTrimmed=True -p:VersionPrefix=$(VERSION)
-	docker build -t fft-benchmark:$(VERSION) .
+	dotnet msbuild /t:docker /p:Arch=$(ARCH) -p:VersionPrefix=$(VERSION)
 
 PROG=$(TARGET)
 test:
