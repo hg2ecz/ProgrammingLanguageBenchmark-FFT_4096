@@ -2,6 +2,7 @@
 name = "fftbenchmark"
 version = "0.1.0"
 authors = ["Zsolt Krüpl <hg2ecz@ham.hu>"]
+edition = "2021"
 
 [dependencies]
 
@@ -9,3 +10,6 @@ authors = ["Zsolt Krüpl <hg2ecz@ham.hu>"]
 name = "fft"
 path = "src/fft.rs"
 crate-type = ["rlib"]
+
+[profile.release]
+strip = true
