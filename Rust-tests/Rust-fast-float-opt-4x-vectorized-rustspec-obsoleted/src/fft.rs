@@ -124,10 +124,10 @@ impl Fft {
                     let reg2_re = VectorType::from_slice(&xy_out.0[i..i + 4]); // 4 lanes reg
                     let reg2_im = VectorType::from_slice(&xy_out.1[i..i + 4]); // 4 lanes reg
 
-                    (reg2_re - temp_re).to_array().copy_from_slice(&xy_out.0[i + mmax..i + mmax + 4]); // 4 lanes sub&store
-                    (reg2_im - temp_im).to_array().copy_from_slice(&xy_out.1[i + mmax..i + mmax + 4]); // 4 lanes sub&store
-                    (reg2_re + temp_re).to_array().copy_from_slice(&xy_out.0[i..i + 4]); // 4 lanes add&store
-                    (reg2_im + temp_im).to_array().copy_from_slice(&xy_out.1[i..i + 4]); // 4 lanes add&store
+                    xy_out.0[i + mmax..i + mmax + 4].copy_from_slice(&(reg2_re - temp_re).to_array()); // 4 lanes sub&store
+                    xy_out.1[i + mmax..i + mmax + 4].copy_from_slice(&(reg2_im - temp_im).to_array()); // 4 lanes sub&store
+                    xy_out.0[i..i + 4].copy_from_slice(&(reg2_re + temp_re).to_array()); // 4 lanes add&store
+                    xy_out.1[i..i + 4].copy_from_slice(&(reg2_im + temp_im).to_array()); // 4 lanes add&store
 
                     i += istep;
                 }
