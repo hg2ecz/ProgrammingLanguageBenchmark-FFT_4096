@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "benchmark.ts",
+  "bin": "dist/benchmark.js",
   "scripts": {
     "build": "tsc",
+    "package": "npx pkg -t linux,macos,win . --out-path dist",
     "start": "node dist/benchmark.js"
   },
   "author": "",
