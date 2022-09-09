@@ -11,6 +11,8 @@ namespace CSharpFftDemo;
 
 [MarkdownExporterAttribute.GitHub]
 [MinColumn, MaxColumn]
+[MemoryDiagnoser]
+// [NativeMemoryProfiler]
 public class DotnetBenchmark
 {
     private const int size = 1 << Params.Log2FftSize;
