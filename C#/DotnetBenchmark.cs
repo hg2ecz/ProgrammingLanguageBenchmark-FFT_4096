@@ -6,6 +6,7 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Validators;
+using MathNet.Numerics.IntegralTransforms;
 
 namespace CSharpFftDemo;
 
@@ -15,9 +16,9 @@ namespace CSharpFftDemo;
 // [NativeMemoryProfiler]
 public class DotnetBenchmark
 {
-    private const int size = 1 << Params.Log2FftSize;
-    readonly Complex[] xyManaged = new Complex[size];
-    readonly Complex[] xyOutManaged = new Complex[size];
+    private static readonly int size = 1 << Params.Log2FftSize;
+    private static readonly Complex[] xyManaged = new Complex[size];
+    private static readonly Complex[] xyOutManaged = new Complex[size];
 
     private readonly FftNative.DoubleComplex[] xyNative = new FftNative.DoubleComplex[size];
     private readonly FftNative.DoubleComplex[] xyOutNative = new FftNative.DoubleComplex[size];
@@ -59,4 +60,7 @@ public class DotnetBenchmark
 
     [Benchmark]
     public void Native() => FftNative.fft(Params.Log2FftSize, xyNative, xyOutNative);
+
+    [Benchmark]
+    public void MathNet() => Fourier.Forward(xyManaged);
 }
