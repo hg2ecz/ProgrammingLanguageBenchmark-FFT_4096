@@ -109,8 +109,6 @@ public static class Benchmark
             return;
         }
 
-        Control.UseNativeMKL();
-
         Console.WriteLine("  - Using managed provider.");
         Console.WriteLine("  - Enabling multithreading");
         Control.UseMultiThreading();
