@@ -77,12 +77,11 @@ public static class Benchmark
                     Params.Log2FftSize = log2FftSize;
                     Params.FftRepeat = repeat;
 
+                    SetupMathNet();
                     Benchmarks(dotnetBenchmark, managedBenchmark, nativeBenchmark, mathNetBenchmark);
                 },
                 dotnetBenchmarkOption, managedBenchmarkOption, nativeBenchmarkOption, mathNetBenchmarkOption,
                 log2FftSizeOption, repeatOption);
-
-        SetupMathNet();
 
         return rootCommand.Invoke(args);
     }
