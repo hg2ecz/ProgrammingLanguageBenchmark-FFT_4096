@@ -23,10 +23,9 @@ impl Fft {
         assert_eq!(xy_out.len(), xy_in.len());
         assert_eq!(xy_in.len(), 1 << log2point);
 
-        xy_in
-            .iter()
-            .enumerate()
-            .for_each(|(i, &xy)| xy_out[i.reverse_bits() >> (usize::count_zeros(0) - log2point)] = xy);
+        for (i, &xy_act) in xy_in.iter().enumerate() {
+            xy_out[i.reverse_bits() >> (usize::count_zeros(0) - log2point)] = xy_act;
+        }
 
         // here begins the Danielson-Lanczos section;
         for l2pt in 0..log2point {
