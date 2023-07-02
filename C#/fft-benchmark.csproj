@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.7.0</VersionPrefix>
+    <VersionPrefix>1.7.1</VersionPrefix>
     <Arch>x64</Arch>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7</TargetFramework>
+    <TargetFramework>net8</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>FftBenchmark</RootNamespace>
