@@ -1,18 +1,37 @@
 TARGET=./dist/fft-benchmark
 ARCH=x64 # arm, arm64, please consult: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids 
 DESTDIR=dist
-VERSION=1.6.0
+VERSION=1.8.0
 
-all:
-	make -C ../C-tests/C-fast_double clean all
-	gcc -shared -fPIC -o libfft.so ../C-tests/C-fast_double/fft.o
-	# mcs -optimize -unsafe -r:System.Numerics.dll Fft.cs Benchmark.cs Params.cs Native.cs -out:$(TARGET)
+CC=gcc
+CFLAGS =-Wall -Ofast -funroll-all-loops -fPIC
+
+PARAMS_CPU = -march=native
+ifeq ($(shell uname -m), armv7l)
+    PARAMS_CPU = -mcpu=cortex-a5 -mfpu=neon-fp16 
+endif
+CFLAGS+= $(PARAMS_CPU)
+
+CFLAGS+=-DLOG2FFTSIZE=12
+CFLAGS+=-DFFT_REPEAT=10000
+
+# improve speed
+CFLAGS+=-DMOD_SPEED
+
+LDFLAGS=-shared
+OBJS=fft.o
+
+TARGET=benchmark
+
+all: libfft
 	dotnet build -c Release -p:VersionPrefix=$(VERSION)
 	dotnet publish -c Release -o $(DESTDIR) --self-contained -r linux-$(ARCH) -p:PublishTrimmed=True -p:VersionPrefix=$(VERSION)
 
+libfft: $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o libfft.so
+
 clean:
-	make -C ../C-tests/C-fast_double clean
-	rm -fr $(TARGET) bin obj *.so BenchmarkDotNet.Artifacts dist *.deb
+	rm -fr $(TARGET) bin obj *.o *.so BenchmarkDotNet.Artifacts dist *.deb
 
 package:
 	dotnet msbuild /t:package /p:Arch=$(ARCH) -p:VersionPrefix=$(VERSION)
@@ -27,3 +46,5 @@ test:
 
 test2:	test
 
+fft.o: ../C-tests/C-fast_double/fft.c
+	$(CC) $(CFLAGC) -o $@ -c $<

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>1.7.1</VersionPrefix>
+    <VersionPrefix>0.0.0</VersionPrefix>
     <Arch>x64</Arch>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8</TargetFramework>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="MathNet.Numerics.MKL.Linux-x64" Version="3.0.0-beta3" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
