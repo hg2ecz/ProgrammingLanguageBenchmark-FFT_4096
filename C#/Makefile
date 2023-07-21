@@ -4,7 +4,7 @@ DESTDIR=dist
 VERSION=1.8.0
 
 CC=gcc
-CFLAGS =-Wall -Ofast -funroll-all-loops -fPIC
+CFLAGS =-Wall -O2 -funroll-all-loops -fPIC
 
 PARAMS_CPU = -march=native
 ifeq ($(shell uname -m), armv7l)
