@@ -47,4 +47,4 @@ test:
 test2:	test
 
 fft.o: ../C-tests/C-fast_double/fft.c
-	$(CC) $(CFLAGC) -o $@ -c $<
+	$(CC) $(CFLAGS) -o $@ -c $<
