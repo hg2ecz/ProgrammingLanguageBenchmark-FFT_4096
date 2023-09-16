@@ -171,8 +171,8 @@ public static class Benchmark
         if (managedElapsedMillisecond.HasValue && mathNetElapsedMillisecond.HasValue)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\nMathNet Ratio: {managedElapsedMillisecond / mathNetElapsedMillisecond:0.####}");
-            Console.WriteLine($"MathNet Diff%: {managedElapsedMillisecond / mathNetElapsedMillisecond - 1:0.##%}");
+            Console.WriteLine($"\nMathNet Ratio: {mathNetElapsedMillisecond / nativeElapsedMillisecond:0.####}");
+            Console.WriteLine($"MathNet Diff%: {mathNetElapsedMillisecond / nativeElapsedMillisecond - 1:0.##%}");
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 

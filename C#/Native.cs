@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace CSharpFftDemo;
 
-internal static class FftNative
+internal static partial class FftNative
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct DoubleComplex
@@ -18,14 +18,14 @@ internal static class FftNative
             Imaginary = imaginary;
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return $"(Re: {Real}, Im: {Imaginary})";
         }
     }
 
-    [DllImport("fft.so")]
-    internal static extern void fft(int log2point, [Out] DoubleComplex[] xy_out, DoubleComplex[] xy_in);
+    [LibraryImport("libfft.so", EntryPoint = "fft")]
+    internal static partial void fft(int log2point, DoubleComplex[] xy_out, DoubleComplex[] xy_in);
 
     public static double Calculate(int log2FftSize, int fftRepeat)
     {
