@@ -55,8 +55,8 @@ jobs:
       working-directory: C#
       run: make package
     - name: Publish artifact
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v2
       with:
-        name: Debian package
+        name: fft-benchmark
         path: C#/*.deb
         retention-days: 3
