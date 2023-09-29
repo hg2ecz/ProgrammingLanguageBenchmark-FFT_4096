@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace CSharpFftDemo;
 
@@ -42,7 +43,7 @@ public sealed class Fft
         };
 
     // Public function
-    public unsafe static void Calculate(int Log2FftSize, Complex[] xy_in, Complex[] xy_out)
+    public unsafe static void Calculate(int Log2FftSize, Span<Complex> xy_in, Span<Complex> xy_out)
     {
         var n = 1 << Log2FftSize;
 
@@ -57,7 +58,7 @@ public sealed class Fft
             brev = (brev >> 16) | (brev << 16);
 
             brev >>= 32 - Log2FftSize;
-            xy_out[brev] = xy_in[i];
+            xy_out[(int)brev] = xy_in[i];
         }
 
         int l2pt = 0;

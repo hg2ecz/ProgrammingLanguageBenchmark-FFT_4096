@@ -25,7 +25,8 @@ internal static partial class FftNative
     }
 
     [LibraryImport("libfft.so", EntryPoint = "fft")]
-    internal static partial void fft(int log2point, DoubleComplex[] xy_out, DoubleComplex[] xy_in);
+    internal 
+    static partial void Fft(int log2point, DoubleComplex[] xy_out, DoubleComplex[] xy_in);
 
     public static double Calculate(int log2FftSize, int fftRepeat)
     {
@@ -45,7 +46,7 @@ internal static partial class FftNative
 
         for (i = 0; i < fftRepeat; i++)
         {
-            fft(log2FftSize, xy_out, xy);
+            Fft(log2FftSize, xy_out, xy);
         }
 
         stopwatch.Stop();
