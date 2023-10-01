@@ -33,8 +33,10 @@ BEGIN {
     eltime = 1000*(timeend - timestart)
     print (FFT_REPEAT, " piece of ", SIZE, " pt FFT; ", eltime/FFT_REPEAT, " ms/piece\n")
 
+    print("bin        real             imag           absval");
     for (i=1; i<7; i++) {
-        print (i, fft_out[i][0], fft_out[i][1])
+        absval = sqrt(fft_out[i][0] * fft_out[i][0] + fft_out[i][1] * fft_out[i][1])
+        printf("%3d %16.4f %16.4f %16.4f\n", i, fft_out[i][0], fft_out[i][1], absval)
     }
     exit(0)
 }

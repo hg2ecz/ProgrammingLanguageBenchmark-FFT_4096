@@ -1,25 +1,21 @@
 import std.math;
 import std.complex;
-
 import std.stdio;
 
-import ifft;
-
-class FFT : IFFT
-{
+class FFT {
 	// Internal variables
 	bool phasevec_exist = false;
-	cdouble[32] phasevec;
+	Complex!(float)[32] phasevec;
 
 	// Public function
-	void Fft(uint log2point, ref cdouble[4096] xy_out, const cdouble[4096] xy_in) {
-    		if (!phasevec_exist) {
+	void Fft(uint log2point, ref Complex!(float)[] xy_out, const Complex!(float)[] xy_in) {
+		if (!phasevec_exist) {
 			for (uint i=0; i<32; i++) {
-	    			double point = 2<<i;
-	    			phasevec[i] = cos(-2.*PI/point) + 1i*sin(-2.*PI/point);
+				float point = 2<<i;
+				phasevec[i] = complex(cos(-2.*PI/point), sin(-2.*PI/point));
 			}
 			phasevec_exist = true;
-    		}
+		}
 
 		for (uint i=0; i < (1<<log2point); i++) {
 			uint brev = i;
@@ -31,30 +27,30 @@ class FFT : IFFT
 
 			brev >>= 32-log2point;
 			xy_out[brev] = xy_in[i];
-    		}
+		}
 
-    		// here begins the Danielson-Lanczos section
-    		uint n = 1<<log2point;
-    		uint l2pt = 0;
-    		uint mmax = 1;
+		// here begins the Danielson-Lanczos section
+		uint n = 1<<log2point;
+		uint l2pt = 0;
+		uint mmax = 1;
 
-    		while (n > mmax) {
+		while (n > mmax) {
 			uint istep = mmax<<1;
-			//	double theta = -2*M_PI/istep
-			//	double complex wphase_XY = cos(theta) + sin(theta)*I
-			cdouble wphase_XY = phasevec[l2pt];
+			//	float theta = -2*M_PI/istep
+			//	float complex wphase_XY = cos(theta) + sin(theta)*I
+			Complex!(float) wphase_XY = phasevec[l2pt];
 			l2pt++;
 
-			cdouble w_XY = 1. + 1i*0.;
+			Complex!(float) w_XY = complex(float(1.), 0.);
 			for (uint m=0; m < mmax; m++) {
-	    			for (uint i=m; i < n; i += istep) {
-					cdouble tempXY  = w_XY * xy_out[i+mmax];
+				for (uint i=m; i < n; i += istep) {
+					Complex!(float) tempXY  = w_XY * xy_out[i+mmax];
 					xy_out[i+mmax]  = xy_out[i] - tempXY;
 					xy_out[i     ] += tempXY;
-	    			}
-	    			w_XY *= wphase_XY; // rotate
+				}
+				w_XY *= wphase_XY; // rotate
 			}
 			mmax=istep;
-    		}
+		}
 	}
 }

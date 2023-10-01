@@ -17,9 +17,9 @@
 
 int main()
 {
-    std::vector<std::complex<double>> xy(SIZE);
+    std::vector<std::complex<float>> xy(SIZE);
 
-    double eltime;
+    float eltime;
     struct timespec gstart, gend;
 
     for (int i = 0; i < SIZE / 2; i++)
@@ -32,7 +32,7 @@ int main()
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &gstart);
 
     auto ff = std::make_unique<fft>();
-    std::vector<std::complex<double>> xy_out;
+    std::vector<std::complex<float>> xy_out;
 
     for (int i = 0; i < FFT_REPEAT; i++)
     {
