@@ -59,7 +59,7 @@ public class DotnetBenchmark
     public void Managed() => Fft.Calculate(Params.Log2FftSize, xyManaged, xyOutManaged);
 
     [Benchmark]
-    public void Native() => FftNative.fft(Params.Log2FftSize, xyNative, xyOutNative);
+    public void Native() => FftNative.Fft(Params.Log2FftSize, xyNative, xyOutNative);
 
     [Benchmark]
     public void MathNet() => Fourier.Forward(xyManaged);

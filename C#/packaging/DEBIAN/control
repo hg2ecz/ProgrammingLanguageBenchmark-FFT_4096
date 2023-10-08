@@ -1,9 +1,8 @@
 Package: fft-benchmark
-Version: 1.6.0.0
+Version: 1.8.0.0
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: libc-bin, libicu67, libstdc++6
+Depends: libc-bin, libicu70, libstdc++6
 Maintainer: Robert Fuszenecker <robert.fuszenecker@outlook.com>
 Description: The FFT benchmark from Zsolt Krüpl
-

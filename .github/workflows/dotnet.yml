@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '8.0.100-preview.6.23330.14'
+        dotnet-version: '8.0.100-rc.1.23463.5'
     - name: Restore dependencies
       working-directory: C#
       run: dotnet restore fft-benchmark.csproj
@@ -55,8 +55,8 @@ jobs:
       working-directory: C#
       run: make package
     - name: Publish artifact
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v2
       with:
-        name: Debian package
+        name: fft-benchmark
         path: C#/*.deb
         retention-days: 3
