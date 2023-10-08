@@ -26,6 +26,10 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="MathNet.Numerics.MKL.Linux-x64" Version="3.0.0-beta3" />
+    <PackageReference Include="MathNet.Numerics.MKL.Win-x64" Version="3.0.0" />
+    <PackageReference Include="MathNet.Numerics.Providers.CUDA" Version="5.0.0" />
+    <PackageReference Include="MathNet.Numerics.Providers.MKL" Version="5.0.0" />
+    <PackageReference Include="MathNet.Numerics.Providers.OpenBLAS" Version="5.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 

@@ -95,22 +95,27 @@ public static class Benchmark
             Console.WriteLine("  - Using CUDA engine.");
             return;
         }
-
-        if (Control.TryUseNativeMKL())
+        else if (Control.TryUseNativeMKL())
         {
             Console.WriteLine("  - Using MKL engine.");
             return;
         }
-
-        if (Control.TryUseNativeOpenBLAS())
+        else if (Control.TryUseNativeOpenBLAS())
         {
             Console.WriteLine("  - Using OpenBLAS engine.");
             return;
         }
-
-        Console.WriteLine("  - Using managed provider.");
-        Console.WriteLine("  - Enabling multithreading");
-        Control.UseMultiThreading();
+        else if (Control.TryUseNative())
+        {
+            Console.WriteLine("  - Using native provider.");
+            return;
+        }
+        else
+        {
+            Console.WriteLine("  - Using managed provider.");
+            Console.WriteLine("  - Enabling multithreading");
+            Control.UseMultiThreading();
+        }
     }
 
     private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark, bool mathNetBenchmark)
