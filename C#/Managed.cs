@@ -14,15 +14,13 @@ internal static class FftManaged
         Complex[] xy_out = new Complex[xy.Length];
 
         for (i = 0; i < size / 2; i++)
+        {
             xy[i] = new Complex(1.0, 0.0);
+        }
 
         for (i = size / 2; i < size; i++)
-            xy[i] = new Complex(-1.0, 0.0);
-
-        // JIT warm up ... possible give more speed
-        for (i = 0; i < fftRepeat; i++)
         {
-            Fft.Calculate(log2FftSize, xy, xy_out);
+            xy[i] = new Complex(-1.0, 0.0);
         }
 
         // FFT
@@ -47,5 +45,29 @@ internal static class FftManaged
         }
 
         return tpp;
+    }
+
+    public static void WarmUp(int log2FftSize, int fftRepeat)
+    {
+        int i;
+        int size = 1 << log2FftSize;
+        Complex[] xy = new Complex[size];
+        Complex[] xy_out = new Complex[xy.Length];
+
+        for (i = 0; i < size / 2; i++)
+        {
+            xy[i] = new Complex(1.0, 0.0);
+        }
+
+        for (i = size / 2; i < size; i++)
+        {
+            xy[i] = new Complex(-1.0, 0.0);
+        }
+
+        // JIT warm up ... possible give more speed
+        for (i = 0; i < fftRepeat; i++)
+        {
+            Fft.Calculate(log2FftSize, xy, xy_out);
+        }
     }
 }

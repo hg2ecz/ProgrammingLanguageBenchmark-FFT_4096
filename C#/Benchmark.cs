@@ -121,11 +121,20 @@ public static class Benchmark
 
         if (dotnetBenchmark)
         {
+            // Benchmark
             DotnetBenchmark.Calculate();
         }
 
         if (managedBenchmark)
         {
+            // Warmup
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("---- MANAGED (warmup) ----");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            FftManaged.WarmUp(Params.Log2FftSize, Params.FftRepeat);
+
+            // Benchmark
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("---- MANAGED ----");
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -137,6 +146,7 @@ public static class Benchmark
         {
             try
             {
+                // Benchmark
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("---- NATIVE ----");
                 Console.ForegroundColor = ConsoleColor.Gray;
@@ -153,6 +163,14 @@ public static class Benchmark
 
         if (mathNetBenchmark)
         {
+            // Warmup
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("---- MATH.NET (warmup) ----");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            FftMathNet.WarmUp(Params.Log2FftSize, Params.FftRepeat);
+
+            // Benchmark
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("---- MATH.NET ----");
             Console.ForegroundColor = ConsoleColor.Gray;

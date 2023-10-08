@@ -7,6 +7,7 @@ public sealed class Fft
 {
     // Internal variables
     private static readonly Complex s_one = Complex.One;
+
     private static readonly Complex[] phasevec = new[] {
             new Complex(-1, -1.22464679914735E-16),
             new Complex(6.12323399573677E-17, -1),
