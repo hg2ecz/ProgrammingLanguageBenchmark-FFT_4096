@@ -17,8 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      working-directory: Rust
+      working-directory: other_tests/Rust-tests/Rust
       run: cargo build --verbose
     - name: Run tests
-      working-directory: Rust
+      working-directory: other_tests/Rust-tests/Rust
       run: cargo test --verbose
