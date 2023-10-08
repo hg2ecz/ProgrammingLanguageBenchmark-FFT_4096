@@ -7,13 +7,13 @@ fft :: fft(void)
 	for (int i = 0; i < 32; i++)
 	{
 		int point = 2 << i;
-		this->phasevec.emplace_back(std::complex<double>(cos(-2 * M_PI / point), sin(-2 * M_PI / point)));
+		this->phasevec.emplace_back(std::complex<float>(cos(-2 * M_PI / point), sin(-2 * M_PI / point)));
 	}
 }
 
-std::vector<std::complex<double>> fft :: calc(int log2point, const std::vector<std::complex<double>>& xy_in)
+std::vector<std::complex<float>> fft :: calc(int log2point, const std::vector<std::complex<float>>& xy_in)
 {
-	std::vector<std::complex<double>> xy_out(xy_in.size());
+	std::vector<std::complex<float>> xy_out(xy_in.size());
 
 	for (int i = 0; i < (1 << log2point); i++)
 	{
@@ -42,16 +42,16 @@ std::vector<std::complex<double>> fft :: calc(int log2point, const std::vector<s
 	{
 		int istep = mmax << 1;
 #endif
-		//	double theta = -2*M_PI/istep;
-		//	double complex wphase_XY = cos(theta) + sin(theta)*I;
-		std::complex<double> wphase_XY = this->phasevec[l2pt++];
-		std::complex<double> w_XY = std::complex<double>(1.0, 0.0);
+		//	float theta = -2*M_PI/istep;
+		//	float complex wphase_XY = cos(theta) + sin(theta)*I;
+		std::complex<float> wphase_XY = this->phasevec[l2pt++];
+		std::complex<float> w_XY = std::complex<float>(1.0, 0.0);
 
 		for (int m = 0; m < mmax; m++)
 		{
 			for (int i = m; i < n; i += istep)
 			{
-				std::complex<double> tempXY = w_XY * xy_out[i + mmax];
+				std::complex<float> tempXY = w_XY * xy_out[i + mmax];
 				xy_out[i + mmax] = xy_out[i] - tempXY;
 				xy_out[i] += tempXY;
 			}

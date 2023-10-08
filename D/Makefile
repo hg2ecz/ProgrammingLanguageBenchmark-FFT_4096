@@ -1,11 +1,11 @@
 DCC=gdc
-CFLAGS =-Wall -Ofast -funroll-all-loops -g
+CFLAGS =-Wall -Ofast -funroll-all-loops
 
 #CFLAGS+=-DLOG2FFTSIZE=12
 #CFLAGS+=-DFFT_REPEAT=1000
 
 LDFLAGS=-s
-OBJS=ifft.o fft.o benchmark.o main.o
+OBJS=fft.o benchmark.o
 
 TARGET=benchmark
 

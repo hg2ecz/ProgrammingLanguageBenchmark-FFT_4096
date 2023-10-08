@@ -1,7 +1,4 @@
-#!/usr/bin/pypy
-# -*- coding: utf8 -*-
-
-from __future__ import print_function
+#!/usr/bin/pypy3
 
 import fft
 import time
@@ -21,5 +18,6 @@ if __name__ == "__main__":
     eltime = 1000*(time.time() - timestart)
     print ("%6d piece of %d pt FFT;  %9.5f ms/piece\n"%(FFT_REPEAT, 1<<LOG2FFTSIZE, eltime/FFT_REPEAT))
 
+    print("bin        real             imag           absval");
     for i in range(6):
-        print (i, fft_out[i])
+        print ("%3d %16.4f %16.4f %16.4f"%(i, fft_out[i].real, fft_out[i].imag, abs(fft_out[i])))
