@@ -22,8 +22,9 @@ int main() {
     eltime = 1000.0*(gend.tv_sec - gstart.tv_sec) + (gend.tv_nsec - gstart.tv_nsec)/1000000.;
     printf("\n%6d piece(s) of %d pt FFT;  %9.5f ms/piece\n", FFT_REPEAT, 1<<LOG2FFTSIZE, eltime/FFT_REPEAT);
 
+    puts("bin        real             imag           absval");
     for(int i=0; i<6; i++) {
-	printf("%3d %16.3f %16.3f %16.3f\n", i, creal(xy_out[i]), cimag(xy_out[i]), cabs(xy_out[i]));
+        printf("%3d %16.4f %16.4f %16.4f\n", i, creal(xy_out[i]), cimag(xy_out[i]), cabs(xy_out[i]));
     }
     return 0;
 }

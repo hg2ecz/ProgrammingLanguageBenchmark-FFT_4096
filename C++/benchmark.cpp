@@ -17,9 +17,9 @@
 
 int main()
 {
-    std::vector<std::complex<double>> xy(SIZE);
+    std::vector<std::complex<float>> xy(SIZE);
 
-    double eltime;
+    float eltime;
     struct timespec gstart, gend;
 
     for (int i = 0; i < SIZE / 2; i++)
@@ -32,7 +32,7 @@ int main()
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &gstart);
 
     auto ff = std::make_unique<fft>();
-    std::vector<std::complex<double>> xy_out;
+    std::vector<std::complex<float>> xy_out;
 
     for (int i = 0; i < FFT_REPEAT; i++)
     {
@@ -42,11 +42,12 @@ int main()
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &gend);
     eltime = 1000. * (gend.tv_sec - gstart.tv_sec) + (gend.tv_nsec - gstart.tv_nsec) / 1000000.;
     
-    printf("\n%6d piece(s) of %d pt FFT;  %9.5f ms/piece\n", FFT_REPEAT, 1 << LOG2FFTSIZE, eltime / FFT_REPEAT);
+    printf("%6d piece(s) of %d pt FFT;  %9.5f ms/piece\n\n", FFT_REPEAT, 1 << LOG2FFTSIZE, eltime / FFT_REPEAT);
 
+    std::cout << "bin        real             imag           absval" << std::endl;
     for (int i = 0; i < 6; i++)
     {
-        printf("%3d %16.9f %16.9f %16.9f\n", i, xy_out[i].real(), xy_out[i].imag(), abs(xy_out[i]));
+        printf("%3d %16.4f %16.4f %16.4f\n", i, xy_out[i].real(), xy_out[i].imag(), abs(xy_out[i]));
     }
     return 0;
 }

@@ -18,8 +18,9 @@ impl Fft {
         fft
     }
 
-    pub fn fft(&self, xy_out: &mut [Complex<f32>; 4096], xy_in: &[Complex<f32>; 4096]) {
+    pub fn fft(&self, xy_out: &mut [Complex<f32>], xy_in: &[Complex<f32>]) {
         let log2point = xy_in.len().ilog2();
+        // if we use these assert_eq checks, the compiler can produce a faster code
         assert_eq!(xy_out.len(), xy_in.len());
         assert_eq!(xy_in.len(), 1 << log2point);
 
