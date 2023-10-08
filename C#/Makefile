@@ -46,5 +46,5 @@ test:
 
 test2:	test
 
-fft.o: ../C-tests/C-fast_double/fft.c
+fft.o: ../other_tests/C-tests/C-fast_double/fft.c
 	$(CC) $(CFLAGS) -o $@ -c $<
