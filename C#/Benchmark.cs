@@ -47,7 +47,7 @@ public static class Benchmark
                     Params.FftRepeat = opts.FftRepeat;
 
                     Benchmarks(
-                        opts.DotnetBenchmark, opts.DotnetBenchmark, 
+                        opts.DotnetBenchmark, opts.ManagedBenchmark, 
                         opts.NativeBenchmark, opts.MathNetBenchmark);
 
                     return 0;
