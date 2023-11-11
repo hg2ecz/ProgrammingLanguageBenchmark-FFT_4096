@@ -1,122 +1,65 @@
 ﻿using System;
-using System.CommandLine;
-using System.IO;
-using MathNet.Numerics;
+using System.Threading.Tasks;
+using CommandLine;
 
 namespace CSharpFftDemo;
 
+public class Arguments
+{
+    [Option(shortName: 'd', longName: "dotnet-benchmark", Default = false,
+        Required = false, HelpText = "Run the BenchmarkDotNet benchmark")]
+    public bool DotnetBenchmark { get; set; }
+
+    [Option(shortName: 'm', longName: "managed", Default = true,
+        Required = false, HelpText = "Run the .NET managed benchmark")]
+    public bool ManagedBenchmark { get; set; }
+
+    [Option(shortName: 'n', longName: "native", Default = true,
+        Required = false, HelpText = "Run the native (C-fast_double) benchmark")]
+    public bool NativeBenchmark { get; set; }
+
+    [Option(shortName: 'M', longName: "mathnet", Default = true,
+        Required = false, HelpText = "Run the MathNet benchmark")]
+    public bool MathNetBenchmark { get; set; }
+
+    [Option(shortName: 'r', longName: "repeat", Default = 20000,
+        Required = false, HelpText = "Number of iterations, e.g. 20000.")]
+    public int FftRepeat { get; set; }
+
+    [Option(shortName: 's', longName: "size", Default = 12,
+        Required = false, HelpText = "Log2 of the buffer size, e.g. 12 for 4096 samples.")]
+    public int Log2FftSize { get; set; }
+}
+
 public static class Benchmark
 {
-    private static int Main(string[] args)
-    {
-        var dotnetBenchmarkOption = new Option<bool>(
-            new [] {
-                "-d",
-                "--dotnet-benchmark"
+    public static async Task<int> Main(string[] args) => 
+        await Parser.Default.ParseArguments<Arguments>(args)
+            .MapResult(async (Arguments opts) =>
+            {
+                try
+                {
+                    FftMathNet.SetupMathNet();
+
+                    Console.WriteLine("Log2FftSize: {0}, Repeat: {1}", opts.Log2FftSize, opts.FftRepeat);
+
+                    Params.Log2FftSize = opts.Log2FftSize;
+                    Params.FftRepeat = opts.FftRepeat;
+
+                    Benchmarks(
+                        opts.DotnetBenchmark, opts.DotnetBenchmark, 
+                        opts.NativeBenchmark, opts.MathNetBenchmark);
+
+                    return 0;
+                }
+                catch
+                {
+                    Console.WriteLine("Error!");
+                    return -3; // Unhandled error
+                }
             },
-            getDefaultValue: () => false,
-            "Run the BenchmarkDotNet benchmark");
+            errs => Task.FromResult(-1)); // Invalid arguments
 
-        var managedBenchmarkOption = new Option<bool>(
-            new [] {
-                "-m",
-                "--managed"
-            },
-            getDefaultValue: () => true,
-            "Run the .NET managed benchmark");
-
-        var nativeBenchmarkOption = new Option<bool>(
-            new [] {
-                "-n",
-                "--native"
-            },
-            getDefaultValue: () => File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}libfft.so"),
-            "Run the native (C-fast_double) benchmark");
-
-        var mathNetBenchmarkOption = new Option<bool>(
-            new [] {
-                "-M",
-                "--mathnet"
-            },
-            getDefaultValue: () => true,
-            "Run the MathNet benchmark");
-
-        var repeatOption = new Option<int>(
-            new [] {
-                "-r",
-                "--repeat"
-            },
-            getDefaultValue: () => 20000,
-            "Number of iterations, e.g. 20000.");
-
-        var log2FftSizeOption = new Option<int>(
-            new [] {
-                "-s",
-                "--size"
-            },
-            getDefaultValue: () => 12,
-            "Log2 of the buffer size, e.g. 12 for 4096 samples.");
-
-        var rootCommand = new RootCommand
-        {
-            dotnetBenchmarkOption,
-            managedBenchmarkOption,
-            nativeBenchmarkOption,
-            mathNetBenchmarkOption,
-            log2FftSizeOption,
-            repeatOption
-        };
-
-        rootCommand.Description = "FFT Benchmark from Zsolt Krüpl.";
-
-        rootCommand.SetHandler(
-            (bool dotnetBenchmark, bool  managedBenchmark, bool nativeBenchmark, bool mathNetBenchmark,
-                int log2FftSize, int repeat) => {
-                    Console.WriteLine("Log2FftSize: {0}, Repeat: {1}", log2FftSize, repeat);
-
-                    Params.Log2FftSize = log2FftSize;
-                    Params.FftRepeat = repeat;
-
-                    SetupMathNet();
-                    Benchmarks(dotnetBenchmark, managedBenchmark, nativeBenchmark, mathNetBenchmark);
-                },
-                dotnetBenchmarkOption, managedBenchmarkOption, nativeBenchmarkOption, mathNetBenchmarkOption,
-                log2FftSizeOption, repeatOption);
-
-        return rootCommand.Invoke(args);
-    }
-
-    private static void SetupMathNet()
-    {
-        Console.WriteLine("Setting up Math.NET: ");
-
-        if (Control.TryUseNativeCUDA())
-        {
-            Console.WriteLine("  - Using CUDA engine.");
-            return;
-        }
-        else if (Control.TryUseNativeMKL())
-        {
-            Console.WriteLine("  - Using MKL engine.");
-            return;
-        }
-        else if (Control.TryUseNativeOpenBLAS())
-        {
-            Console.WriteLine("  - Using OpenBLAS engine.");
-            return;
-        }
-        else if (Control.TryUseNative())
-        {
-            Console.WriteLine("  - Using native provider.");
-            return;
-        }
-        else
-        {
-            Console.WriteLine("  - Using managed provider.");
-            Console.WriteLine("  - Enabling multithreading");
-            Control.UseMultiThreading();
-        }
-    }
 
     private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark, bool mathNetBenchmark)
     {

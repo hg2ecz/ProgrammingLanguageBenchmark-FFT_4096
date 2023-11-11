@@ -1,12 +1,45 @@
 using System;
 using System.Diagnostics;
 using System.Numerics;
+using MathNet.Numerics;
 using MathNet.Numerics.IntegralTransforms;
 
 namespace CSharpFftDemo;
 
 internal static class FftMathNet
 {
+    public static void SetupMathNet()
+    {
+        Console.WriteLine("Setting up Math.NET: ");
+
+        if (Control.TryUseNativeCUDA())
+        {
+            Console.WriteLine("  - Using CUDA engine.");
+            return;
+        }
+        else if (Control.TryUseNativeMKL())
+        {
+            Console.WriteLine("  - Using MKL engine.");
+            return;
+        }
+        else if (Control.TryUseNativeOpenBLAS())
+        {
+            Console.WriteLine("  - Using OpenBLAS engine.");
+            return;
+        }
+        else if (Control.TryUseNative())
+        {
+            Console.WriteLine("  - Using native provider.");
+            return;
+        }
+        else
+        {
+            Console.WriteLine("  - Using managed provider.");
+            Console.WriteLine("  - Enabling multithreading");
+            Control.UseMultiThreading();
+        }
+    }
+
     public static double Calculate(int log2FftSize, int fftRepeat)
     {
         int i;
