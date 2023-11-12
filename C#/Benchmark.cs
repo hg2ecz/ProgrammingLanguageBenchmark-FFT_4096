@@ -88,7 +88,7 @@ public static class Benchmark
             FftManaged.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(resourceManager.GetString("ManagedText", CultureInfo.InvariantCulture));
             Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -100,7 +100,7 @@ public static class Benchmark
             try
             {
                 // Benchmark
-                Console.ForegroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(resourceManager.GetString("NativeText", CultureInfo.InvariantCulture));
                 Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -124,7 +124,7 @@ public static class Benchmark
             FftMathNet.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(resourceManager.GetString("MathNetText", CultureInfo.InvariantCulture));
             Console.ForegroundColor = ConsoleColor.Gray;
 

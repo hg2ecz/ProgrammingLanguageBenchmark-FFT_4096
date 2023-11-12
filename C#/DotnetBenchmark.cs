@@ -30,7 +30,7 @@ public class DotnetBenchmark
 
     public static void Calculate()
     {
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine(resourceManager.GetString("BenchmarkDotNetText", CultureInfo.InvariantCulture));
         Console.ForegroundColor = ConsoleColor.Gray;
 
