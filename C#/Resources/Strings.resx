@@ -181,4 +181,8 @@
     <value>{0}\t{1}</value>
     <comment/>
   </data>
+  <data name="UnhandledExceptionText" xml:space="preserve">
+    <value>Unhandled exception: {0}</value>
+    <comment/>
+  </data>
 </root>

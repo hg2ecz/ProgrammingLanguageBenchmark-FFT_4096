@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
-using System.Reflection;
-using System.Resources;
-using System.Threading.Tasks;
 using CommandLine;
+
+using static CSharpFftDemo.GlobalResourceManager;
 
 namespace CSharpFftDemo;
 
@@ -36,8 +34,6 @@ public class Arguments
 
 public static class Benchmark
 {
-    private static ResourceManager resourceManager = new ResourceManager("FftBenchmark.Resources.Strings", Assembly.GetExecutingAssembly());
-
     public static int Main(string[] args)
     {
         return Parser.Default.ParseArguments<Arguments>(args)
@@ -58,16 +54,13 @@ public static class Benchmark
 
                     return 0;
                 }
-                catch (AggregateException e)
-                {
-                    Console.WriteLine("Unhandled exception: " + e.InnerException?.Message);
-                    return -3;
-                }
+                #pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception e)
                 {
-                    Console.WriteLine("Unhandled exception: " + e.Message);
-                    throw;
+                    Console.WriteLine(GetStringResource("UnhandledExceptionText")!, e.Message);
+                    return -4;
                 }
+                #pragma warning restore CA1031 // Do not catch general exception types
             },
             errs => -1
         );
@@ -89,14 +82,14 @@ public static class Benchmark
         {
             // Warmup
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(resourceManager.GetString("ManagedWarmupText", CultureInfo.InvariantCulture));
+            Console.WriteLine(GetStringResource("ManagedWarmupText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             FftManaged.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(resourceManager.GetString("ManagedText", CultureInfo.InvariantCulture));
+            Console.WriteLine(GetStringResource("ManagedText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             managedElapsedMillisecond = FftManaged.Calculate(Params.Log2FftSize, Params.FftRepeat);
@@ -108,15 +101,15 @@ public static class Benchmark
             {
                 // Benchmark
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(resourceManager.GetString("NativeText", CultureInfo.InvariantCulture));
+                Console.WriteLine(GetStringResource("NativeText"));
                 Console.ForegroundColor = ConsoleColor.Gray;
 
                 nativeElapsedMillisecond = FftNative.Calculate(Params.Log2FftSize, Params.FftRepeat);
             }
             catch (DllNotFoundException e)
             {
-                Console.WriteLine(resourceManager.GetString("CanotRunNative", CultureInfo.InvariantCulture)!, e.Message);
-                Console.WriteLine(resourceManager.GetString("HaveYouCompiledNative", CultureInfo.InvariantCulture));
+                Console.WriteLine(GetStringResource("CanotRunNative")!, e.Message);
+                Console.WriteLine(GetStringResource("HaveYouCompiledNative"));
                 return 1;
             }
         }
@@ -125,14 +118,14 @@ public static class Benchmark
         {
             // Warmup
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(resourceManager.GetString("MathNetWarmupText", CultureInfo.InvariantCulture));
+            Console.WriteLine(GetStringResource("MathNetWarmupText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             FftMathNet.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(resourceManager.GetString("MathNetText", CultureInfo.InvariantCulture));
+            Console.WriteLine(GetStringResource("MathNetText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             mathNetElapsedMillisecond = FftMathNet.Calculate(Params.Log2FftSize, Params.FftRepeat);
