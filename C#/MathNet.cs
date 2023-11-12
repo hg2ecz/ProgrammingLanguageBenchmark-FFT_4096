@@ -10,7 +10,9 @@ internal static class FftMathNet
 {
     public static void SetupMathNet()
     {
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Setting up Math.NET: ");
+        Console.ForegroundColor = ConsoleColor.Gray;
 
         if (Control.TryUseNativeCUDA())
         {

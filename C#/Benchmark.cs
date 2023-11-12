@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using System.Reflection;
+using System.Resources;
 using System.Threading.Tasks;
 using CommandLine;
 
@@ -33,6 +36,8 @@ public class Arguments
 
 public static class Benchmark
 {
+    private static ResourceManager resourceManager = new ResourceManager("FftBenchmark.Resources.Strings", Assembly.GetExecutingAssembly());
+
     public static async Task<int> Main(string[] args) => 
         await Parser.Default.ParseArguments<Arguments>(args)
             .MapResult(async (Arguments opts) =>
@@ -41,7 +46,7 @@ public static class Benchmark
                 {
                     FftMathNet.SetupMathNet();
 
-                    Console.WriteLine("Log2FftSize: {0}, Repeat: {1}", opts.Log2FftSize, opts.FftRepeat);
+                    Console.WriteLine($"Log2FftSize: {opts.Log2FftSize}, Repeat: {opts.FftRepeat}");
 
                     Params.Log2FftSize = opts.Log2FftSize;
                     Params.FftRepeat = opts.FftRepeat;
@@ -52,14 +57,14 @@ public static class Benchmark
 
                     return 0;
                 }
-                catch
+                catch (Exception e)
                 {
-                    Console.WriteLine("Error!");
+                    Console.WriteLine("Unhandled exception: " + e.Message);
                     return -3; // Unhandled error
                 }
             },
-            errs => Task.FromResult(-1)); // Invalid arguments
-
+            errs => Task.FromResult(-1)
+        ).ConfigureAwait(true);
 
     private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark, bool mathNetBenchmark)
     {
@@ -77,14 +82,14 @@ public static class Benchmark
         {
             // Warmup
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MANAGED (warmup) ----");
+            Console.WriteLine(resourceManager.GetString("ManagedWarmupText", CultureInfo.InvariantCulture));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             FftManaged.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MANAGED ----");
+            Console.WriteLine(resourceManager.GetString("ManagedText", CultureInfo.InvariantCulture));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             managedElapsedMillisecond = FftManaged.Calculate(Params.Log2FftSize, Params.FftRepeat);
@@ -96,15 +101,15 @@ public static class Benchmark
             {
                 // Benchmark
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("---- NATIVE ----");
+                Console.WriteLine(resourceManager.GetString("NativeText", CultureInfo.InvariantCulture));
                 Console.ForegroundColor = ConsoleColor.Gray;
 
                 nativeElapsedMillisecond = FftNative.Calculate(Params.Log2FftSize, Params.FftRepeat);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Can not run native method: {e.Message}");
-                Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
+                Console.WriteLine(resourceManager.GetString("CanotRunNative", CultureInfo.InvariantCulture)!, e.Message);
+                Console.WriteLine(resourceManager.GetString("HaveYouCompiledNative", CultureInfo.InvariantCulture));
                 return 1;
             }
         }
@@ -113,14 +118,14 @@ public static class Benchmark
         {
             // Warmup
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MATH.NET (warmup) ----");
+            Console.WriteLine(resourceManager.GetString("MathNetWarmupText", CultureInfo.InvariantCulture));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             FftMathNet.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MATH.NET ----");
+            Console.WriteLine(resourceManager.GetString("MathNetText", CultureInfo.InvariantCulture));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             mathNetElapsedMillisecond = FftMathNet.Calculate(Params.Log2FftSize, Params.FftRepeat);

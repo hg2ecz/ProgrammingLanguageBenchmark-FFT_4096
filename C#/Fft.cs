@@ -44,7 +44,7 @@ public sealed class Fft
         };
 
     // Public function
-    public unsafe static void Calculate(int Log2FftSize, Span<Complex> xy_in, Span<Complex> xy_out)
+    public unsafe static void Calculate(int Log2FftSize, Span<Complex> xyIn, Span<Complex> xyOut)
     {
         var n = 1 << Log2FftSize;
 
@@ -59,7 +59,7 @@ public sealed class Fft
             brev = (brev >> 16) | (brev << 16);
 
             brev >>= 32 - Log2FftSize;
-            xy_out[(int)brev] = xy_in[i];
+            xyOut[(int)brev] = xyIn[i];
         }
 
         int l2pt = 0;
@@ -75,10 +75,10 @@ public sealed class Fft
             {
                 for (int i = m; i < n; i += istep)
                 {
-                    var tempXY = w_XY * xy_out[i + mmax];
+                    var tempXY = w_XY * xyOut[i + mmax];
 
-                    xy_out[i + mmax] = xy_out[i] - tempXY;
-                    xy_out[i] += tempXY;
+                    xyOut[i + mmax] = xyOut[i] - tempXY;
+                    xyOut[i] += tempXY;
                 }
 
                 w_XY *= wphase_XY;

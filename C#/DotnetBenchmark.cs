@@ -1,5 +1,8 @@
 using System;
+using System.Globalization;
 using System.Numerics;
+using System.Reflection;
+using System.Resources;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
@@ -23,10 +26,12 @@ public class DotnetBenchmark
     private readonly FftNative.DoubleComplex[] xyNative = new FftNative.DoubleComplex[size];
     private readonly FftNative.DoubleComplex[] xyOutNative = new FftNative.DoubleComplex[size];
 
+    private static ResourceManager resourceManager = new ResourceManager("FftBenchmark.Resources.Strings", Assembly.GetExecutingAssembly());
+
     public static void Calculate()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("---- Benchmark.NET ----");
+        Console.WriteLine(resourceManager.GetString("BenchmarkDotNetText", CultureInfo.InvariantCulture));
         Console.ForegroundColor = ConsoleColor.Gray;
 
         var config = new ManualConfig()
