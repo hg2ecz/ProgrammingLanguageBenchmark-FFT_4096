@@ -38,9 +38,10 @@ public static class Benchmark
 {
     private static ResourceManager resourceManager = new ResourceManager("FftBenchmark.Resources.Strings", Assembly.GetExecutingAssembly());
 
-    public static async Task<int> Main(string[] args) => 
-        await Parser.Default.ParseArguments<Arguments>(args)
-            .MapResult(async (Arguments opts) =>
+    public static int Main(string[] args)
+    {
+        return Parser.Default.ParseArguments<Arguments>(args)
+            .MapResult((Arguments opts) =>
             {
                 try
                 {
@@ -52,19 +53,25 @@ public static class Benchmark
                     Params.FftRepeat = opts.FftRepeat;
 
                     Benchmarks(
-                        opts.DotnetBenchmark, opts.ManagedBenchmark, 
+                        opts.DotnetBenchmark, opts.ManagedBenchmark,
                         opts.NativeBenchmark, opts.MathNetBenchmark);
 
                     return 0;
                 }
+                catch (AggregateException e)
+                {
+                    Console.WriteLine("Unhandled exception: " + e.InnerException?.Message);
+                    return -3;
+                }
                 catch (Exception e)
                 {
                     Console.WriteLine("Unhandled exception: " + e.Message);
-                    return -3; // Unhandled error
+                    throw;
                 }
             },
-            errs => Task.FromResult(-1)
-        ).ConfigureAwait(true);
+            errs => -1
+        );
+    }
 
     private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark, bool mathNetBenchmark)
     {
@@ -106,7 +113,7 @@ public static class Benchmark
 
                 nativeElapsedMillisecond = FftNative.Calculate(Params.Log2FftSize, Params.FftRepeat);
             }
-            catch (Exception e)
+            catch (DllNotFoundException e)
             {
                 Console.WriteLine(resourceManager.GetString("CanotRunNative", CultureInfo.InvariantCulture)!, e.Message);
                 Console.WriteLine(resourceManager.GetString("HaveYouCompiledNative", CultureInfo.InvariantCulture));
