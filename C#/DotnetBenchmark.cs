@@ -11,6 +11,8 @@ using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Validators;
 using MathNet.Numerics.IntegralTransforms;
 
+using static CSharpFftDemo.GlobalResourceManager;
+
 #pragma warning disable CA1822
 
 namespace CSharpFftDemo;
@@ -28,12 +30,10 @@ public class DotnetBenchmark
     private readonly FftNative.DoubleComplex[] xyNative = new FftNative.DoubleComplex[size];
     private readonly FftNative.DoubleComplex[] xyOutNative = new FftNative.DoubleComplex[size];
 
-    private static ResourceManager resourceManager = new ResourceManager("FftBenchmark.Resources.Strings", Assembly.GetExecutingAssembly());
-
     public static void Calculate()
     {
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine(resourceManager.GetString("BenchmarkDotNetText", CultureInfo.InvariantCulture));
+        Console.WriteLine(GetStringResource("BenchmarkDotNetText"));
         Console.ForegroundColor = ConsoleColor.Gray;
 
         var config = new ManualConfig()
