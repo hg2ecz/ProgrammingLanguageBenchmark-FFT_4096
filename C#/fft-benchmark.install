@@ -1,7 +1,0 @@
-post_install() {
-	ln -s /opt/fft-benchmark/fft-benchmark /usr/bin/
-}
-
-pre_remove() {
-	rm -rf /usr/bin/fft-benchmark
-}

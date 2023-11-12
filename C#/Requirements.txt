@@ -1,3 +1,4 @@
 # apt-get install gcc make
 # apt-get install mono-mcs libmono-system-numerics4.0-cil
+apt install dotnet-sdk-8.0
 $ make
