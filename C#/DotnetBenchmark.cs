@@ -11,6 +11,8 @@ using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Validators;
 using MathNet.Numerics.IntegralTransforms;
 
+#pragma warning disable CA1822
+
 namespace CSharpFftDemo;
 
 [MarkdownExporterAttribute.GitHub]

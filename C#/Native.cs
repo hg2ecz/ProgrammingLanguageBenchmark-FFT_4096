@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+using static CSharpFftDemo.GlobalResourceManager;
+
 namespace CSharpFftDemo;
 
 internal static partial class FftNative
@@ -24,9 +26,11 @@ internal static partial class FftNative
         }
     }
 
+    #pragma warning disable CA5392
     [LibraryImport("libfft.so", EntryPoint = "fft")]
     internal
     static partial void Fft(int log2point, DoubleComplex[] xy_out, DoubleComplex[] xy_in);
+    #pragma warning restore CA5392
 
     public static double Calculate(int log2FftSize, int fftRepeat)
     {
@@ -63,7 +67,7 @@ internal static partial class FftNative
 
         for (i = 0; i < 6; i++)
         {
-            Console.WriteLine("{0}\t{1}", i, xy_out[i]);
+            Console.WriteLine(GetStringResource("ZeroTabOne")!, i, xy_out[i]);
         }
 
         return tpp;

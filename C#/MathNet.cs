@@ -1,8 +1,13 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Numerics;
+using System.Reflection;
+using System.Resources;
 using MathNet.Numerics;
 using MathNet.Numerics.IntegralTransforms;
+
+using static CSharpFftDemo.GlobalResourceManager;
 
 namespace CSharpFftDemo;
 
@@ -11,33 +16,33 @@ internal static class FftMathNet
     public static void SetupMathNet()
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Setting up Math.NET: ");
+        Console.WriteLine(GetStringResource("MathNetSetupText"));
         Console.ForegroundColor = ConsoleColor.Gray;
 
         if (Control.TryUseNativeCUDA())
         {
-            Console.WriteLine("  - Using CUDA engine.");
+            Console.WriteLine(GetStringResource("MathNetCudaText"));
             return;
         }
         else if (Control.TryUseNativeMKL())
         {
-            Console.WriteLine("  - Using MKL engine.");
+            Console.WriteLine(GetStringResource("MathNetMklText"));
             return;
         }
         else if (Control.TryUseNativeOpenBLAS())
         {
-            Console.WriteLine("  - Using OpenBLAS engine.");
+            Console.WriteLine(GetStringResource("MathNetOpenBlasText"));
             return;
         }
         else if (Control.TryUseNative())
         {
-            Console.WriteLine("  - Using native provider.");
+            Console.WriteLine(GetStringResource("MathNetNativeText"));
             return;
         }
         else
         {
-            Console.WriteLine("  - Using managed provider.");
-            Console.WriteLine("  - Enabling multithreading");
+            Console.WriteLine(GetStringResource("MathNetManagedText"));
+            Console.WriteLine(GetStringResource("MathNetMiltithreadingText"));
             Control.UseMultiThreading();
         }
     }
@@ -69,7 +74,7 @@ internal static class FftMathNet
             {
                 for (i = 0; i < 6; i++)
                 {
-                    Console.WriteLine("{0}\t{1}", i, xy[i]);
+                    Console.WriteLine(GetStringResource("ZeroTabOne")!, i, xy[i]);
                 }
             }
         }

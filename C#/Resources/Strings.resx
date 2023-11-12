@@ -149,4 +149,36 @@
     <value>---- BENCHMARK.NET ----</value>
     <comment/>
   </data>
+  <data name="MathNetSetupText" xml:space="preserve">
+    <value>Setting up Math.NET: </value>
+    <comment/>
+  </data>
+  <data name="MathNetCudaText" xml:space="preserve">
+    <value>  - Using CUDA engine.</value>
+    <comment/>
+  </data>
+  <data name="MathNetMlkText" xml:space="preserve">
+    <value>  - Using MKL engine.</value>
+    <comment/>
+  </data>
+  <data name="MathNetOpenBlasText" xml:space="preserve">
+    <value>  - Using OpenBLAS engine.</value>
+    <comment/>
+  </data>
+  <data name="MathNetNativeText" xml:space="preserve">
+    <value>  - Using native provider.</value>
+    <comment/>
+  </data>
+  <data name="MathNetManagedText" xml:space="preserve">
+    <value>  - Using managed provider.</value>
+    <comment/>
+  </data>
+  <data name="MathNetMiltithreadingText" xml:space="preserve">
+    <value>  - Enabling multithreading.</value>
+    <comment/>
+  </data>
+  <data name="ZeroTabOne" xml:space="preserve">
+    <value>{0}\t{1}</value>
+    <comment/>
+  </data>
 </root>
