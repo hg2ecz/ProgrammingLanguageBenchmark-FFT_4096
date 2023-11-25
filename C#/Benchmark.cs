@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using CommandLine;
+
+using static CSharpFftDemo.GlobalResourceManager;
 
 namespace CSharpFftDemo;
 
@@ -33,33 +34,37 @@ public class Arguments
 
 public static class Benchmark
 {
-    public static async Task<int> Main(string[] args) => 
-        await Parser.Default.ParseArguments<Arguments>(args)
-            .MapResult(async (Arguments opts) =>
+    public static int Main(string[] args)
+    {
+        return Parser.Default.ParseArguments<Arguments>(args)
+            .MapResult((Arguments opts) =>
             {
                 try
                 {
                     FftMathNet.SetupMathNet();
 
-                    Console.WriteLine("Log2FftSize: {0}, Repeat: {1}", opts.Log2FftSize, opts.FftRepeat);
+                    Console.WriteLine($"Log2FftSize: {opts.Log2FftSize}, Repeat: {opts.FftRepeat}");
 
                     Params.Log2FftSize = opts.Log2FftSize;
                     Params.FftRepeat = opts.FftRepeat;
 
                     Benchmarks(
-                        opts.DotnetBenchmark, opts.ManagedBenchmark, 
+                        opts.DotnetBenchmark, opts.ManagedBenchmark,
                         opts.NativeBenchmark, opts.MathNetBenchmark);
 
                     return 0;
                 }
-                catch
+                #pragma warning disable CA1031 // Do not catch general exception types
+                catch (Exception e)
                 {
-                    Console.WriteLine("Error!");
-                    return -3; // Unhandled error
+                    Console.WriteLine(GetStringResource("UnhandledExceptionText")!, e.Message);
+                    return -4;
                 }
+                #pragma warning restore CA1031 // Do not catch general exception types
             },
-            errs => Task.FromResult(-1)); // Invalid arguments
-
+            errs => -1
+        );
+    }
 
     private static int Benchmarks(bool dotnetBenchmark, bool managedBenchmark, bool nativeBenchmark, bool mathNetBenchmark)
     {
@@ -77,14 +82,14 @@ public static class Benchmark
         {
             // Warmup
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MANAGED (warmup) ----");
+            Console.WriteLine(GetStringResource("ManagedWarmupText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             FftManaged.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MANAGED ----");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(GetStringResource("ManagedText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             managedElapsedMillisecond = FftManaged.Calculate(Params.Log2FftSize, Params.FftRepeat);
@@ -95,16 +100,16 @@ public static class Benchmark
             try
             {
                 // Benchmark
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("---- NATIVE ----");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(GetStringResource("NativeText"));
                 Console.ForegroundColor = ConsoleColor.Gray;
 
                 nativeElapsedMillisecond = FftNative.Calculate(Params.Log2FftSize, Params.FftRepeat);
             }
-            catch (Exception e)
+            catch (DllNotFoundException e)
             {
-                Console.WriteLine($"Can not run native method: {e.Message}");
-                Console.WriteLine("Have you successfully compiled the project in ../C-tests/C-fast_double/?");
+                Console.WriteLine(GetStringResource("CanotRunNative")!, e.Message);
+                Console.WriteLine(GetStringResource("HaveYouCompiledNative"));
                 return 1;
             }
         }
@@ -113,14 +118,14 @@ public static class Benchmark
         {
             // Warmup
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MATH.NET (warmup) ----");
+            Console.WriteLine(GetStringResource("MathNetWarmupText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             FftMathNet.WarmUp(Params.Log2FftSize, Params.FftRepeat);
 
             // Benchmark
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MATH.NET ----");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(GetStringResource("MathNetText"));
             Console.ForegroundColor = ConsoleColor.Gray;
 
             mathNetElapsedMillisecond = FftMathNet.Calculate(Params.Log2FftSize, Params.FftRepeat);

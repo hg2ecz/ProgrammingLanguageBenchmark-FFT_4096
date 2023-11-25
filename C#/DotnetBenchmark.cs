@@ -8,6 +8,10 @@ using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Validators;
 using MathNet.Numerics.IntegralTransforms;
 
+using static CSharpFftDemo.GlobalResourceManager;
+
+#pragma warning disable CA1822
+
 namespace CSharpFftDemo;
 
 [MarkdownExporterAttribute.GitHub]
@@ -25,8 +29,8 @@ public class DotnetBenchmark
 
     public static void Calculate()
     {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("---- Benchmark.NET ----");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine(GetStringResource("BenchmarkDotNetText"));
         Console.ForegroundColor = ConsoleColor.Gray;
 
         var config = new ManualConfig()

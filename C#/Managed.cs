@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Numerics;
 
+using static CSharpFftDemo.GlobalResourceManager;
+
 namespace CSharpFftDemo;
 
 internal static class FftManaged
@@ -41,7 +43,7 @@ internal static class FftManaged
 
         for (i = 0; i < 6; i++)
         {
-            Console.WriteLine("{0}\t{1}", i, xy_out[i]);
+            Console.WriteLine(GetStringResource("ZeroTabOne")!, i, xy_out[i]);
         }
 
         return tpp;
