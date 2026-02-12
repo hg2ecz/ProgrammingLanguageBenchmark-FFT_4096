@@ -28,11 +28,18 @@
     <!-- Dynamic Profile-Guided Optimization -->
     <TieredPGO>true</TieredPGO>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    
+    <!-- x86-64-v3 specific optimizations (AVX2, FMA, BMI2) -->
+    <InstructionSet>avx2,bmi2,fma,popcnt,lzcnt</InstructionSet>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    
+    <!-- Additional aggressive optimizations for Release -->
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcInstructionSet>avx2,bmi2,fma,popcnt,lzcnt</IlcInstructionSet>
   </PropertyGroup>
 
   <ItemGroup>
