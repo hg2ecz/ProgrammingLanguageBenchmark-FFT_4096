@@ -1,73 +1,97 @@
 using System;
+using System.Buffers;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace CSharpFftDemo;
 
 internal static partial class FftManaged
 {
-    public static double Calculate(int log2FftSize, int fftRepeat)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void InitializeTestData(Complex[] xy, int size)
     {
-        int i;
-        int size = 1 << log2FftSize;
-        Complex[] xy = new Complex[size];
-        Complex[] xy_out = new Complex[xy.Length];
-
-        for (i = 0; i < size / 2; i++)
+        int halfSize = size / 2;
+        
+        for (int i = 0; i < halfSize; i++)
         {
-            xy[i] = new Complex(1.0, 0.0);
+            xy[i] = Complex.One;
         }
 
-        for (i = size / 2; i < size; i++)
+        for (int i = halfSize; i < size; i++)
         {
             xy[i] = new Complex(-1.0, 0.0);
         }
+    }
 
-        // FFT
-        Stopwatch stopwatch = Stopwatch.StartNew();
+    public static double Calculate(int log2FftSize, int fftRepeat)
+    {
+        int size = 1 << log2FftSize;
+        
+        // Use ArrayPool to reduce GC pressure
+        Complex[] xy = ArrayPool<Complex>.Shared.Rent(size);
+        Complex[] xy_out = ArrayPool<Complex>.Shared.Rent(size);
 
-        for (i = 0; i < fftRepeat; i++)
+        try
         {
-            Calculate(log2FftSize, xy, xy_out);
+            // Initialize test data once with optimized method
+            InitializeTestData(xy, size);
+
+            // FFT
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            for (int i = 0; i < fftRepeat; i++)
+            {
+                Calculate(log2FftSize, xy.AsSpan(0, size), xy_out.AsSpan(0, size));
+            }
+
+            stopwatch.Stop();
+
+            Console.WriteLine($"Total ({fftRepeat}): {stopwatch.ElapsedMilliseconds}");
+
+            float tpp = stopwatch.ElapsedMilliseconds / (float)fftRepeat;
+
+            Console.WriteLine($"{fftRepeat} piece(s) of {1 << log2FftSize} pt FFT;  {tpp} ms/piece\n");
+
+            for (int i = 0; i < 6; i++)
+            {
+                Console.WriteLine($"{i} {xy_out[i]}");
+            }
+
+            return tpp;
         }
-
-        stopwatch.Stop();
-
-        Console.WriteLine($"Total ({fftRepeat}): {stopwatch.ElapsedMilliseconds}");
-
-        float tpp = stopwatch.ElapsedMilliseconds / (float)fftRepeat;
-
-        Console.WriteLine($"{fftRepeat} piece(s) of {1 << log2FftSize} pt FFT;  {tpp} ms/piece\n");
-
-        for (i = 0; i < 6; i++)
+        finally
         {
-            Console.WriteLine($"{i} {xy_out[i]}");
+            // Return arrays to pool
+            ArrayPool<Complex>.Shared.Return(xy);
+            ArrayPool<Complex>.Shared.Return(xy_out);
         }
-
-        return tpp;
     }
 
     public static void WarmUp(int log2FftSize, int fftRepeat)
     {
-        int i;
         int size = 1 << log2FftSize;
-        Complex[] xy = new Complex[size];
-        Complex[] xy_out = new Complex[xy.Length];
+        
+        // Use ArrayPool to reduce GC pressure
+        Complex[] xy = ArrayPool<Complex>.Shared.Rent(size);
+        Complex[] xy_out = ArrayPool<Complex>.Shared.Rent(size);
 
-        for (i = 0; i < size / 2; i++)
+        try
         {
-            xy[i] = new Complex(1.0, 0.0);
+            // Initialize test data once with optimized method
+            InitializeTestData(xy, size);
+
+            // JIT warm up ... possible gives more speed
+            for (int i = 0; i < fftRepeat; i++)
+            {
+                Calculate(log2FftSize, xy.AsSpan(0, size), xy_out.AsSpan(0, size));
+            }
         }
-
-        for (i = size / 2; i < size; i++)
+        finally
         {
-            xy[i] = new Complex(-1.0, 0.0);
-        }
-
-        // JIT warm up ... possible gives more speed
-        for (i = 0; i < fftRepeat; i++)
-        {
-            Calculate(log2FftSize, xy, xy_out);
+            // Return arrays to pool
+            ArrayPool<Complex>.Shared.Return(xy);
+            ArrayPool<Complex>.Shared.Return(xy_out);
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿using System;
+using System;
+using System.Buffers.Binary;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.X86;
 
 namespace CSharpFftDemo;
 
@@ -42,6 +45,20 @@ internal static partial class FftManaged
             new Complex(1, 0)
         ];
 
+    // Optimized bit reversal helper
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int ReverseBits(int value, int bitCount)
+    {
+        // More efficient bit reversal using divide-and-conquer
+        uint v = (uint)value;
+        v = ((v & 0xAAAAAAAA) >> 1) | ((v & 0x55555555) << 1);
+        v = ((v & 0xCCCCCCCC) >> 2) | ((v & 0x33333333) << 2);
+        v = ((v & 0xF0F0F0F0) >> 4) | ((v & 0x0F0F0F0F) << 4);
+        v = ((v & 0xFF00FF00) >> 8) | ((v & 0x00FF00FF) << 8);
+        v = (v >> 16) | (v << 16);
+        return (int)(v >> (32 - bitCount));
+    }
+
     // Public function
     public static unsafe void Calculate(int Log2FftSize, Span<Complex> xyIn, Span<Complex> xyOut)
     {
@@ -50,18 +67,11 @@ internal static partial class FftManaged
         ref Complex inRef = ref MemoryMarshal.GetReference(xyIn);
         ref Complex outRef = ref MemoryMarshal.GetReference(xyOut);
 
+        // Optimized bit reversal with helper method
         for (int i = 0; i < n; i++)
         {
-            long brev = i;
-
-            brev = ((brev & 0xaaaaaaaa) >> 1) | ((brev & 0x55555555) << 1);
-            brev = ((brev & 0xcccccccc) >> 2) | ((brev & 0x33333333) << 2);
-            brev = ((brev & 0xf0f0f0f0) >> 4) | ((brev & 0x0f0f0f0f) << 4);
-            brev = ((brev & 0xff00ff00) >> 8) | ((brev & 0x00ff00ff) << 8);
-            brev = (brev >> 16) | (brev << 16);
-
-            brev >>= 32 - Log2FftSize;
-            Unsafe.Add(ref outRef, (int)brev) = Unsafe.Add(ref inRef, i);
+            int brev = ReverseBits(i, Log2FftSize);
+            Unsafe.Add(ref outRef, brev) = Unsafe.Add(ref inRef, i);
         }
 
         int l2pt = 0;
@@ -75,18 +85,28 @@ internal static partial class FftManaged
 
             for (int m = 0; m < mmax; m++)
             {
+                // Cache w_XY components for better register allocation
+                double wReal = w_XY.Real;
+                double wImag = w_XY.Imaginary;
+                
                 for (int i = m; i < n; i += istep)
                 {
                     // Access references for the two elements to avoid bounds checks
                     ref Complex upperRef = ref Unsafe.Add(ref outRef, i);
                     ref Complex lowerRef = ref Unsafe.Add(ref outRef, i + mmax);
 
-                    // Compute temp = w_XY * lowerRef (preserve original operation order)
-                    Complex tempXY = w_XY * lowerRef;
-
-                    // Perform updates in same order as original
-                    lowerRef = upperRef - tempXY;
-                    upperRef += tempXY;
+                    // Manually expanded complex multiplication for better optimization
+                    double lowerReal = lowerRef.Real;
+                    double lowerImag = lowerRef.Imaginary;
+                    
+                    double tempReal = wReal * lowerReal - wImag * lowerImag;
+                    double tempImag = wReal * lowerImag + wImag * lowerReal;
+                    
+                    double upperReal = upperRef.Real;
+                    double upperImag = upperRef.Imaginary;
+                    
+                    lowerRef = new Complex(upperReal - tempReal, upperImag - tempImag);
+                    upperRef = new Complex(upperReal + tempReal, upperImag + tempImag);
                 }
 
                 // Update w_XY exactly once per m (preserve original semantics)
