@@ -27,7 +27,6 @@
     
     <!-- Dynamic Profile-Guided Optimization -->
     <TieredPGO>true</TieredPGO>
-    <UseSystemResourceKeys>true</UseSystemResourceKeys>
     
     <!-- x86-64-v3 specific optimizations (AVX2, FMA, BMI2) -->
     <InstructionSet>avx2,bmi2,fma,popcnt,lzcnt</InstructionSet>
