@@ -33,13 +33,14 @@ fn stop_time(start_time: &Instant, xy_out_fft: &[Cf32], txt: &str) {
 }
 
 fn main() {
+    let mut xy_1_0 = [Complex::new(0.0, 0.0); SIZE];
     let mut xy = [Complex::new(0.0, 0.0); SIZE];
     let mut xy_out_fft = [Complex::new(0.0, 0.0); SIZE];
 
-    for xy_act in xy.iter_mut().take(SIZE / 2) {
+    for xy_act in xy_1_0.iter_mut().take(SIZE / 2) {
         *xy_act = Complex::new(1.0, 0.0);
     }
-    for xy_act in xy.iter_mut().take(SIZE).skip(SIZE / 2) {
+    for xy_act in xy_1_0.iter_mut().take(SIZE).skip(SIZE / 2) {
         *xy_act = Complex::new(-1.0, 0.0);
     }
 
@@ -47,7 +48,7 @@ fn main() {
     let ffto = fft::Fft::new();
     let start_time = Instant::now();
     for _i in 0..FFT_REPEAT {
-        ffto.fft(&mut xy_out_fft, &xy)
+        ffto.fft(&mut xy_out_fft, &xy_1_0)
     }
     stop_time(&start_time, &xy_out_fft, "Rust code (+1.0, -1.0)");
 
@@ -82,11 +83,18 @@ fn main() {
     }
     stop_time(&start_time, &xy_out_fft, "C module (unsafe)");
 
-    // FFT - Rust
+    // FFT - Rust algebraic
     let ffto = fft_algebraic::Fft::new();
+
+    let start_time = Instant::now();
+    for _i in 0..FFT_REPEAT {
+        ffto.fft(&mut xy_out_fft, &xy_1_0)
+    }
+    stop_time(&start_time, &xy_out_fft, "Rust algebraic code (+1.0, -1.0)");
+
     let start_time = Instant::now();
     for _i in 0..FFT_REPEAT {
         ffto.fft(&mut xy_out_fft, &xy)
     }
-    stop_time(&start_time, &xy_out_fft, "Rust algebraic code (+1.0, -1.0)");
+    stop_time(&start_time, &xy_out_fft, "Rust algebraic code (rndnum)");
 }
