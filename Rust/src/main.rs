@@ -1,4 +1,5 @@
 mod fft;
+mod fft_algebraic;
 mod fft_c;
 
 use num_complex::{Complex, ComplexFloat};
@@ -80,4 +81,12 @@ fn main() {
         fft_c::fftcu(&mut xy_out_fft, &xy)
     }
     stop_time(&start_time, &xy_out_fft, "C module (unsafe)");
+
+    // FFT - Rust
+    let ffto = fft_algebraic::Fft::new();
+    let start_time = Instant::now();
+    for _i in 0..FFT_REPEAT {
+        ffto.fft(&mut xy_out_fft, &xy)
+    }
+    stop_time(&start_time, &xy_out_fft, "Rust algebraic code (+1.0, -1.0)");
 }
