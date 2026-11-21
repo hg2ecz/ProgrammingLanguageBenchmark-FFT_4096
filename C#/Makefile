@@ -7,7 +7,7 @@
 #   make clean
 
 PROJECT := fft-benchmark.csproj
-VERSION := 1.9.1.2
+VERSION := 1.10.0.0
 
 # .NET runtime identifier architecture: x64 or arm64 (defaults to the build machine)
 ARCH ?= $(if $(filter aarch64 arm64,$(shell uname -m)),arm64,x64)
