@@ -1,8 +1,12 @@
 Package: fft-benchmark
 Version: %%VERSION%%
-Section: base
+Section: utils
 Priority: optional
-Architecture: amd64
-Depends: libc6, libgcc-s1, libgssapi-krb5-2, libicu76, libssl3, libstdc++6, zlib1g
+Architecture: %%ARCH%%
+Depends: libc6, libgcc-s1, libstdc++6
 Maintainer: Robert Fuszenecker <robert.fuszenecker@outlook.com>
-Description: The FFT benchmark from Zsolt Krüpl
+Homepage: https://github.com/hg2ecz/ProgrammingLanguageBenchmark-FFT_4096
+Description: FFT benchmark in C# with native C and Rust implementations
+ Self-contained .NET build of the C# version of Zsolt Krüpl's FFT benchmark.
+ It compares the managed C# FFT with the same algorithm implemented in C and
+ Rust, called through P/Invoke.

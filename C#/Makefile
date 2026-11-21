@@ -1,56 +1,71 @@
-TARGET=./dist/fft-benchmark
-ARCH=x64
-DESTDIR=dist
-VERSION=1.9.1.2
+# C# FFT benchmark (managed C# + native C and Rust implementations via P/Invoke)
+#
+#   make            build native libraries and publish a self-contained app to ./dist
+#   make test       run the benchmark 10 times and print the average (../avgcalc.py)
+#   make package    build a .deb package
+#   make docker     build a Docker image
+#   make clean
 
-CC=gcc
-CFLAGS =-Wall -O2 -funroll-all-loops -fPIC
+PROJECT := fft-benchmark.csproj
+VERSION := $(shell sed -n 's:.*<VersionPrefix>\(.*\)</VersionPrefix>.*:\1:p' $(PROJECT))
 
-PARAMS_CPU = -march=native
+# .NET runtime identifier architecture: x64 or arm64 (defaults to the build machine)
+ARCH ?= $(if $(filter aarch64 arm64,$(shell uname -m)),arm64,x64)
+DEB_ARCH := $(if $(filter arm64,$(ARCH)),arm64,amd64)
+
+DESTDIR ?= dist
+PKGROOT := obj/deb
+DEB := fft-benchmark_$(VERSION)_$(DEB_ARCH).deb
+IMAGE := fft-benchmark:$(VERSION)
+
+PUBLISH := dotnet publish $(PROJECT) -c Release -r linux-$(ARCH) --self-contained -p:PublishTrimmed=false
+
+# Native C implementation, shared with the C benchmark
+C_SRC := ../other_tests/C-tests/C-fast_double/fft.c
+CC ?= gcc
+CFLAGS := -Wall -O2 -funroll-all-loops -fPIC -DMOD_SPEED
 ifeq ($(shell uname -m), armv7l)
-    PARAMS_CPU = -mcpu=cortex-a5 -mfpu=neon-fp16 
+    CFLAGS += -mcpu=cortex-a5 -mfpu=neon-fp16
+else
+    CFLAGS += -march=native
 endif
-CFLAGS+= $(PARAMS_CPU)
 
-CFLAGS+=-DLOG2FFTSIZE=12
-CFLAGS+=-DFFT_REPEAT=10000
+.PHONY: all native publish test test2 package docker clean
 
-# improve speed
-CFLAGS+=-DMOD_SPEED
+all: publish
 
-LDFLAGS=-shared
-OBJS=fft.o
+native: libfft.so libfftr.so
 
-TARGET=benchmark
+libfft.so: $(C_SRC)
+	$(CC) $(CFLAGS) -shared -o $@ $<
 
-all: libfft libfftr
-	dotnet build -c Release -p:VersionPrefix=$(VERSION) fft-benchmark.csproj
-	dotnet publish -c Release -o $(DESTDIR) --self-contained -r linux-$(ARCH) -p:PublishTrimmed=False -p:VersionPrefix=$(VERSION) fft-benchmark.csproj
+libfftr.so: rust/Cargo.toml rust/src/lib.rs
+	cd rust && ./build.sh
+	cp rust/target/release/libfftr.so $@
 
-libfft: $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o libfft.so
+publish: native
+	$(PUBLISH) -o $(DESTDIR)
 
-libfftr: 
-	cd rust && ./build.sh && cp target/release/libfftr.so ..
+test: publish
+	./$(DESTDIR)/fft-benchmark
+	@for i in 1 2 3 4 5 6 7 8 9 10; do ./$(DESTDIR)/fft-benchmark; done | ../avgcalc.py
+
+test2: test
+
+package: native
+	rm -rf $(PKGROOT)
+	mkdir -p $(PKGROOT)/DEBIAN $(PKGROOT)/usr/bin
+	sed -e 's/%%VERSION%%/$(VERSION)/g' -e 's/%%ARCH%%/$(DEB_ARCH)/g' packaging/DEBIAN/control.in > $(PKGROOT)/DEBIAN/control
+	$(PUBLISH) -o $(PKGROOT)/opt/fft-benchmark
+	find $(PKGROOT) -type d -exec chmod 755 {} +
+	find $(PKGROOT) -type f -exec chmod 644 {} +
+	chmod 755 $(PKGROOT)/opt/fft-benchmark/fft-benchmark
+	ln -s /opt/fft-benchmark/fft-benchmark $(PKGROOT)/usr/bin/fft-benchmark
+	dpkg-deb --root-owner-group --build $(PKGROOT) $(DEB)
+
+# The build context is the repository root, because the C source lives outside this directory.
+docker:
+	docker build -f Dockerfile -t $(IMAGE) ..
 
 clean:
-	rm -fr $(TARGET) bin obj *.o *.so BenchmarkDotNet.Artifacts dist *.deb
-
-package:
-	sed -e 's/%%VERSION%%/$(VERSION)/g' packaging/DEBIAN/control.in > packaging/DEBIAN/control
-	dotnet publish -c Release -r linux-$(ARCH) --self-contained -o packaging/opt/fft-benchmark -p:PublishTrimmed=False -p:VersionPrefix=$(VERSION) fft-benchmark.csproj
-	dpkg-deb --build packaging fft-benchmark-$(VERSION)-$(ARCH).deb
-
-docker:
-    dotnet publish -c Release -o dist --self-contained -r linux-$(ARCH) -p:PublishTrimmed=False -p:VersionPrefix=$(VERSION) fft-benchmark.csproj
-    docker build -t fft-benchmark:$(VERSION) .
-
-PROG=$(TARGET)
-test:
-	./$(PROG)
-	@(./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG);  ./$(PROG);./$(PROG);./$(PROG);./$(PROG);./$(PROG) )|../avgcalc.py
-
-test2:	test
-
-fft.o: ../other_tests/C-tests/C-fast_double/fft.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	rm -rf bin obj $(DESTDIR) BenchmarkDotNet.Artifacts rust/target *.so *.o *.deb

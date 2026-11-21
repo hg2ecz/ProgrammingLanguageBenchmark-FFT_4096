@@ -1,43 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>0.0.0</VersionPrefix>
-    <Arch>x64</Arch>
+    <VersionPrefix>1.9.1.2</VersionPrefix>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <RuntimeIdentifiers>linux-x64;linux-arm64;win-x64</RuntimeIdentifiers>
+    <RootNamespace>FftBenchmark</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <RootNamespace>FftBenchmark</RootNamespace>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    
-    <!-- Performance optimizations -->
-    <Optimize>true</Optimize>
-    <TieredCompilation>true</TieredCompilation>
+
+    <!-- No culture-specific behavior needed; removes the libicu dependency -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <!-- JIT: skip quick (unoptimized) JIT and use dynamic PGO for hot methods -->
     <TieredCompilationQuickJit>false</TieredCompilationQuickJit>
-    <ServerGarbageCollection>true</ServerGarbageCollection>
-    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
-    <PublishReadyToRun>true</PublishReadyToRun>
-    <PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
-    <PlatformTarget>x64</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-    
-    <!-- Dynamic Profile-Guided Optimization -->
     <TieredPGO>true</TieredPGO>
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="*.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>  
+    <!-- Native libraries built by the Makefile (libfft.so, libfftr.so) -->
+    <Content Include="*.so" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

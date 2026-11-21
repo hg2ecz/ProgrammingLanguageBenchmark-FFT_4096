@@ -1,2 +1,0 @@
-echo "Removing /usr/local/bin/fft-benchmark"
-rm /usr/local/bin/fft-benchmark
