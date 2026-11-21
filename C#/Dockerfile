@@ -1,21 +1,23 @@
-FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
-WORKDIR /app
+# Build and package with: make docker
+# The build context is the repository root, because the C source lives outside C#/.
+# The .NET app comes from ./dist (make publish); the native libraries are rebuilt here
+# with the Makefile's own rules, against the same distribution as the runtime image.
 
-USER app
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG configuration=Release
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0 AS native
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc libc6-dev make cargo \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
-COPY ["fft-benchmark.csproj", "./"]
-RUN dotnet restore "fft-benchmark.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "fft-benchmark.csproj" -c $configuration -o /app/build fft-benchmark.csproj
+COPY other_tests/C-tests/C-fast_double/ other_tests/C-tests/C-fast_double/
+COPY C#/Makefile C#/
+COPY C#/rust/Cargo.toml C#/rust/build.sh C#/rust/
+COPY C#/rust/src/ C#/rust/src/
+WORKDIR /src/C#
+RUN make native
 
-FROM build AS publish
-ARG configuration=Release
-RUN dotnet publish "fft-benchmark.csproj" -c $configuration -o /app/publish /p:UseAppHost=false fft-benchmark.csproj
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "fft-benchmark.dll"]
+COPY C#/dist/ .
+COPY --from=native /src/C#/libfft.so /src/C#/libfftr.so ./
+USER app
+ENTRYPOINT ["./fft-benchmark"]

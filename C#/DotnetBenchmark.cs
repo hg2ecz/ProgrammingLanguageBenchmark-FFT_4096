@@ -3,12 +3,15 @@ using System.Numerics;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 
-namespace CSharpFftDemo;
+namespace FftBenchmark;
 
+/// <summary>
+/// BenchmarkDotNet comparison of the three implementations. Not sealed: BenchmarkDotNet
+/// generates a derived type.
+/// </summary>
 [MinColumn, MaxColumn, MeanColumn, MedianColumn]
 [MemoryDiagnoser]
 [DisassemblyDiagnoser]
@@ -24,64 +27,48 @@ public class DotnetBenchmark : IDisposable
         }
     }
 
-    public static int Log2FftSize { get; set; }
+    // BenchmarkDotNet runs the benchmarks in a child process, so the size is passed as a [Params] value.
+    [Params(12)]
+    public int Log2FftSize { get; set; }
 
-    private int size;
-    private Complex[] xyManaged = null!;
-    private Complex[] xyOutManaged = null!;
+    private Complex[] xyIn = [];
+    private Complex[] xyOut = [];
+    private NativeRust? rust;
 
-    private FftNativeC.DoubleComplex[] xyNative = null!;
-    private FftNativeC.DoubleComplex[] xyOutNative = null!;
-
-    private FftNativeRust.DoubleComplex[] xyRust = null!;
-    private FftNativeRust.DoubleComplex[] xyOutRust = null!;
-    private FftNativeRust.FftHandle rustHandle = null!;
-
-    public static void Calculate(int log2FftSize)
+    public static void Run(int log2FftSize)
     {
-        Log2FftSize = log2FftSize;
+        Measurement.WriteTitle("BENCHMARK.NET", ConsoleColor.Yellow);
 
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("---- BENCHMARK.NET ----");
-        Console.ForegroundColor = ConsoleColor.Gray;
+        var config = new Config();
 
-        _ = BenchmarkRunner.Run<DotnetBenchmark>(new Config());
+        if (log2FftSize != 12)
+        {
+            Console.WriteLine("Note: BenchmarkDotNet always uses Log2FftSize = 12 (see [Params]).");
+        }
+
+        _ = BenchmarkRunner.Run<DotnetBenchmark>(config);
     }
 
     [GlobalSetup]
     public void Setup()
     {
-        size = 1 << Log2FftSize;
-        xyManaged = new Complex[size];
-        xyOutManaged = new Complex[size];
-        xyNative = new FftNativeC.DoubleComplex[size];
-        xyOutNative = new FftNativeC.DoubleComplex[size];
-        xyRust = new FftNativeRust.DoubleComplex[size];
-        xyOutRust = new FftNativeRust.DoubleComplex[size];
-        rustHandle = new FftNativeRust.FftHandle();
-
-        int i;
-
-        for (i = 0; i < size / 2; i++)
-        {
-            xyManaged[i] = new Complex(1.0, 0.0);
-            xyNative[i] = new FftNativeC.DoubleComplex(1.0f, 0.0f);
-            xyRust[i] = new FftNativeRust.DoubleComplex(1.0f, 0.0f);
-        }
-
-        for (i = size / 2; i < size; i++)
-        {
-            xyManaged[i] = new Complex(-1.0, 0.0);
-            xyNative[i] = new FftNativeC.DoubleComplex(-1.0f, 0.0f);
-            xyRust[i] = new FftNativeRust.DoubleComplex(-1.0f, 0.0f);
-        }
+        int size = 1 << Log2FftSize;
+        xyIn = Measurement.CreateTestInput(size);
+        xyOut = new Complex[size];
+        rust = new FftBenchmark.NativeRust();
     }
 
     [GlobalCleanup]
-    public void Cleanup()
-    {
-        Dispose();
-    }
+    public void Cleanup() => Dispose();
+
+    [Benchmark]
+    public void Managed() => FftManaged.Calculate(Log2FftSize, xyIn, xyOut);
+
+    [Benchmark(Baseline = true)]
+    public void NativeC() => FftBenchmark.NativeC.Calculate(Log2FftSize, xyIn, xyOut);
+
+    [Benchmark]
+    public void NativeRust() => rust!.Calculate(Log2FftSize, xyIn, xyOut);
 
     public void Dispose()
     {
@@ -93,25 +80,8 @@ public class DotnetBenchmark : IDisposable
     {
         if (disposing)
         {
-            rustHandle?.Dispose();
+            rust?.Dispose();
+            rust = null;
         }
-    }
-
-    [Benchmark]
-    public void Managed()
-    {
-        FftManaged.Calculate(Log2FftSize, xyManaged, xyOutManaged);
-    }
-
-    [Benchmark(Baseline = true)]
-    public void NativeC()
-    {
-        FftNativeC.Fft(Log2FftSize, xyNative, xyOutNative);
-    }
-
-    [Benchmark]
-    public void NativeRust()
-    {
-        rustHandle.Fft(xyOutRust, xyRust, size);
     }
 }
