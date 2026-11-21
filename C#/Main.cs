@@ -1,187 +1,160 @@
 ﻿using System;
 
-namespace CSharpFftDemo;
+namespace FftBenchmark;
 
-internal sealed class Arguments
+internal sealed class Options
 {
     public bool DotnetBenchmark { get; set; }
-    public bool ManagedBenchmark { get; set; } = true;
-    public bool NativeBenchmark { get; set; }
-    public bool RustBenchmark { get; set; }
+    public bool Managed { get; set; }
+    public bool NativeC { get; set; }
+    public bool NativeRust { get; set; }
     public int FftRepeat { get; set; } = 20000;
     public int Log2FftSize { get; set; } = 12;
-}
 
-internal static class ArgumentParser
-{
-    public static Arguments Parse(string[] args)
+    /// <summary>Parses the command line; returns null if the program should exit with <paramref name="exitCode"/>.</summary>
+    public static Options? Parse(string[] args, out int exitCode)
     {
-        var arguments = new Arguments();
+        var options = new Options();
+        exitCode = 0;
 
         for (int i = 0; i < args.Length; i++)
         {
-            string arg = args[i];
-
-            if (arg == "-d" || arg == "--dotnet-benchmark")
+            switch (args[i])
             {
-                arguments.DotnetBenchmark = true;
-            }
-            else if (arg == "-m" || arg == "--managed")
-            {
-                arguments.ManagedBenchmark = true;
-            }
-            else if (arg == "-n" || arg == "--native")
-            {
-                arguments.NativeBenchmark = true;
-            }
-            else if (arg == "-u" || arg == "--rust")
-            {
-                arguments.RustBenchmark = true;
-            }
-            else if (arg == "-r" || arg == "--repeat")
-            {
-                if (i + 1 < args.Length && int.TryParse(args[i + 1], out int repeat))
-                {
-                    arguments.FftRepeat = repeat;
-                    i++;
-                }
-            }
-            else if (arg == "-s" || arg == "--size")
-            {
-                if (i + 1 < args.Length && int.TryParse(args[i + 1], out int size))
-                {
-                    arguments.Log2FftSize = size;
-                    i++;
-                }
-            }
-            else if (arg == "-h" || arg == "--help")
-            {
-                PrintHelp();
-                Environment.Exit(0);
+                case "-d" or "--dotnet-benchmark":
+                    options.DotnetBenchmark = true;
+                    break;
+                case "-m" or "--managed":
+                    options.Managed = true;
+                    break;
+                case "-n" or "--native":
+                    options.NativeC = true;
+                    break;
+                case "-u" or "--rust":
+                    options.NativeRust = true;
+                    break;
+                case "-r" or "--repeat" when TryReadInt(args, ref i, 1, int.MaxValue, out int repeat):
+                    options.FftRepeat = repeat;
+                    break;
+                case "-s" or "--size" when TryReadInt(args, ref i, 1, 30, out int log2Size):
+                    options.Log2FftSize = log2Size;
+                    break;
+                case "-h" or "--help":
+                    PrintHelp();
+                    return null;
+                default:
+                    Console.Error.WriteLine($"Invalid or incomplete option: {args[i]}");
+                    PrintHelp();
+                    exitCode = 2;
+                    return null;
             }
         }
 
-        return arguments;
+        // Nothing selected: run the managed benchmark only.
+        if (!options.DotnetBenchmark && !options.Managed && !options.NativeC && !options.NativeRust)
+        {
+            options.Managed = true;
+        }
+
+        return options;
+    }
+
+    private static bool TryReadInt(string[] args, ref int i, int min, int max, out int value)
+    {
+        if (i + 1 < args.Length && int.TryParse(args[i + 1], out value) && value >= min && value <= max)
+        {
+            i++;
+            return true;
+        }
+
+        value = 0;
+        return false;
     }
 
     private static void PrintHelp()
     {
-        Console.WriteLine("FFT Benchmark Tool");
-        Console.WriteLine("Usage: fft-benchmark [options]");
-        Console.WriteLine();
-        Console.WriteLine("Options:");
-        Console.WriteLine("  -d, --dotnet-benchmark    Run the BenchmarkDotNet benchmark");
-        Console.WriteLine("  -m, --managed              Run the .NET managed benchmark (default)");
-        Console.WriteLine("  -n, --native               Run the native (C-fast_double) benchmark");
-        Console.WriteLine("  -u, --rust                 Run the native (Rust) benchmark");
-        Console.WriteLine("  -r, --repeat <N>           Number of iterations (default: 20000)");
-        Console.WriteLine("  -s, --size <N>             Log2 of buffer size (default: 12 for 4096 samples)");
-        Console.WriteLine("  -h, --help                 Show this help message");
+        Console.WriteLine("""
+            FFT Benchmark Tool
+            Usage: fft-benchmark [options]
+
+            Options:
+              -m, --managed              Run the managed C# implementation (default if nothing is selected)
+              -n, --native               Run the native C implementation (libfft.so)
+              -u, --rust                 Run the native Rust implementation (libfftr.so)
+              -d, --dotnet-benchmark     Run all implementations with BenchmarkDotNet
+              -r, --repeat <N>           Number of iterations (default: 20000)
+              -s, --size <N>             Log2 of the FFT size, 1..30 (default: 12, i.e. 4096 points)
+              -h, --help                 Show this help message
+            """);
     }
 }
 
-internal static class Benchmark
+internal static class Program
 {
     public static int Main(string[] args)
     {
+        Options? options = Options.Parse(args, out int exitCode);
+
+        if (options is null)
+        {
+            return exitCode;
+        }
+
         try
         {
-            var opts = ArgumentParser.Parse(args);
-            Console.WriteLine($"Log2FftSize: {opts.Log2FftSize}, Repeat: {opts.FftRepeat}");
-
-            return Benchmarks(opts);
+            Run(options);
+            return 0;
         }
-        catch (Exception e)
+        catch (DllNotFoundException e)
         {
-            Console.WriteLine($"Unhandled exception: {e.Message}");
-            return -4;
+            Console.Error.WriteLine($"Can not load native library: {e.Message}");
+            Console.Error.WriteLine("Have you built it with 'make'?");
+            return 1;
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Console output is not localized.")]
-    private static int Benchmarks(Arguments opts)
+    private static void Run(Options options)
     {
-        double? managedElapsedMillisecond = null;
-        double? nativeElapsedMillisecond = null;
-        double? rustElapsedMillisecond = null;
+        Console.WriteLine($"Log2FftSize: {options.Log2FftSize}, Repeat: {options.FftRepeat}");
 
-        if (opts.DotnetBenchmark)
+        int log2 = options.Log2FftSize;
+        int repeat = options.FftRepeat;
+        double? managedMs = null;
+
+        if (options.DotnetBenchmark)
         {
-            // Benchmark
-            DotnetBenchmark.Calculate(opts.Log2FftSize);
+            DotnetBenchmark.Run(log2);
         }
 
-        if (opts.ManagedBenchmark)
+        if (options.Managed)
         {
-            // Warmup
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("---- MANAGED (warmup) ----");
-            Console.ForegroundColor = ConsoleColor.Gray;
-
-            FftManaged.WarmUp(opts.Log2FftSize, opts.FftRepeat);
-
-            // Benchmark
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("---- MANAGED ----");
-            Console.ForegroundColor = ConsoleColor.Gray;
-
-            managedElapsedMillisecond = FftManaged.Calculate(opts.Log2FftSize, opts.FftRepeat);
+            managedMs = Measurement.Run("MANAGED", log2, repeat, FftManaged.Calculate, warmUp: true);
         }
 
-        if (opts.NativeBenchmark)
+        if (options.NativeC)
         {
-            try
-            {
-                // Benchmark
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("---- NATIVE ----");
-                Console.ForegroundColor = ConsoleColor.Gray;
-
-                nativeElapsedMillisecond = FftNativeC.Calculate(opts.Log2FftSize, opts.FftRepeat);
-            }
-            catch (DllNotFoundException e)
-            {
-                Console.WriteLine($"Can not run native method: {e.Message}");
-                Console.WriteLine("Have you successfully compiled the native library?");
-                return 1;
-            }
+            double nativeMs = Measurement.Run("NATIVE", log2, repeat, NativeC.Calculate);
+            PrintRatio("Native", managedMs, nativeMs);
         }
 
-        if (opts.RustBenchmark)
+        if (options.NativeRust)
         {
-            try
-            {
-                // Benchmark
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("---- RUST ----");
-                Console.ForegroundColor = ConsoleColor.Gray;
+            using var rust = new NativeRust();
+            double rustMs = Measurement.Run("RUST", log2, repeat, rust.Calculate);
+            PrintRatio("Rust", managedMs, rustMs);
+        }
+    }
 
-                rustElapsedMillisecond = FftNativeRust.Calculate(opts.Log2FftSize, opts.FftRepeat);
-            }
-            catch (DllNotFoundException e)
-            {
-                Console.WriteLine($"Can not run native method: {e.Message}");
-                Console.WriteLine("Have you successfully compiled the native library?");
-                return 1;
-            }
+    private static void PrintRatio(string name, double? managedMs, double otherMs)
+    {
+        if (managedMs is not double managed)
+        {
+            return;
         }
 
-        if (managedElapsedMillisecond.HasValue && nativeElapsedMillisecond.HasValue)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Native Ratio: {managedElapsedMillisecond / nativeElapsedMillisecond:0.####}");
-            Console.WriteLine($"Native Diff%: {managedElapsedMillisecond / nativeElapsedMillisecond - 1:0.##%}");
-            Console.ForegroundColor = ConsoleColor.Gray;
-        }
-
-        if (managedElapsedMillisecond.HasValue && rustElapsedMillisecond.HasValue)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Rust Ratio: {managedElapsedMillisecond / rustElapsedMillisecond:0.####}");
-            Console.WriteLine($"Rust Diff%: {managedElapsedMillisecond / rustElapsedMillisecond - 1:0.##%}");
-            Console.ForegroundColor = ConsoleColor.Gray;
-        }
-
-        return 0;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"{name} Ratio: {managed / otherMs:0.####}");
+        Console.WriteLine($"{name} Diff%: {(managed / otherMs) - 1:0.##%}");
+        Console.ResetColor();
     }
 }
