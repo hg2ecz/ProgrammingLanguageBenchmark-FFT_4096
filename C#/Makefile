@@ -7,7 +7,7 @@
 #   make clean
 
 PROJECT := fft-benchmark.csproj
-VERSION := $(shell sed -n 's:.*<VersionPrefix>\(.*\)</VersionPrefix>.*:\1:p' $(PROJECT))
+VERSION := 1.9.1.2
 
 # .NET runtime identifier architecture: x64 or arm64 (defaults to the build machine)
 ARCH ?= $(if $(filter aarch64 arm64,$(shell uname -m)),arm64,x64)
@@ -18,7 +18,7 @@ PKGROOT := obj/deb
 DEB := fft-benchmark_$(VERSION)_$(DEB_ARCH).deb
 IMAGE := fft-benchmark:$(VERSION)
 
-PUBLISH := dotnet publish $(PROJECT) -c Release -r linux-$(ARCH) --self-contained -p:PublishTrimmed=false
+PUBLISH := dotnet publish $(PROJECT) -c Release -p:VersionPrefix=$(VERSION) -r linux-$(ARCH) --self-contained -p:PublishTrimmed=false
 
 # Native C implementation, shared with the C benchmark
 C_SRC := ../other_tests/C-tests/C-fast_double/fft.c
@@ -63,9 +63,8 @@ package: native
 	ln -s /opt/fft-benchmark/fft-benchmark $(PKGROOT)/usr/bin/fft-benchmark
 	dpkg-deb --root-owner-group --build $(PKGROOT) $(DEB)
 
-# The build context is the repository root, because the C source lives outside this directory.
-docker:
-	docker build -f Dockerfile -t $(IMAGE) ..
+docker: publish
+	docker build -t $(IMAGE) .
 
 clean:
 	rm -rf bin obj $(DESTDIR) BenchmarkDotNet.Artifacts rust/target *.so *.o *.deb

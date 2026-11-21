@@ -39,7 +39,8 @@ make docker               # Docker image fft-benchmark:<version>
 make ARCH=arm64 package   # on an arm64 machine (native code is not cross-compiled)
 ```
 
-The version comes from `<VersionPrefix>` in `fft-benchmark.csproj`.
+The version is set in one place, `VERSION` in the `Makefile`; it is passed to the .NET build
+(`-p:VersionPrefix`), the .deb package and the Docker image tag.
 
 ## Source layout
 
