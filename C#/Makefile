@@ -63,8 +63,10 @@ package: native
 	ln -s /opt/fft-benchmark/fft-benchmark $(PKGROOT)/usr/bin/fft-benchmark
 	dpkg-deb --root-owner-group --build $(PKGROOT) $(DEB)
 
+# Context: repository root (the C source lives outside this directory).
+# The native libraries are rebuilt inside the image with 'make native'.
 docker: publish
-	docker build -t $(IMAGE) .
+	docker build -f Dockerfile -t $(IMAGE) ..
 
 clean:
 	rm -rf bin obj $(DESTDIR) BenchmarkDotNet.Artifacts rust/target *.so *.o *.deb
