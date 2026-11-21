@@ -52,9 +52,9 @@ internal static partial class FftNativeC
 
         stopwatch.Stop();
 
-        Console.WriteLine($"Total ({fftRepeat}): {stopwatch.ElapsedMilliseconds}");
+        Console.WriteLine($"Total ({fftRepeat}): {stopwatch.Elapsed.TotalMilliseconds:F1}");
 
-        float tpp = stopwatch.ElapsedMilliseconds / (float)fftRepeat;
+        double tpp = stopwatch.Elapsed.TotalMilliseconds / fftRepeat;
 
         Console.WriteLine($"{fftRepeat} piece(s) of {1 << log2FftSize} pt FFT;  {tpp} ms/piece\n");
 

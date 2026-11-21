@@ -25,16 +25,12 @@ internal static partial class FftNativeRust
     {
         public FftHandle() : base(0, true)
         {
-            Console.WriteLine("Creating new Rust FFT handle.");
             SetHandle(NewHandle());
-            Console.WriteLine("Rust FFT handle: 0x{0:X}", handle);
         }
 
         protected override bool ReleaseHandle()
         {
-            Console.WriteLine("Disposing Rust FFT handle.");
             FreeHandle(handle);
-            Console.WriteLine("Disposed Rust FFT handle.");
             return true;
         }
 
@@ -82,28 +78,22 @@ internal static partial class FftNativeRust
             xy[i] = new DoubleComplex(-1.0f, 0.0f);
         }
 
+        // Create the handle outside the measured section; a missing library
+        // (DllNotFoundException) propagates to the caller.
+        using FftHandle fftHandle = new FftHandle();
+
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        try
+        for (i = 0; i < fftRepeat; i++)
         {
-            using FftHandle fftHandle = new FftHandle();
-
-            for (i = 0; i < fftRepeat; i++)
-            {
-                fftHandle.Fft(xy_out, xy, size);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Exception: {ex.Message}");
-            return 0;
+            fftHandle.Fft(xy_out, xy, size);
         }
 
         stopwatch.Stop();
 
-        Console.WriteLine($"Total ({fftRepeat}): {stopwatch.ElapsedMilliseconds}");
+        Console.WriteLine($"Total ({fftRepeat}): {stopwatch.Elapsed.TotalMilliseconds:F1}");
 
-        float tpp = stopwatch.ElapsedMilliseconds / (float)fftRepeat;
+        double tpp = stopwatch.Elapsed.TotalMilliseconds / fftRepeat;
 
         Console.WriteLine($"{fftRepeat} piece(s) of {1 << log2FftSize} pt FFT;  {tpp} ms/piece\n");
 
